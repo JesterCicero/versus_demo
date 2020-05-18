@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">VersusTest</string>
+    <string name="vs_text">VS</string>
+    <string name="first_img_description">first image</string>
+    <string name="second_img_description">second image</string>
+    <string name="round">round</string>
+</resources>
