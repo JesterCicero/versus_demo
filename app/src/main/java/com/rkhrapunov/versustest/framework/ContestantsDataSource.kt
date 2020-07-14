@@ -9,6 +9,7 @@ import com.rkhrapunov.versustest.framework.helpers.RestApiHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -23,12 +24,23 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private val mRenderUiChannel by inject<ConflatedBroadcastChannel<IRenderState>>(named("RenderState"))
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mRestApiHelper by inject<RestApiHelper>()
+    private val mContestantsCache by inject<ContestantsCache>()
     private var mCurrentContestants = listOf<IContestantsInfo>()
     private var mInterimContestants = mutableListOf<IContestantsInfo>()
     private var mWinnersList = mutableListOf<IContestantsInfo>()
     private var mCurrentQuiz = EMPTY_STRING
     private var mCurrentRound = 0
     private var mLastWinnerState: RenderState.WinnerState? = null
+    private var mStartQuizJob: Job? = null
+    private var mUpdateStateJob: Job? = null
+    private var mPostWinnerJob: Job? = null
+    private var mResetContestUpdateUiJob: Job? = null
+    private var mGetQuizListJob: Job? = null
+    private var mGetQuizItemDetailJob: Job? = null
+    private var mGetStatsJob: Job? = null
+    private var mQuizListUpdateUiJob: Job? = null
+    private var mQuizStatsUpdateUiJob: Job? = null
+    private var mPostWinnerSuccessUpdateUiJob: Job? = null
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
@@ -38,7 +50,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     override fun getRenderUiChannel() = mRenderUiChannel
 
     override fun updateState(state: IRenderState, chosenFirst: Boolean) {
-        mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+        mUpdateStateJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             if (state is RenderState.QuizItemDetailState) {
                 mWinnersList.add(if (chosenFirst) state.firstContestant else state.secondContestant)
             }
@@ -50,17 +62,21 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                     mWinnersList.clear()
                 }
             }
-            val resultState = if (mCurrentRound == 0) {
-                val winnerState = RenderState.WinnerState(mWinnersList[0])
-                val winnerName = mWinnersList[0].name
-                mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ postWinner(winnerName) })
-                mWinnersList.clear()
-                mLastWinnerState = winnerState
-                winnerState
-            } else {
-                getQuizItemDetailState()
+            try {
+                val resultState = if (mCurrentRound == 0) {
+                    val winnerState = RenderState.WinnerState(mWinnersList[0])
+                    val winnerName = mWinnersList[0].name
+                    mPostWinnerJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ postWinner(winnerName) })
+                    mWinnersList.clear()
+                    mLastWinnerState = winnerState
+                    winnerState
+                } else {
+                    getQuizItemDetailState()
+                }
+                mRenderUiChannel.send(resultState)
+            } catch (e: Exception) {
+                Timber.e("Exception caught: $e")
             }
-            mRenderUiChannel.send(resultState)
         }
     }
 
@@ -69,25 +85,59 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mWinnersList.clear()
         mInterimContestants.addAll(mCurrentContestants)
         mCurrentRound = mInterimContestants.size / 2
-        mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-            mRenderUiChannel.send(getQuizItemDetailState())
+        mResetContestUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            try {
+                mRenderUiChannel.send(getQuizItemDetailState())
+            } catch (e: Exception) {
+                Timber.e("Exception caught: $e")
+            }
         }
     }
 
     override fun getQuizList() {
-        mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ getAllQuizzesApi() })
+        mGetQuizListJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+            mContestantsCache.tryToGetQuizzesInfoCache()
+            getAllQuizzesApi()
+        })
     }
 
     override fun getQuizItemDetail(itemData: String) {
         mCurrentQuiz = itemData
-        mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ getQuizApi() })
+        mGetQuizItemDetailJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+            mContestantsCache.tryToGetQuizInfoCache(mCurrentQuiz)?.let {
+                Timber.d("starting quiz with values from cache")
+                startQuiz(it)
+            }
+            getQuizApi()
+        })
     }
 
     override fun getStats() {
-        mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ getQuizStatsApi() })
+        mGetStatsJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ getQuizStatsApi() })
     }
 
     override fun sendWinner(winner: String) = postWinner(winner)
+
+    override fun cancelQuiz() {
+        Timber.d("cancelQuiz()")
+        mStartQuizJob?.cancel()
+        mUpdateStateJob?.cancel()
+        mPostWinnerJob?.cancel()
+        mResetContestUpdateUiJob?.cancel()
+        mGetQuizListJob?.cancel()
+        mGetQuizItemDetailJob?.cancel()
+        mGetStatsJob?.cancel()
+        mQuizListUpdateUiJob?.cancel()
+        mQuizStatsUpdateUiJob?.cancel()
+        mPostWinnerSuccessUpdateUiJob?.cancel()
+        clearData()
+    }
+
+    private fun clearData() {
+        mInterimContestants.clear()
+        mCurrentContestants = emptyList()
+        mWinnersList.clear()
+    }
 
     private fun getQuizApi() {
         Timber.d("getQuizApi()")
@@ -101,14 +151,35 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
 
     private fun onGetQuizApiSuccess(response: Response<List<ContestantsInfo>>) {
         response.body()?.let {
-            it.let {
-                Timber.d("onGetQuizApiSuccess(): contestants size: ${it.size}")
-                mCurrentContestants = it
-                mInterimContestants = mCurrentContestants.toMutableList()
-                mCurrentRound = mInterimContestants.size / 2
-                mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mRenderUiChannel.send(getQuizItemDetailState())
+            val sortedQuizList: List<IContestantsInfo> = it.sortedBy { element -> element.name }
+            if (mContestantsCache.isQuizCacheEmpty(mCurrentQuiz)) {
+                mContestantsCache.updateQuizInfoCache(sortedQuizList)
+                startQuiz(sortedQuizList)
+            } else {
+                mContestantsCache.quizCache?.let { quizCacheList ->
+                    if (quizCacheList != sortedQuizList) {
+                        Timber.d("quiz was updated from server")
+                        mContestantsCache.updateQuizInfoCache(sortedQuizList)
+                        getQuizList()
+                    }
                 }
+            }
+        }
+    }
+
+    private fun startQuiz(contestants: List<IContestantsInfo>) {
+        mUpdateStateJob?.cancel()
+        mResetContestUpdateUiJob?.cancel()
+        clearData()
+        mStartQuizJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mCurrentContestants = contestants
+            mInterimContestants = mCurrentContestants.toMutableList()
+            Timber.d("interim contestants size: ${mInterimContestants.size}")
+            mCurrentRound = mInterimContestants.size / 2
+            try {
+                mRenderUiChannel.send(getQuizItemDetailState())
+            } catch (e: Exception) {
+                Timber.e("Exception caught: $e")
             }
         }
     }
@@ -125,8 +196,15 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private fun onGetAllQuizzesApiSuccess(response: Response<List<QuizShortInfo>>) {
         response.body()?.let {
             Timber.d("onGetAllQuizzesApiSuccess(): allQuizzes size: ${it.size}")
-            mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mRenderUiChannel.send(RenderState.QuizListState(it))
+            val sortedQuizShortInfoList = it.sortedBy { element -> element.title }
+            val listsUnequal = mContestantsCache.quizzesInfoCache != sortedQuizShortInfoList
+            Timber.d("listsUnequal: $listsUnequal")
+            if (listsUnequal) {
+                Timber.d("onGetAllQuizzesApiSuccess(): got new quizzes from server")
+                mContestantsCache.updateQuizzesInfoCache(sortedQuizShortInfoList)
+                mQuizListUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                    mRenderUiChannel.send(RenderState.QuizListState(sortedQuizShortInfoList))
+                }
             }
         }
     }
@@ -144,7 +222,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private fun onGetQuizStatsApiSuccess(response: Response<List<ContestantsStatsInfo>>) {
         response.body()?.let {
             Timber.d("onGetQuizStatsApiSuccess(): quiz stats size: ${it.size}")
-            mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mQuizStatsUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                 mRenderUiChannel.send(RenderState.StatsListState(it))
             }
         }
@@ -163,7 +241,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private fun onPostWinnerSuccess(response: Response<String>) {
         response.body()?.let {
             if (it == WINNER_RESPONSE) {
-                mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                mPostWinnerSuccessUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     mLastWinnerState?.let { lastWinnerState ->
                         mRenderUiChannel.send(RenderState.WinnerFinalState(lastWinnerState.winner))
                     }

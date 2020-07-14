@@ -7,14 +7,12 @@ import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
 import com.rkhrapunov.core.interactors.ResetInteractor
 import com.rkhrapunov.core.interactors.GetStatsInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
-import com.rkhrapunov.versustest.framework.helpers.CustomDispatchers
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
 import org.koin.core.KoinComponent
@@ -38,7 +36,6 @@ class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .flowOn(CustomDispatchers.singleCoroutineDispatcher)
                 .filter {
                     (it is RenderState.WinnerState || it is RenderState.WinnerFinalState) && it != mCurrentState
                 }

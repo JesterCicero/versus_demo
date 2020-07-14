@@ -15,6 +15,7 @@ import timber.log.Timber
 class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private val mPresenter by inject<IMainContract.IMainPresenter>()
+    private var mQuizList = true
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private fun getQuizListFragment(quizList: Boolean): QuizListFragment {
         val args = Bundle()
         args.putBoolean(QUIZ_LIST_EXTRA, quizList)
+        mQuizList = quizList
         val fragment = QuizListFragment()
         fragment.arguments = args
         return fragment
@@ -66,9 +68,10 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
         Timber.d("onBackPressed() current fragment: $currentFragment")
-        if (currentFragment == QuizListFragment::class.simpleName
+        if (currentFragment == QuizListFragment::class.simpleName && !mQuizList
             || currentFragment == QuizItemDetailFragment::class.simpleName
             || currentFragment == WinnerFragment::class.simpleName) {
+            mPresenter.cancelQuiz()
             replaceFragment(QuizListFragment())
         } else {
             super.onBackPressed()
