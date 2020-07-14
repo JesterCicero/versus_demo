@@ -1,0 +1,87 @@
+package com.rkhrapunov.versustest.presentation.quizlist
+
+import androidx.lifecycle.Lifecycle
+import com.rkhrapunov.core.data.IContestantsStatsInfo
+import com.rkhrapunov.core.data.IQuizShortInfo
+import com.rkhrapunov.core.domain.IRenderState
+import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.core.interactors.GetQuizItemDetailInteractor
+import com.rkhrapunov.core.interactors.GetQuizListInteractor
+import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
+import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
+import com.rkhrapunov.versustest.framework.helpers.CustomDispatchers
+import com.rkhrapunov.versustest.presentation.base.BasePresenter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.collect
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import timber.log.Timber
+
+@FlowPreview
+@ExperimentalCoroutinesApi
+class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
+    IQuizListContract.IQuizListPresenter, KoinComponent, IItemClickListener {
+
+    private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
+    private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
+    private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
+    private val mGetQuizItemDetailInteractor by inject<GetQuizItemDetailInteractor>()
+    private var mJob: Job? = null
+    private var mAllContestants = emptyList<IQuizShortInfo>()
+    private var mAllContestantsStats = emptyList<IContestantsStatsInfo>()
+
+    override fun attachView(view: IQuizListContract.IQuizListView, viewLifecycle: Lifecycle) {
+        super.attachView(view, viewLifecycle)
+        mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mRenderUiChannelInteractor.getRenderUiChannel()
+                .asFlow()
+                .flowOn(CustomDispatchers.singleCoroutineDispatcher)
+                .filter {
+                    it is RenderState.QuizListState && mAllContestants != it.allContestants
+                            || it is RenderState.StatsListState && mAllContestantsStats != it.statsContestants
+                }
+                .collect { onCollectRenderState(it) }
+        }
+        val shouldShowQuizList = mView?.shouldShowQuizList() ?: true
+        Timber.d("attachView(): shouldShowQuizList=$shouldShowQuizList")
+        if (shouldShowQuizList) {
+            mGetQuizListInteractor.getQuizList()
+        }
+    }
+
+    override fun onViewDestroyed() {
+        mJob?.cancel()
+        super.onViewDestroyed()
+    }
+
+    override fun onBackToQuizzesButtonClickedIntent() {
+        mView?.onBackToQuizzesButtonClicked()
+    }
+
+    override fun onItemClickedIntent(itemData: String) = mGetQuizItemDetailInteractor.getQuizItemDetail(itemData)
+
+    private fun onCollectRenderState(renderState: IRenderState) {
+        Timber.d("attachView(): renderState=$renderState")
+        if (renderState is RenderState.QuizListState) {
+            mAllContestants = renderState.allContestants
+            mView?.let {
+                val adapter = QuizListAdapter<IQuizShortInfo>(this@QuizListPresenter, it)
+                it.setAdapter(adapter)
+                adapter.updateData(mAllContestants)
+            }
+        } else if (renderState is RenderState.StatsListState) {
+            mAllContestantsStats = renderState.statsContestants
+            mView?.let {
+                val adapter = QuizListAdapter<IContestantsStatsInfo>(this@QuizListPresenter, it)
+                it.setAdapter(adapter)
+                adapter.updateData(mAllContestantsStats)
+            }
+        }
+    }
+}

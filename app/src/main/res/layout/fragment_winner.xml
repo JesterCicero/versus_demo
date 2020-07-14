@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.rkhrapunov.versustest.presentation.winner.IWinnerContract.IWinnerPresenter"/>
+        <variable
+            name="name"
+            type="String" />
+        <variable
+            name="presenter"
+            type="IWinnerPresenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_container"
+        android:background="@color/backgroundMainColor"
+        tools:context=".presentation.main.MainActivity">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/winner_title"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/winner"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/winner_title"
+            android:textColor="@color/quizListItemTextColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/winner"
+            android:onClick="@{ () -> presenter.onWinnerClickedIntent()}"
+            app:layout_constraintTop_toBottomOf="@id/winner_title"
+            app:layout_constraintBottom_toTopOf="@id/winner_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
+            <ImageView
+                android:layout_width="@dimen/contestant_img_width_height"
+                android:layout_height="@dimen/contestant_img_width_height"
+                android:id="@+id/winner_img_id"
+                android:scaleType="fitCenter"
+                android:src="@drawable/empty_drawable"
+                android:contentDescription="@string/winner_img_description"
+                tools:src="@drawable/jennifer_lawrence"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/winner_description"
+            app:layout_constraintTop_toBottomOf="@id/winner"
+            app:layout_constraintBottom_toTopOf="@id/stats_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{name}"
+            android:textColor="@color/contestantsTitleTextColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            tools:text="Winner Title"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/stats_button"
+            android:onClick="@{ () -> presenter.onViewStatsClickedIntent()}"
+            app:layout_constraintTop_toBottomOf="@id/winner_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/view_stats"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -11,6 +11,10 @@ class ContestantsRepository : KoinComponent {
 
     @ExperimentalCoroutinesApi
     fun getRenderUiChannel() = mContestantsDataSource.getRenderUiChannel()
+    @ExperimentalCoroutinesApi
     fun onChosenContestant(state: IRenderState, chosenFirst: Boolean) = mContestantsDataSource.updateState(state, chosenFirst)
     fun resetContest() = mContestantsDataSource.resetContest()
+    fun getQuizList() = mContestantsDataSource.getQuizList()
+    fun getQuizItemDetail(itemData: String) = mContestantsDataSource.getQuizItemDetail(itemData)
+    fun getStats() = mContestantsDataSource.getStats()
 }

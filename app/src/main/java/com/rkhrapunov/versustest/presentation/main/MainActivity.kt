@@ -1,89 +1,77 @@
 package com.rkhrapunov.versustest.presentation.main
 
-import android.content.res.Configuration
 import android.os.Bundle
-import android.view.View
-import android.view.ViewPropertyAnimator
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil.setContentView
+import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
-import com.rkhrapunov.versustest.databinding.ActivityMainBinding
-import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
+import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
+import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
+import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
 import org.koin.android.ext.android.inject
 import timber.log.Timber
-
 
 class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private val mPresenter by inject<IMainContract.IMainPresenter>()
-    private var mBinding: ActivityMainBinding? = null
+
+    companion object {
+        const val QUIZ_LIST_EXTRA = "quiz_list_extra"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = setContentView(this, R.layout.activity_main)
+        setContentView(R.layout.activity_main)
+        if (savedInstanceState == null) {
+            replaceFragmentIfNecessary(QuizListFragment())
+        }
         mPresenter.attachView(this, lifecycle)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        mPresenter.onSaveInstanceState(outState)
+    override suspend fun render(renderState: IRenderState) {
+        Timber.d("render(): renderState=$renderState")
+        val fragment: Fragment = when (renderState) {
+            is RenderState.QuizListState -> getQuizListFragment(true)
+            is RenderState.StatsListState -> getQuizListFragment(false)
+            is RenderState.QuizItemDetailState -> QuizItemDetailFragment()
+            is RenderState.WinnerState -> WinnerFragment()
+            is RenderState.WinnerFinalState -> return
+            else -> getQuizListFragment(true)
+        }
+        replaceFragmentIfNecessary(fragment)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        mPresenter.onRestoreInstanceState(savedInstanceState)
+    private fun getQuizListFragment(quizList: Boolean): QuizListFragment {
+        val args = Bundle()
+        args.putBoolean(QUIZ_LIST_EXTRA, quizList)
+        val fragment = QuizListFragment()
+        fragment.arguments = args
+        return fragment
     }
 
-    override fun render(renderState: IRenderState) {
-        if (renderState is RenderState.VersusState) {
-            Timber.d("########## render VersusState")
-            mBinding?.dataReady = true
-            mBinding?.versusState = renderState
-            mBinding?.round = renderState.round
-            mBinding?.executePendingBindings()
-        } else if (renderState is RenderState.WinnerState) {
-            mBinding?.round = "The Winner"
-            mBinding?.vsTextView?.visibility = View.GONE
-            if (renderState.firstContestantWon) {
-                mBinding?.secondImg?.visibility = View.GONE
-                mBinding?.secondImgDescription?.visibility = View.GONE
-                mBinding?.firstImageId?.setImageResource(renderState.winnerImgResId)
-                mBinding?.firstImgDescription?.text = renderState.winnerImgDescription
-            } else {
-                mBinding?.firstImg?.visibility = View.GONE
-                mBinding?.firstImgDescription?.visibility = View.GONE
-                mBinding?.secondImageId?.setImageResource(renderState.winnerImgResId)
-                mBinding?.secondImgDescription?.text = renderState.winnerImgDescription
-            }
-            mBinding?.executePendingBindings()
-            Toast.makeText(this, "Click on Winner to start again", Toast.LENGTH_SHORT).show()
+    private fun replaceFragmentIfNecessary(fragment: Fragment) {
+        val currentFragmentClassName = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
+        val fragmentClassName = fragment.javaClass.simpleName
+        Timber.d("current fragment: $currentFragmentClassName, new fragment: $fragmentClassName")
+        currentFragmentClassName?.let { if (it != fragmentClassName) replaceFragment(fragment) } ?: replaceFragment(fragment)
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
+            .commit()
+    }
+
+    override fun onBackPressed() {
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
+        Timber.d("onBackPressed() current fragment: $currentFragment")
+        if (currentFragment == QuizListFragment::class.simpleName
+            || currentFragment == QuizItemDetailFragment::class.simpleName
+            || currentFragment == WinnerFragment::class.simpleName) {
+            replaceFragment(QuizListFragment())
+        } else {
+            super.onBackPressed()
         }
     }
-
-    fun onFirstImgClicked(view: View) {
-//        val screenOrientation = resources.configuration.orientation
-//        view.animate().translationX()
-        mPresenter.onFirstImgClicked()
-    }
-
-    fun onSecondImgClicked(view: View) = mPresenter.onSecondImgClicked()
-
-    override fun resetViews() {
-        mBinding?.roundDescription?.text = EMPTY_STRING
-        mBinding?.firstImageId?.setImageResource(R.drawable.empty_drawable)
-        mBinding?.secondImageId?.setImageResource(R.drawable.empty_drawable)
-        mBinding?.firstImgDescription?.text = EMPTY_STRING
-        mBinding?.secondImgDescription?.text = EMPTY_STRING
-        mBinding?.vsTextView?.visibility = View.VISIBLE
-        mBinding?.firstImg?.visibility = View.VISIBLE
-        mBinding?.firstImgDescription?.visibility = View.VISIBLE
-        mBinding?.secondImg?.visibility = View.VISIBLE
-        mBinding?.secondImgDescription?.visibility = View.VISIBLE
-    }
-
-//    private fun getTranslation(viewPropertyAnimator: ViewPropertyAnimator)
-//            = if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) viewPropertyAnimator.translationY()
 }

@@ -1,11 +1,18 @@
 package com.rkhrapunov.core.domain
 
-sealed class RenderState : IRenderState {
-    data class VersusState(val firstImgResId: Int,
-                           val firstImgDescription: String,
-                           val secondImgResId: Int,
-                           val secondImgDescription: String,
-                           val round: String): RenderState()
+import com.rkhrapunov.core.data.IContestantsInfo
+import com.rkhrapunov.core.data.IContestantsStatsInfo
+import com.rkhrapunov.core.data.IQuizShortInfo
 
-    data class WinnerState(val winnerImgResId: Int, val winnerImgDescription: String, val firstContestantWon: Boolean): RenderState()
+sealed class RenderState : IRenderState {
+
+    data class QuizListState(val allContestants: List<IQuizShortInfo>) : RenderState()
+
+    data class QuizItemDetailState(val firstContestant: IContestantsInfo, val secondContestant: IContestantsInfo, val round: String) : RenderState()
+
+    data class StatsListState(val statsContestants: List<IContestantsStatsInfo>) : RenderState()
+
+    data class WinnerState(val winner: IContestantsInfo): RenderState()
+
+    data class WinnerFinalState(val winner: IContestantsInfo) : RenderState()
 }
