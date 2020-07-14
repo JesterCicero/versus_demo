@@ -5,9 +5,12 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 
 interface IContestantsDataSource {
-    fun getAllContestants(): Map<String, Int>
     @ExperimentalCoroutinesApi
     fun getRenderUiChannel(): BroadcastChannel<IRenderState>
     fun updateState(state: IRenderState, chosenFirst: Boolean)
     fun resetContest()
+    fun getQuizList()
+    fun getQuizItemDetail(itemData: String)
+    fun getStats()
+    fun sendWinner(winner: String)
 }
