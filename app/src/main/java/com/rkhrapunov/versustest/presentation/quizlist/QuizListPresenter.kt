@@ -9,14 +9,12 @@ import com.rkhrapunov.core.interactors.GetQuizItemDetailInteractor
 import com.rkhrapunov.core.interactors.GetQuizListInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
-import com.rkhrapunov.versustest.framework.helpers.CustomDispatchers
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
 import org.koin.core.KoinComponent
@@ -41,7 +39,6 @@ class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .flowOn(CustomDispatchers.singleCoroutineDispatcher)
                 .filter {
                     it is RenderState.QuizListState && mAllContestants != it.allContestants
                             || it is RenderState.StatsListState && mAllContestantsStats != it.statsContestants

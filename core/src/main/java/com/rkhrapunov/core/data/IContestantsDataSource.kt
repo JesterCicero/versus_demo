@@ -13,4 +13,5 @@ interface IContestantsDataSource {
     fun getQuizItemDetail(itemData: String)
     fun getStats()
     fun sendWinner(winner: String)
+    fun cancelQuiz()
 }

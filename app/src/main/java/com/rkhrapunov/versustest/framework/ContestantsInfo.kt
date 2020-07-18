@@ -7,7 +7,5 @@ data class ContestantsInfo (
     @SerializedName("name")
     override val name: String,
     @SerializedName("url")
-    override val url: String,
-    @SerializedName("owner")
-    override val owner: String
+    override val url: String
 ) : IContestantsInfo

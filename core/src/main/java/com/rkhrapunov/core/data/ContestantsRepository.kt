@@ -17,4 +17,5 @@ class ContestantsRepository : KoinComponent {
     fun getQuizList() = mContestantsDataSource.getQuizList()
     fun getQuizItemDetail(itemData: String) = mContestantsDataSource.getQuizItemDetail(itemData)
     fun getStats() = mContestantsDataSource.getStats()
+    fun cancelQuiz() = mContestantsDataSource.cancelQuiz()
 }
