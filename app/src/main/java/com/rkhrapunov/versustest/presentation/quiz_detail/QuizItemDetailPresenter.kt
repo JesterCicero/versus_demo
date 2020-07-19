@@ -51,10 +51,14 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
 
     override fun onSecondImgClickedIntent() = onItemClicked(false)
 
+    override fun onItemClickFinished(chosenFirst: Boolean) {
+        mCurrentState?.let { mChosenContestantInteractor.onChosenContestant(it, chosenFirst) }
+    }
+
     private fun onItemClicked(chosenFirst: Boolean) {
         if (mQuizItemStateUpdated) {
             mQuizItemStateUpdated = false
-            mCurrentState?.let { mChosenContestantInteractor.onChosenContestant(it, chosenFirst) }
+            mView?.onItemClicked(chosenFirst)
         }
     }
 

@@ -8,10 +8,12 @@ interface IQuizItemDetailContract {
 
     interface IQuizItemDetailView : IBaseView {
         suspend fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState)
+        fun onItemClicked(chosenFirst: Boolean)
     }
 
     interface IQuizItemDetailPresenter : IBaseStatefulPresenter<IQuizItemDetailView> {
         fun onFirstImgClickedIntent()
         fun onSecondImgClickedIntent()
+        fun onItemClickFinished(chosenFirst: Boolean)
     }
 }
