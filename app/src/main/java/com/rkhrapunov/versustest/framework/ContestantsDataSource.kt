@@ -197,6 +197,11 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         response.body()?.let {
             Timber.d("onGetAllQuizzesApiSuccess(): allQuizzes size: ${it.size}")
             val sortedQuizShortInfoList = it.sortedBy { element -> element.title }
+//                .map { element ->
+//                    val newTitle = element.title.replace('_', ' ').capitalize(Locale.getDefault())
+//                    Timber.d("##### newTitle: $newTitle")
+//                    QuizShortInfo(newTitle, element.url)
+//                }
             val listsUnequal = mContestantsCache.quizzesInfoCache != sortedQuizShortInfoList
             Timber.d("listsUnequal: $listsUnequal")
             if (listsUnequal) {

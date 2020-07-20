@@ -1,11 +1,13 @@
 package com.rkhrapunov.versustest.presentation.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
+import com.rkhrapunov.versustest.databinding.ActivityMainBinding
 import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
 import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private val mPresenter by inject<IMainContract.IMainPresenter>()
     private var mQuizList = true
+    private var mBinding: ActivityMainBinding? = null
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -23,7 +26,9 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        mBinding = binding
         if (savedInstanceState == null) {
             replaceFragmentIfNecessary(QuizListFragment())
         }
@@ -33,14 +38,38 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     override suspend fun render(renderState: IRenderState) {
         Timber.d("render(): renderState=$renderState")
         val fragment: Fragment = when (renderState) {
-            is RenderState.QuizListState -> getQuizListFragment(true)
-            is RenderState.StatsListState -> getQuizListFragment(false)
-            is RenderState.QuizItemDetailState -> QuizItemDetailFragment()
-            is RenderState.WinnerState -> WinnerFragment()
+            is RenderState.QuizListState -> onQuizListRenderState()
+            is RenderState.StatsListState -> {
+                showTopBar(true)
+                getQuizListFragment(false)
+            }
+            is RenderState.QuizItemDetailState -> {
+                showTopBar(false)
+                QuizItemDetailFragment()
+            }
+            is RenderState.WinnerState -> {
+                showTopBar(false)
+                WinnerFragment()
+            }
             is RenderState.WinnerFinalState -> return
-            else -> getQuizListFragment(true)
+            else -> onQuizListRenderState()
         }
         replaceFragmentIfNecessary(fragment)
+    }
+
+    private fun onQuizListRenderState(): QuizListFragment {
+        showTopBar(true)
+        return getQuizListFragment(true)
+    }
+
+    private fun showTopBar(showTopBar: Boolean) {
+        mBinding?.let {
+            it.backButtonFrameLayoutId.visibility = if (showTopBar) View.VISIBLE else View.GONE
+            it.topBarSpace.visibility = if (showTopBar) View.VISIBLE else View.GONE
+            it.searchView.visibility = if (showTopBar) View.VISIBLE else View.GONE
+            it.topBarSpaceEnd.visibility = if (showTopBar) View.VISIBLE else View.GONE
+            it.menuId.visibility = if (showTopBar) View.VISIBLE else View.GONE
+        }
     }
 
     private fun getQuizListFragment(quizList: Boolean): QuizListFragment {
@@ -64,6 +93,8 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
             .commit()
     }
+
+    fun onBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View) = onBackPressed()
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag

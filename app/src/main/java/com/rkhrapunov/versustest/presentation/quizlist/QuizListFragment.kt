@@ -27,7 +27,7 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
         binding.quizListRecyclerViewId.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@QuizListFragment.activity)
-            addItemDecoration(CustomItemDecorator())
+            addItemDecoration(CustomItemDecorator(context))
         }
         if (!mQuizListState) {
             binding.backButton.visibility = View.VISIBLE

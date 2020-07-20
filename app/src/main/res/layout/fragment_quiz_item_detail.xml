@@ -58,10 +58,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
                 <ImageView
-                    android:layout_width="@dimen/contestant_img_width_height"
-                    android:layout_height="@dimen/contestant_img_width_height"
-                    android:scaleType="fitCenter"
+                    android:layout_width="280dp"
+                    android:layout_height="210dp"
                     android:id="@+id/first_image_id"
+                    android:scaleType="fitXY"
                     android:src="@drawable/empty_drawable"
                     android:contentDescription="@string/first_img_description"
                     tools:src="@drawable/charlize_theron"/>
@@ -91,10 +91,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
                 <ImageView
-                    android:layout_width="@dimen/contestant_img_width_height"
-                    android:layout_height="@dimen/contestant_img_width_height"
+                    android:layout_width="280dp"
+                    android:layout_height="210dp"
                     android:id="@+id/second_image_id"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
                     android:src="@drawable/empty_drawable"
                     android:contentDescription="@string/second_img_description"
                     tools:src="@drawable/jennifer_lawrence"/>

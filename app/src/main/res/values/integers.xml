@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="quiz_list_recycler_view_vertical_weight">90</integer>
-    <integer name="quiz_list_back_to_quizzes_button_vertical_weight">10</integer>
+    <integer name="quiz_list_recycler_view_vertical_weight">85</integer>
+    <integer name="quiz_list_back_to_quizzes_button_vertical_weight">15</integer>
     <integer name="quiz_list_icon_horizontal_weight">20</integer>
     <integer name="quiz_list_item_description_horizontal_weight">55</integer>
     <integer name="quiz_list_percentage_horizontal_weight">25</integer>
+    <integer name="quiz_list_item_padding_start_end">16</integer>
 </resources>

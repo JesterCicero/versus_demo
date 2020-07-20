@@ -161,7 +161,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val ANIM_DURATION_MS = 750L
         private const val SCALE_FACTOR = 0.2F
         private const val CHOSEN_CONTESTANT_TIMEOUT = 2000L
-        private const val NEXT_ROUND_TIMEOUT = 20L
+        private const val NEXT_ROUND_TIMEOUT = 30L
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.8F
     }
 }

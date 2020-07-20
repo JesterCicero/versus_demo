@@ -15,6 +15,7 @@ import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
+import java.util.*
 
 class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
                          private val mQuizListView: IQuizListContract.IQuizListView)
@@ -50,7 +51,9 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
                 else -> EMPTY_STRING
             }
             Timber.d("itemData is: $itemData")
-            mRecognitionDialogItemBinding.itemData = itemData
+            mRecognitionDialogItemBinding.itemName.isSelected = true
+            mRecognitionDialogItemBinding.itemDataReal = itemData
+            mRecognitionDialogItemBinding.itemDataFake = itemData.replace('_', ' ').toUpperCase(Locale.getDefault())
             mRecognitionDialogItemBinding.executePendingBindings()
         }
 
