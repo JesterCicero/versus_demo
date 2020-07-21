@@ -53,22 +53,45 @@
         app:layout_constraintBottom_toTopOf="@id/fragment_container"
         />
 
-    <com.rkhrapunov.versustest.framework.custom_views.CustomEditText
+    <!--    <com.rkhrapunov.versustest.framework.custom_views.CustomEditText-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="60dp"-->
+<!--        android:id="@+id/search_view"-->
+<!--        android:hint="@string/search_hint"-->
+<!--        android:background="@drawable/search_view_shape"-->
+<!--        app:layout_constraintHorizontal_weight="64"-->
+<!--        app:layout_constraintStart_toEndOf="@id/top_bar_space"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/top_bar_space_end"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/top_bar_space_top"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/fragment_container"-->
+<!--        android:textColorHint="#232323"-->
+<!--        android:textSize="25sp"-->
+<!--        android:paddingBottom="3dp"-->
+<!--        android:paddingStart="16dp"-->
+<!--        android:paddingLeft="16dp"-->
+<!--        tools:ignore="RtlSymmetry" />-->
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_view"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:id="@+id/search_view"
-        android:hint="@string/search_hint"
         android:background="@drawable/search_view_shape"
-        app:layout_constraintHorizontal_weight="64"
-        app:layout_constraintStart_toEndOf="@id/top_bar_space"
-        app:layout_constraintEnd_toStartOf="@id/top_bar_space_end"
-        app:layout_constraintTop_toBottomOf="@id/top_bar_space_top"
-        app:layout_constraintBottom_toTopOf="@id/fragment_container"
-        android:textColorHint="#232323"
-        android:textSize="25sp"
-        android:paddingBottom="3dp"
         android:paddingStart="16dp"
         android:paddingLeft="16dp"
+        android:paddingBottom="3dp"
+        android:textColorHint="#232323"
+        android:textSize="25sp"
+        android:theme="@style/SearchViewStyle"
+        app:queryBackground="@null"
+        app:defaultQueryHint="@string/search_hint"
+        app:iconifiedByDefault="false"
+        app:layout_constraintBottom_toTopOf="@id/fragment_container"
+        app:layout_constraintEnd_toStartOf="@id/top_bar_space_end"
+        app:layout_constraintHorizontal_weight="64"
+        app:layout_constraintStart_toEndOf="@id/top_bar_space"
+        app:layout_constraintTop_toBottomOf="@id/top_bar_space_top"
+        app:queryHint="@string/search_hint"
+        app:searchIcon="@null"
         tools:ignore="RtlSymmetry" />
 
     <Space

@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/backgroundMainColor</item>
     </style>
 
+    <style name="SearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColorHint">#232323</item>
+    </style>
+
 </resources>

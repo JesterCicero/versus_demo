@@ -17,21 +17,49 @@ import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
 
+@Suppress("UNCHECKED_CAST")
 class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
                          private val mQuizListView: IQuizListContract.IQuizListView)
     : RecyclerView.Adapter<QuizListAdapter.QuizListViewHolder>() {
 
-    private var mData = emptyList<T>()
+    private var mData = mutableListOf<T>()
+    private var mCopyData = mutableListOf<T>()
 
     fun updateData(data: List<T>) {
         Timber.d("data size: {${data.size}}")
-        mData = data
+        mData = data.toMutableList()
+        notifyDataSetChanged()
+    }
+
+    fun filter(text: String) {
+        if (mCopyData.isEmpty()) {
+            mCopyData.addAll(mData)
+        }
+        mData.clear()
+        if (text.isEmpty()) {
+            mData.addAll(mCopyData)
+        } else {
+            if (mCopyData.isNotEmpty()) {
+                if (mCopyData[0] is IQuizShortInfo) {
+                    (mCopyData as? MutableList<IQuizShortInfo>)?.forEach {
+                        if (it.title.toLowerCase(Locale.getDefault()).contentEquals(text.toLowerCase(Locale.getDefault()))) {
+                            (mData as? MutableList<IQuizShortInfo>)?.add(it)
+                        }
+                    }
+                } else {
+                    (mCopyData as? MutableList<IContestantsStatsInfo>)?.forEach {
+                        if (it.name.toLowerCase(Locale.getDefault()).contentEquals(text.toLowerCase(Locale.getDefault()))) {
+                            (mData as? MutableList<IContestantsStatsInfo>)?.add(it)
+                        }
+                    }
+                }
+            }
+        }
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuizListViewHolder(
         QuizListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), mItemClickListener)
-
 
     override fun getItemCount() = mData.size
 
@@ -79,6 +107,7 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
             fragment?.let {
                 mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
+
                         mImageLoader.loadImage(it, url, mRecognitionDialogItemBinding.smallImg)
                     }
                 }
