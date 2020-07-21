@@ -3,12 +3,14 @@ package com.rkhrapunov.versustest.presentation.main
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
 import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
+import com.rkhrapunov.versustest.presentation.quizlist.QuizListAdapter
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
 import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
 import org.koin.android.ext.android.inject
@@ -19,6 +21,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private val mPresenter by inject<IMainContract.IMainPresenter>()
     private var mQuizList = true
     private var mBinding: ActivityMainBinding? = null
+    //private var mQuizListAdapter: QuizListAdapter<*>? = null
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -28,6 +31,21 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.searchView.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String): Boolean {
+                    Timber.d("########## onQueryTextSubmit()")
+                    getQuizListAdapter()?.filter(query)
+                    return true
+                }
+
+                override fun onQueryTextChange(newText: String): Boolean {
+                    Timber.d("########## onQueryTextChange()")
+                    getQuizListAdapter()?.filter(newText)
+                    return true
+                }
+            }
+        )
         mBinding = binding
         if (savedInstanceState == null) {
             replaceFragmentIfNecessary(QuizListFragment())
@@ -93,6 +111,11 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
             .commit()
     }
+
+    private fun getQuizListAdapter(): QuizListAdapter<*>? = supportFragmentManager.findFragmentById(
+        R.id.fragment_container)?.let {
+            (it as? QuizListFragment)?.getAdapter()
+        }
 
     fun onBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View) = onBackPressed()
 

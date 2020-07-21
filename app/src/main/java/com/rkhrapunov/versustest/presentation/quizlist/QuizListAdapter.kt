@@ -32,23 +32,27 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
     }
 
     fun filter(text: String) {
+        Timber.d("########## filter(): text: $text")
         if (mCopyData.isEmpty()) {
             mCopyData.addAll(mData)
         }
         mData.clear()
         if (text.isEmpty()) {
+            Timber.d("########## filter() text is empty")
             mData.addAll(mCopyData)
         } else {
             if (mCopyData.isNotEmpty()) {
                 if (mCopyData[0] is IQuizShortInfo) {
+                    Timber.d("########## filter() IQuizShortInfo")
                     (mCopyData as? MutableList<IQuizShortInfo>)?.forEach {
-                        if (it.title.toLowerCase(Locale.getDefault()).contentEquals(text.toLowerCase(Locale.getDefault()))) {
+                        if (it.title.toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
                             (mData as? MutableList<IQuizShortInfo>)?.add(it)
                         }
                     }
                 } else {
+                    Timber.d("########## filter() IContestantsStatsInfo")
                     (mCopyData as? MutableList<IContestantsStatsInfo>)?.forEach {
-                        if (it.name.toLowerCase(Locale.getDefault()).contentEquals(text.toLowerCase(Locale.getDefault()))) {
+                        if (it.name.toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
                             (mData as? MutableList<IContestantsStatsInfo>)?.add(it)
                         }
                     }

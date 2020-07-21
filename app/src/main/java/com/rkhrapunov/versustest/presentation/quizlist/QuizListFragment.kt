@@ -15,6 +15,7 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
     private val mPresenter by inject<IQuizListContract.IQuizListPresenter>()
     private var mQuizListState = true
     private var mBinding: FragmentQuizListBinding? = null
+    private var mAdapter: QuizListAdapter<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +38,11 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
         return binding.root
     }
 
+    fun getAdapter() = mAdapter
+
     override fun setAdapter(quizListAdapter: QuizListAdapter<*>?) {
         mBinding?.let{ it.quizListRecyclerViewId.apply { adapter = quizListAdapter } }
+        mAdapter = quizListAdapter
     }
 
     override fun onBackToQuizzesButtonClicked() {
