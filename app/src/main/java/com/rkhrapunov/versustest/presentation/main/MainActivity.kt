@@ -1,8 +1,11 @@
 package com.rkhrapunov.versustest.presentation.main
 
 import android.os.Bundle
+import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
@@ -118,6 +121,28 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         }
 
     fun onBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View) = onBackPressed()
+
+    fun showPopupMenu(v: View) {
+        mBinding?.let {
+            PopupMenu(this, it.anchorMenu, Gravity.END, 0, R.style.MyPopupMenu).apply {
+                setOnMenuItemClickListener { item ->
+                    when (item.itemId) {
+                        R.id.refresh -> {
+                            Timber.d("####### new game")
+                            true
+                        }
+                        R.id.about -> {
+                            Timber.d("####### help")
+                            true
+                        }
+                        else -> false
+                    }
+                }
+                menuInflater.inflate(R.menu.topbar_menu, menu)
+                show()
+            }
+        }
+    }
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag

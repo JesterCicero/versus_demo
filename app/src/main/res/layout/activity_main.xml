@@ -17,6 +17,17 @@
         app:layout_constraintBottom_toTopOf="@id/search_view"
         />
 
+    <View
+        android:id="@+id/anchor_menu"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -116,6 +127,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:background="@drawable/back_button_selector"
+        android:onClick="showPopupMenu"
         android:scaleType="centerCrop">
         <ImageView
             tools:ignore="ContentDescription"
