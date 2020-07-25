@@ -9,10 +9,12 @@ import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.databinding.FragmentWinnerBinding
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
+import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
+@ExperimentalStdlibApi
 class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
 
     private val mPresenter by inject<IWinnerContract.IWinnerPresenter>()
@@ -48,7 +50,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
 
     private suspend fun renderWinner(name: String, url: String) {
         mBinding?.let {
-            it.name = name
+            it.name = name.capitalizeWords()
             it.presenter = mPresenter
             withContext(Dispatchers.IO) { mImageLoader.loadImage(this@WinnerFragment, url, it.winnerImgId) }
         }

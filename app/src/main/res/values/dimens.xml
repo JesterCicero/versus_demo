@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="quiz_list_item_parent_height">100dp</dimen>
+    <dimen name="quiz_list_item_parent_height">75dp</dimen>
     <dimen name="custom_selector_inset_start_end">16dp</dimen>
     <dimen name="quiz_list_item_name_width">300dp</dimen>
     <dimen name="quiz_list_item_name_padding">8dp</dimen>
     <dimen name="quiz_list_item_corner_radius">10dp</dimen>
     <dimen name="contestant_tile_corner_radius">8dp</dimen>
     <dimen name="contestant_img_width_height">250dp</dimen>
-    <dimen name="quiz_list_recycler_view_margin_top_bottom">25dp</dimen>
+    <dimen name="quiz_list_recycler_view_margin_top_bottom">16dp</dimen>
     <dimen name="quiz_list_recycler_view_scroll_bar_size">5dp</dimen>
     <dimen name="quiz_list_icon_height">50dp</dimen>
+    <dimen name="statistics_button_width">90dp</dimen>
+    <dimen name="back_button_margin_start">16dp</dimen>
+    <dimen name="back_button_width_height">60dp</dimen>
+    <dimen name="back_button_padding_top_bottom">8dp</dimen>
+    <dimen name="contestant_img_width">280dp</dimen>
+    <dimen name="contestant_img_height">210dp</dimen>
+    <dimen name="next_button_margin">16dp</dimen>
+    <dimen name="search_view_corner_radius">5dp</dimen>
+    <dimen name="item_icon_margin_start">16dp</dimen>
+    <dimen name="item_description_margin_start">24dp</dimen>
+    <dimen name="item_percentage_margin_end">16dp</dimen>
+    <dimen name="top_bar_top_space_height">24dp</dimen>
+    <dimen name="search_view_margin_start">16dp</dimen>
+    <dimen name="search_view_padding_bottom">3dp</dimen>
+    <dimen name="search_view_text_size">25sp</dimen>
+    <dimen name="menu_button_margin_end">16dp</dimen>
 </resources>

@@ -6,6 +6,34 @@
         <item name="colorPrimary">#000</item>
         <item name="colorPrimaryDark">#000</item>
         <item name="colorAccent">@color/backgroundMainColor</item>
+        <item name="android:itemTextAppearance">@style/itemTextStyle</item>
+        <item name="popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="dropDownListViewStyle">@style/ListViewStyle</item>
     </style>
 
+    <style name="SearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColorHint">#232323</item>
+    </style>
+
+<!--    <item name="android:popupBackground">@drawable/custom_menu_selector</item>-->
+    <style name="CustomPopupMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:dropDownHorizontalOffset">0dp</item>
+        <item name="android:dropDownVerticalOffset">0dp</item>
+        <item name="android:popupBackground">@drawable/custom_menu_selector</item>
+        <item name="android:dropDownSelector">@drawable/custom_menu_item_selector</item>
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="itemTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textColor">#ffb80a</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="ListViewStyle" parent="@android:style/Widget.ListView">
+        <item name="android:listSelector">@drawable/custom_menu_item_selector</item>
+        <item name="android:divider">@color/quizListItemTileColor</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
 </resources>

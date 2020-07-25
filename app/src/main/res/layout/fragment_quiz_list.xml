@@ -24,7 +24,7 @@ xmlns:tools="http://schemas.android.com/tools">
             android:scrollbars="vertical"
             android:scrollbarThumbVertical="@color/mainColor"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/back_button"
+            app:layout_constraintBottom_toTopOf="@id/next_button_frame_layout_id"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="@integer/quiz_list_recycler_view_vertical_weight"
@@ -32,20 +32,33 @@ xmlns:tools="http://schemas.android.com/tools">
             android:focusable="true"
             android:focusableInTouchMode="true" />
 
-        <Button
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/back_button"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_button_frame_layout_id"
+            android:background="@drawable/next_button_selector"
             android:onClick="@{ () -> presenter.onBackToQuizzesButtonClickedIntent()}"
+            android:layout_marginEnd="@dimen/next_button_margin"
+            android:layout_marginRight="@dimen/next_button_margin"
+            android:layout_marginBottom="@dimen/next_button_margin"
             app:layout_constraintTop_toBottomOf="@id/quiz_list_recycler_view_id"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_weight="@integer/quiz_list_back_to_quizzes_button_vertical_weight"
-            android:text="@string/back_to_quizzes"
+            android:scaleType="centerCrop"
             android:visibility="gone"
-            tools:visibility="visible"
-            />
+            tools:visibility="visible">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/back_button_width_height"
+                android:layout_height="@dimen/back_button_width_height"
+                android:paddingTop="@dimen/quiz_list_item_name_padding"
+                android:paddingBottom="@dimen/quiz_list_item_name_padding"
+                android:layout_gravity="center"
+                android:id="@+id/nav_back_btn_icon_id"
+                android:src="@drawable/ic_next"/>
+
+        </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,6 +29,7 @@ import org.koin.dsl.module
 
 private const val PREFS_NAME = "prefs_name"
 
+@ExperimentalStdlibApi
 @FlowPreview
 @ExperimentalCoroutinesApi
 val applicationModule = module(override = true) {

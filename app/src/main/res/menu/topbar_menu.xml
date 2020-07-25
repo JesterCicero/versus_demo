@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/refresh"
+        android:title="@string/sort">
+        <menu>
+            <item android:id="@+id/quiz_list_sort_asc"
+                android:title="@string/ascending" />
+            <item android:id="@+id/quiz_list_sort_desc"
+                android:title="@string/descending" />
+        </menu>
+    </item>
+    <item android:id="@+id/about"
+        android:title="@string/about" />
+</menu>

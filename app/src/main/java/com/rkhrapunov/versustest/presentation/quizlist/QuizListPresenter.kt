@@ -21,6 +21,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
 
+@ExperimentalStdlibApi
 @FlowPreview
 @ExperimentalCoroutinesApi
 class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),

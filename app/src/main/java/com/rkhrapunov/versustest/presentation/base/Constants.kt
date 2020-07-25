@@ -6,4 +6,6 @@ object Constants {
     const val MAX_PERCENTAGE_SYMBOLS = 6
     const val MAX_PERCENTAGE_VALUE = "100"
     const val PERCENTAGE_SYMBOL = "%"
+    const val UNDERSCORE_SYMBOL = '_'
+    const val SPACE_SYMBOL = ' '
 }
