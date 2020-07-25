@@ -6,7 +6,14 @@
     <string name="winner_img_description">winner image</string>
     <string name="list_icon_description">list icon</string>
     <string name="round">round</string>
-    <string name="back_to_quizzes">back to quizzes</string>
+    <string name="back_to_quizzes">OK</string>
     <string name="winner_title">Winner</string>
     <string name="view_stats">View Stats</string>
+    <string name="search_hint">search…</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="sort">Sort</string>
+    <string name="about">About</string>
+    <string name="sort_by_results">Sort by results</string>
+    <string name="sort_by_name">Sort by name</string>
 </resources>

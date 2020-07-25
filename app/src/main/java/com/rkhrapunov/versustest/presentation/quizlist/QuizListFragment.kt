@@ -10,11 +10,13 @@ import com.rkhrapunov.versustest.databinding.FragmentQuizListBinding
 import com.rkhrapunov.versustest.presentation.main.MainActivity
 import org.koin.android.ext.android.inject
 
+@ExperimentalStdlibApi
 class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
 
     private val mPresenter by inject<IQuizListContract.IQuizListPresenter>()
     private var mQuizListState = true
     private var mBinding: FragmentQuizListBinding? = null
+    private var mAdapter: QuizListAdapter<*>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,18 +29,21 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
         binding.quizListRecyclerViewId.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@QuizListFragment.activity)
-            addItemDecoration(CustomItemDecorator())
+            addItemDecoration(CustomItemDecorator(context))
         }
         if (!mQuizListState) {
-            binding.backButton.visibility = View.VISIBLE
+            binding.nextButtonFrameLayoutId.visibility = View.VISIBLE
             binding.presenter = mPresenter
         }
         mBinding = binding
         return binding.root
     }
 
+    fun getAdapter() = mAdapter
+
     override fun setAdapter(quizListAdapter: QuizListAdapter<*>?) {
         mBinding?.let{ it.quizListRecyclerViewId.apply { adapter = quizListAdapter } }
+        mAdapter = quizListAdapter
     }
 
     override fun onBackToQuizzesButtonClicked() {

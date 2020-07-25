@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_window_focused="false" android:drawable="@android:color/transparent" />
+
+    <!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
+    <item
+        android:state_focused="true"
+        android:state_enabled="false"
+        android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/quizListItemSelectionColor" />
+            <corners
+                android:radius="@dimen/quiz_list_item_corner_radius"/>
+        </shape>
+    </item>
+    <item
+        android:state_focused="true"
+        android:state_enabled="false">
+
+        <shape android:shape="rectangle">
+            <solid android:color="@color/quizListItemSelectionColor" />
+            <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
+        </shape>
+
+    </item>
+    <item
+        android:state_focused="true"
+        android:state_pressed="true">
+
+        <shape android:shape="rectangle">
+            <solid android:color="@color/quizListItemSelectionColor" />
+            <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
+        </shape>
+
+    </item>
+
+    <item
+        android:state_focused="false"
+        android:state_pressed="true">
+
+        <shape android:shape="rectangle">
+            <solid android:color="@color/quizListItemSelectionColor" />
+            <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
+        </shape>
+
+    </item>
+
+    <item android:state_focused="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/quizListItemSelectionColor" />
+            <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
+        </shape>
+    </item>
+
+</selector>

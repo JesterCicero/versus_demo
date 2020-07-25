@@ -6,10 +6,8 @@ import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.bumptech.glide.signature.ObjectKey
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import kotlinx.coroutines.Dispatchers
@@ -22,14 +20,10 @@ class ImageLoader : KoinComponent {
 
     fun loadImage(fragment: Fragment, url: String, imgView: ImageView) {
 
-        val requestOptions = RequestOptions()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .signature(ObjectKey(System.currentTimeMillis().toShort()))
-
         Glide.with(fragment)
             .asBitmap()
             .load("http://$url")
-            .apply(requestOptions)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(GlideCustomTarget(imgView))
     }
 

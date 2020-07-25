@@ -10,6 +10,7 @@ import org.koin.core.context.startKoin
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 
+@ExperimentalStdlibApi
 @ExperimentalCoroutinesApi
 @FlowPreview
 class VersusTest : Application() {

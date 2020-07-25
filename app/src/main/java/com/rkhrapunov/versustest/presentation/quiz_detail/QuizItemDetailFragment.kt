@@ -10,12 +10,16 @@ import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.FragmentQuizItemDetailBinding
+import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
+import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
+import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
+@ExperimentalStdlibApi
 class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDetailView {
 
     private val mPresenter by inject<IQuizItemDetailContract.IQuizItemDetailPresenter>()
@@ -149,7 +153,9 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
     override suspend fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState) {
         Timber.d("round: ${renderState.round}")
         mBinding?.let {
-            it.quizItemDetailState = renderState
+            it.round = renderState.round
+            it.firstDescription = renderState.firstContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
+            it.secondDescription = renderState.secondContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             withContext(Dispatchers.IO) {
                 mImageLoader.loadImage(this@QuizItemDetailFragment, renderState.firstContestant.url, it.firstImageId)
                 mImageLoader.loadImage(this@QuizItemDetailFragment, renderState.secondContestant.url, it.secondImageId)
@@ -161,7 +167,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val ANIM_DURATION_MS = 750L
         private const val SCALE_FACTOR = 0.2F
         private const val CHOSEN_CONTESTANT_TIMEOUT = 2000L
-        private const val NEXT_ROUND_TIMEOUT = 20L
+        private const val NEXT_ROUND_TIMEOUT = 30L
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.8F
     }
 }

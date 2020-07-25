@@ -153,13 +153,13 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         response.body()?.let {
             val sortedQuizList: List<IContestantsInfo> = it.sortedBy { element -> element.name }
             if (mContestantsCache.isQuizCacheEmpty(mCurrentQuiz)) {
-                mContestantsCache.updateQuizInfoCache(sortedQuizList)
+                mContestantsCache.updateQuizInfoCache(sortedQuizList, mCurrentQuiz)
                 startQuiz(sortedQuizList)
             } else {
                 mContestantsCache.quizCache?.let { quizCacheList ->
                     if (quizCacheList != sortedQuizList) {
                         Timber.d("quiz was updated from server")
-                        mContestantsCache.updateQuizInfoCache(sortedQuizList)
+                        mContestantsCache.updateQuizInfoCache(sortedQuizList, mCurrentQuiz)
                         getQuizList()
                     }
                 }
@@ -223,7 +223,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         response.body()?.let {
             Timber.d("onGetQuizStatsApiSuccess(): quiz stats size: ${it.size}")
             mQuizStatsUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mRenderUiChannel.send(RenderState.StatsListState(it))
+                mRenderUiChannel.send(RenderState.StatsListState(it.sortedByDescending { element -> element.percentage }))
             }
         }
     }

@@ -7,11 +7,17 @@
             <import type="com.rkhrapunov.core.domain.RenderState.QuizItemDetailState"/>
             <import type="com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter"/>
             <variable
-                name="quizItemDetailState"
-                type="QuizItemDetailState" />
-            <variable
                 name="presenter"
                 type="IQuizItemDetailPresenter" />
+            <variable
+                name="round"
+                type="String" />
+            <variable
+                name="firstDescription"
+                type="String" />
+            <variable
+                name="secondDescription"
+                type="String" />
         </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +27,29 @@
         android:background="@color/backgroundMainColor"
         tools:context=".presentation.main.MainActivity">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_button_frame_layout_id"
+            android:background="@drawable/back_button_selector"
+            android:layout_marginStart="@dimen/back_button_margin_start"
+            android:layout_marginLeft="@dimen/back_button_margin_start"
+            android:onClick="onBackButtonClick"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:scaleType="centerCrop">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/back_button_width_height"
+                android:layout_height="@dimen/back_button_width_height"
+                android:paddingTop="@dimen/back_button_padding_top_bottom"
+                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_gravity="center"
+                android:id="@+id/nav_back_btn_icon_id"
+                android:src="@drawable/ic_back_button"/>
+
+        </FrameLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -29,7 +58,7 @@
                 app:layout_constraintBottom_toTopOf="@id/first_img_description"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{quizItemDetailState.round}"
+                android:text="@{round}"
                 android:textColor="@color/quizListItemTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="@string/round"/>
@@ -38,8 +67,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/first_img_description"
-                android:text="@{quizItemDetailState.firstContestant.name}"
-                android:textColor="@color/contestantsTitleTextColor"
+                android:text="@{firstDescription}"
+                android:textColor="@color/quizListItemTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintTop_toBottomOf="@id/round_description"
                 app:layout_constraintBottom_toTopOf="@id/first_img"
@@ -58,10 +87,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
                 <ImageView
-                    android:layout_width="@dimen/contestant_img_width_height"
-                    android:layout_height="@dimen/contestant_img_width_height"
-                    android:scaleType="fitCenter"
+                    android:layout_width="@dimen/contestant_img_width"
+                    android:layout_height="@dimen/contestant_img_height"
                     android:id="@+id/first_image_id"
+                    android:scaleType="fitXY"
                     android:src="@drawable/empty_drawable"
                     android:contentDescription="@string/first_img_description"
                     tools:src="@drawable/charlize_theron"/>
@@ -91,10 +120,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
                 <ImageView
-                    android:layout_width="@dimen/contestant_img_width_height"
-                    android:layout_height="@dimen/contestant_img_width_height"
+                    android:layout_width="@dimen/contestant_img_width"
+                    android:layout_height="@dimen/contestant_img_height"
                     android:id="@+id/second_image_id"
-                    android:scaleType="fitCenter"
+                    android:scaleType="fitXY"
                     android:src="@drawable/empty_drawable"
                     android:contentDescription="@string/second_img_description"
                     tools:src="@drawable/jennifer_lawrence"/>
@@ -108,8 +137,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{quizItemDetailState.secondContestant.name}"
-                android:textColor="@color/contestantsTitleTextColor"
+                android:text="@{secondDescription}"
+                android:textColor="@color/quizListItemTextColor"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 tools:text="@string/second_img_description"/>
 

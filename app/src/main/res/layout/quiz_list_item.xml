@@ -7,7 +7,8 @@
         <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener"/>
         <import type="android.view.View"/>
         <import type="com.rkhrapunov.versustest.presentation.base.Constants"/>
-        <variable name="itemData" type="String" />
+        <variable name="itemDataFake" type="String" />
+        <variable name="itemDataReal" type="String" />
         <variable name="itemDataDetail" type="String" />
         <variable name="itemClickListener" type="IItemClickListener" />
         <variable name="quizList" type="Boolean" />
@@ -17,28 +18,29 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/quiz_list_item_parent_height"
         android:background="@drawable/custom_list_selector"
-        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemData)}">
+        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
 
         <ImageView
-            android:layout_width="0dp"
+            android:layout_width="@dimen/quiz_list_icon_height"
             android:layout_height="@dimen/quiz_list_icon_height"
+            android:layout_marginStart="@dimen/item_icon_margin_start"
+            android:layout_marginLeft="@dimen/item_icon_margin_start"
             android:id="@+id/small_img"
             android:src="@drawable/empty_drawable"
             android:contentDescription="@string/list_icon_description"
-            app:layout_constraintHorizontal_weight="@integer/quiz_list_icon_horizontal_weight"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/item_name" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{itemData}"
+            android:layout_marginStart="@dimen/item_description_margin_start"
+            android:layout_marginLeft="@dimen/item_description_margin_start"
+            android:text="@{itemDataFake}"
             android:singleLine="true"
             android:id="@+id/item_name"
-            android:ellipsize="end"
-            app:layout_constraintHorizontal_weight="@integer/quiz_list_item_description_horizontal_weight"
+            android:ellipsize="marquee"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/small_img"
@@ -48,16 +50,16 @@
             tools:text="Test Description"/>
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:id="@+id/item_detail"
             android:ellipsize="end"
             android:gravity="center"
-            app:layout_constraintHorizontal_weight="@integer/quiz_list_percentage_horizontal_weight"
+            android:layout_marginEnd="@dimen/item_percentage_margin_end"
+            android:layout_marginRight="@dimen/item_percentage_margin_end"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/item_name"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/quizListItemTextColor"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"

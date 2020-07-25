@@ -60,11 +60,11 @@ class ContestantsCache : KoinComponent {
 
     fun tryToGetQuizInfoCache(quizTitle: String): List<IContestantsInfo>? {
         Timber.d("tryToGetQuizInfoCache()")
-        val currentQuizTitle = mCurrentQuizTitle
-        mCurrentQuizTitle = quizTitle
         return quizCache?.let {
-            if (currentQuizTitle.isNotEmpty() && currentQuizTitle != quizTitle) { return@let null }
+            Timber.d("currentQuizTitle: $mCurrentQuizTitle, quizTitle: $quizTitle")
+            if (mCurrentQuizTitle.isNotEmpty() && mCurrentQuizTitle != quizTitle) { return@let null }
             Timber.d("tryToGetQuizInfoCache(): cache from memory")
+            mCurrentQuizTitle = quizTitle
             it
         } ?: run {
             mPreferences.getQuiz(quizTitle)?.let {
@@ -76,13 +76,15 @@ class ContestantsCache : KoinComponent {
                 if (contestantsList.isEmpty()) { return@let null }
                 Timber.d("tryToGetQuizInfoCache(): cache from preferences")
                 quizCache = contestantsList
+                mCurrentQuizTitle = quizTitle
                 contestantsList
             }
         }
     }
 
-    fun updateQuizInfoCache(updatedQuizInfoCache: List<IContestantsInfo>) {
+    fun updateQuizInfoCache(updatedQuizInfoCache: List<IContestantsInfo>, currentQuiz: String) {
         Timber.d("updateQuizInfoCache()")
+        mCurrentQuizTitle = currentQuiz
         quizCache = updatedQuizInfoCache
         mPreferences.saveQuiz(mCurrentQuizTitle, updatedQuizInfoCache.map { "${it.name};${it.url}" }.toSet())
     }

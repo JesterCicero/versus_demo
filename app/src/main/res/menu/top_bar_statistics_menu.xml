@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/sort_by_results"
+        android:title="@string/sort_by_results">
+        <menu>
+            <item android:id="@+id/ascending_results"
+                android:title="@string/ascending" />
+            <item android:id="@+id/descending_results"
+                android:title="@string/descending" />
+        </menu>
+    </item>
+    <item android:id="@+id/sort_by_name"
+        android:title="@string/sort_by_name">
+        <menu>
+            <item android:id="@+id/ascending_name"
+                android:title="@string/ascending" />
+            <item android:id="@+id/descending_name"
+                android:title="@string/descending" />
+        </menu>
+    </item>
+</menu>
