@@ -35,7 +35,7 @@ class RestApiHelper {
     }
 
     companion object {
-        private const val BASE_URL = "http://192.168.0.12"
+        private const val BASE_URL = "https://185.177.114.72"
     }
 
     init {

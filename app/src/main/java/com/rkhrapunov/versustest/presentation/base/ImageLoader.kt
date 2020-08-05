@@ -13,16 +13,17 @@ import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import kotlinx.coroutines.Dispatchers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import timber.log.Timber
 
 class ImageLoader : KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
 
     fun loadImage(fragment: Fragment, url: String, imgView: ImageView) {
-
+        Timber.d("url: $url")
         Glide.with(fragment)
             .asBitmap()
-            .load("http://$url")
+            .load("https://$url")
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(GlideCustomTarget(imgView))
     }
