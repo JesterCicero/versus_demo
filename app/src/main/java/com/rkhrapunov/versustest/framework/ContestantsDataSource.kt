@@ -41,6 +41,8 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mQuizListUpdateUiJob: Job? = null
     private var mQuizStatsUpdateUiJob: Job? = null
     private var mPostWinnerSuccessUpdateUiJob: Job? = null
+    private var mPageIndicatorText: String = EMPTY_STRING
+    private var mCurrentPagePosition: Int = 0
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
@@ -133,6 +135,18 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         clearData()
     }
 
+    override fun savePageIndicatorText(pageIndicatorText: String) {
+        mPageIndicatorText = pageIndicatorText
+    }
+
+    override fun getPageIndicatorText() = mPageIndicatorText
+
+    override fun saveCurrentPagePosition(currentPosition: Int) {
+        mCurrentPagePosition = currentPosition
+    }
+
+    override fun getCurrentPagePosition() = mCurrentPagePosition
+
     private fun clearData() {
         mInterimContestants.clear()
         mCurrentContestants = emptyList()
@@ -223,7 +237,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         response.body()?.let {
             Timber.d("onGetQuizStatsApiSuccess(): quiz stats size: ${it.size}")
             mQuizStatsUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mRenderUiChannel.send(RenderState.StatsListState(it.sortedByDescending { element -> element.percentage }))
+                mRenderUiChannel.send(RenderState.StatsListState(it.sortedByDescending { element -> element.percentage.toFloat() }))
             }
         }
     }

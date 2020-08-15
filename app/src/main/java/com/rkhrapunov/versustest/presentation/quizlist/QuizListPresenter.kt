@@ -1,5 +1,7 @@
 package com.rkhrapunov.versustest.presentation.quizlist
 
+import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.data.IContestantsStatsInfo
 import com.rkhrapunov.core.data.IQuizShortInfo
@@ -35,18 +37,15 @@ class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
     private var mAllContestants = emptyList<IQuizShortInfo>()
     private var mAllContestantsStats = emptyList<IContestantsStatsInfo>()
 
-    override fun attachView(view: IQuizListContract.IQuizListView, viewLifecycle: Lifecycle) {
-        super.attachView(view, viewLifecycle)
+    override fun attachView(view: IQuizListContract.IQuizListView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
+        super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .filter {
-                    it is RenderState.QuizListState && mAllContestants != it.allContestants
-                            || it is RenderState.StatsListState && mAllContestantsStats != it.statsContestants
-                }
+                .filter { it is RenderState.StatsListState && mAllContestantsStats != it.statsContestants }
                 .collect { onCollectRenderState(it) }
         }
-        val shouldShowQuizList = mView?.shouldShowQuizList() ?: true
+        val shouldShowQuizList = mView?.shouldShowQuizList() ?: false
         Timber.d("attachView(): shouldShowQuizList=$shouldShowQuizList")
         if (shouldShowQuizList) {
             mGetQuizListInteractor.getQuizList()
@@ -69,14 +68,14 @@ class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
         if (renderState is RenderState.QuizListState) {
             mAllContestants = renderState.allContestants
             mView?.let {
-                val adapter = QuizListAdapter<IQuizShortInfo>(this@QuizListPresenter, it)
+                val adapter = QuizListAdapter<IQuizShortInfo>(this@QuizListPresenter, it as Fragment)
                 it.setAdapter(adapter)
                 adapter.updateData(mAllContestants)
             }
         } else if (renderState is RenderState.StatsListState) {
             mAllContestantsStats = renderState.statsContestants
             mView?.let {
-                val adapter = QuizListAdapter<IContestantsStatsInfo>(this@QuizListPresenter, it)
+                val adapter = QuizListAdapter<IContestantsStatsInfo>(this@QuizListPresenter, it as Fragment, false)
                 it.setAdapter(adapter)
                 adapter.updateData(mAllContestantsStats)
             }

@@ -1,8 +1,9 @@
 package com.rkhrapunov.versustest.presentation.base
 
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 
 interface IBasePresenter<V : IBaseView> {
-    fun attachView(view: V, viewLifecycle: Lifecycle)
+    fun attachView(view: V, viewLifecycle: Lifecycle, savedInstanceState: Bundle? = null)
     fun onDestroy() {}
 }

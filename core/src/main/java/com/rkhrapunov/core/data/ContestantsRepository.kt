@@ -18,4 +18,8 @@ class ContestantsRepository : KoinComponent {
     fun getQuizItemDetail(itemData: String) = mContestantsDataSource.getQuizItemDetail(itemData)
     fun getStats() = mContestantsDataSource.getStats()
     fun cancelQuiz() = mContestantsDataSource.cancelQuiz()
+    fun savePageIndicatorText(pageIndicatorText: String) = mContestantsDataSource.savePageIndicatorText(pageIndicatorText)
+    fun getPageIndicatorText() = mContestantsDataSource.getPageIndicatorText()
+    fun saveCurrentPagePosition(currentPosition: Int) = mContestantsDataSource.saveCurrentPagePosition(currentPosition)
+    fun getCurrentPagePosition() = mContestantsDataSource.getCurrentPagePosition()
 }

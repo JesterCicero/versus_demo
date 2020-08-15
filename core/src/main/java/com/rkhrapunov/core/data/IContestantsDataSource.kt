@@ -14,4 +14,8 @@ interface IContestantsDataSource {
     fun getStats()
     fun sendWinner(winner: String)
     fun cancelQuiz()
+    fun savePageIndicatorText(pageIndicatorText: String)
+    fun getPageIndicatorText(): String
+    fun saveCurrentPagePosition(currentPosition: Int)
+    fun getCurrentPagePosition(): Int
 }
