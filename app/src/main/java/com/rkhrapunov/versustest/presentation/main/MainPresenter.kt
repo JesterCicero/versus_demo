@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.main
 
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.interactors.CancelQuizInteractor
@@ -27,8 +28,8 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private var mCurrentState: IRenderState? = null
 
-    override fun attachView(view: IMainContract.IMainView, viewLifecycle: Lifecycle) {
-        super.attachView(view, viewLifecycle)
+    override fun attachView(view: IMainContract.IMainView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
+        super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()

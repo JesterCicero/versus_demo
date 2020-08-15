@@ -1,18 +1,21 @@
 package com.rkhrapunov.versustest.presentation.quizlist
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.rkhrapunov.core.data.IContestantsStatsInfo
 import com.rkhrapunov.core.data.IQuizShortInfo
 import com.rkhrapunov.versustest.databinding.QuizListItemBinding
+import com.rkhrapunov.versustest.databinding.QuizListPagerItemBinding
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
+import com.rkhrapunov.versustest.presentation.base.weak
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
@@ -23,11 +26,18 @@ import java.util.Locale
 @ExperimentalStdlibApi
 @Suppress("UNCHECKED_CAST")
 class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
-                         private val mQuizListView: IQuizListContract.IQuizListView)
+                         fragment: Fragment,
+                         quizList: Boolean = true)
     : RecyclerView.Adapter<QuizListAdapter.QuizListViewHolder>() {
 
     private var mData = mutableListOf<T>()
     private var mCopyData = mutableListOf<T>()
+    private var mFragment: Fragment? by weak()
+    private var mQuizList = quizList
+
+    init {
+        mFragment = fragment
+    }
 
     fun updateData(data: List<T>) {
         Timber.d("data size: {${data.size}}")
@@ -46,7 +56,7 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
                 val list = mData as? MutableList<IContestantsStatsInfo>
                 if (sortByResults) {
                     list?.let { contestantsStatsInfo ->
-                        if (ascending) contestantsStatsInfo.sortBy { it.percentage } else contestantsStatsInfo.sortByDescending { it.percentage }
+                        if (ascending) contestantsStatsInfo.sortBy { it.percentage.toFloat() } else contestantsStatsInfo.sortByDescending { it.percentage.toFloat() }
                     }
                 } else {
                     list?.let { contestantsStatsInfo ->
@@ -89,58 +99,75 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuizListViewHolder(
-        QuizListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), mItemClickListener)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = if (mQuizList) QuizListViewHolder(
+        QuizListPagerItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false), mItemClickListener) else QuizListViewHolder(
+        QuizListItemBinding.inflate(
+            LayoutInflater.from(parent.context), parent, false), mItemClickListener)
 
     override fun getItemCount() = mData.size
 
-    override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) = holder.bind(position, mData, mQuizListView as? Fragment)
+    override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) = holder.bind(position, mData, mFragment)
 
     @ExperimentalStdlibApi
-    class QuizListViewHolder(private val mRecognitionDialogItemBinding: QuizListItemBinding,
+    class QuizListViewHolder(root: View,
                              private val mItemClickListener: IItemClickListener)
-        : RecyclerView.ViewHolder(mRecognitionDialogItemBinding.root), KoinComponent {
+        : RecyclerView.ViewHolder(root), KoinComponent {
 
         private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
         private val mImageLoader by inject<ImageLoader>()
+        private lateinit var mQuizListPagerItemBinding: QuizListPagerItemBinding
+        private lateinit var mQuizListItemBinding: QuizListItemBinding
 
-        fun bind(position: Int, data: List<*>, fragment: Fragment?) {
-            val itemData = when {
-                data[position] is IQuizShortInfo -> onBindQuizShortInfo(position, data, fragment)
-                data[position] is IContestantsStatsInfo -> onBindContestantsStatsInfo(position, data, fragment)
-                else -> EMPTY_STRING
-            }
-            Timber.d("itemData is: $itemData")
-            mRecognitionDialogItemBinding.itemName.isSelected = true
-            mRecognitionDialogItemBinding.itemDataReal = itemData
-            mRecognitionDialogItemBinding.itemDataFake = itemData.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
-            mRecognitionDialogItemBinding.executePendingBindings()
+        constructor(quizListPagerItemBinding: QuizListPagerItemBinding,
+                    itemClickListener: IItemClickListener) : this(quizListPagerItemBinding.root, itemClickListener) {
+            mQuizListPagerItemBinding = quizListPagerItemBinding
         }
 
-        private fun onBindQuizShortInfo(position: Int, data: List<*>, fragment: Fragment?): String {
-            mRecognitionDialogItemBinding.itemClickListener = mItemClickListener
-            mRecognitionDialogItemBinding.quizList = true
-            return (data[position] as? IQuizShortInfo)?.let {
+        constructor(quizListItemBinding: QuizListItemBinding, itemClickListener: IItemClickListener)
+                : this(quizListItemBinding.root, itemClickListener) {
+            mQuizListItemBinding = quizListItemBinding
+        }
+
+        fun bind(position: Int, data: List<*>, fragment: Fragment?) {
+           when {
+                data[position] is IQuizShortInfo -> onBindQuizShortInfo(position, data, fragment)
+                data[position] is IContestantsStatsInfo -> onBindContestantsStatsInfo(position, data, fragment)
+                else -> Timber.w("Unknown info")
+            }
+        }
+
+        private fun onBindQuizShortInfo(position: Int, data: List<*>, fragment: Fragment?) {
+            mQuizListPagerItemBinding.itemClickListener = mItemClickListener
+            mQuizListPagerItemBinding.quizList = true
+            val itemData = (data[position] as? IQuizShortInfo)?.let {
                 loadImage(fragment, it.url)
                 it.title
             } ?: EMPTY_STRING
+            mQuizListPagerItemBinding.itemName.isSelected = true
+            mQuizListPagerItemBinding.itemDataReal = itemData
+            mQuizListPagerItemBinding.itemDataFake = itemData.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
+            mQuizListPagerItemBinding.executePendingBindings()
         }
 
-        private fun onBindContestantsStatsInfo(position: Int, data: List<*>, fragment: Fragment?): String {
-            mRecognitionDialogItemBinding.quizList = false
-            return (data[position] as? IContestantsStatsInfo)?.let {
-                mRecognitionDialogItemBinding.itemDataDetail = it.percentage
-                loadImage(fragment, it.minUrl)
+        private fun onBindContestantsStatsInfo(position: Int, data: List<*>, fragment: Fragment?) {
+            mQuizListItemBinding.quizList = false
+            val itemData = (data[position] as? IContestantsStatsInfo)?.let {
+                mQuizListItemBinding.itemDataDetail = it.percentage
+                loadImage(fragment, it.minUrl, false)
                 it.name
             } ?: EMPTY_STRING
+            mQuizListItemBinding.itemName.isSelected = true
+            mQuizListItemBinding.itemDataReal = itemData
+            mQuizListItemBinding.itemDataFake = itemData.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
+            mQuizListItemBinding.executePendingBindings()
         }
 
-        private fun loadImage(fragment: Fragment?, url: String) {
+        private fun loadImage(fragment: Fragment?, url: String, quizList: Boolean = true) {
             fragment?.let {
                 mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
-
-                        mImageLoader.loadImage(it, url, mRecognitionDialogItemBinding.smallImg)
+                        mImageLoader.loadImage(it, url, if (quizList) mQuizListPagerItemBinding.smallImg else mQuizListItemBinding.smallImg)
                     }
                 }
             }

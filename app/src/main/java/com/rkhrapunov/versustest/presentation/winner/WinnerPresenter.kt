@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.winner
 
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
@@ -31,8 +32,8 @@ class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
     private var mJob: Job? = null
     private var mCurrentState: IRenderState? = null
 
-    override fun attachView(view: IWinnerContract.IWinnerView, viewLifecycle: Lifecycle) {
-        super.attachView(view, viewLifecycle)
+    override fun attachView(view: IWinnerContract.IWinnerView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
+        super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()

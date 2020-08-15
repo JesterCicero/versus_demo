@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.databinding.FragmentWinnerBinding
+import com.rkhrapunov.versustest.presentation.base.Constants
+import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
+import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +53,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
 
     private suspend fun renderWinner(name: String, url: String) {
         mBinding?.let {
-            it.name = name.capitalizeWords()
+            it.name = name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             it.presenter = mPresenter
             withContext(Dispatchers.IO) { mImageLoader.loadImage(this@WinnerFragment, url, it.winnerImgId) }
         }

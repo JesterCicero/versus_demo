@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener"/>
+        <import type="android.view.View"/>
+        <import type="com.rkhrapunov.versustest.presentation.base.Constants"/>
+        <variable name="itemDataFake" type="String" />
+        <variable name="itemDataReal" type="String" />
+        <variable name="itemDataDetail" type="String" />
+        <variable name="itemClickListener" type="IItemClickListener" />
+        <variable name="quizList" type="Boolean" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/pager_item_parent_height"
+        android:layout_margin="@dimen/pager_item_parent_margin"
+        android:background="@drawable/custom_list_selector"
+        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
+
+        <ImageView
+            android:layout_width="@dimen/pager_item_icon_width"
+            android:layout_height="@dimen/pager_item_icon_height"
+            android:layout_marginTop="@dimen/pager_item_parent_margin"
+            android:id="@+id/small_img"
+            android:src="@drawable/empty_drawable"
+            android:contentDescription="@string/list_icon_description"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_description_margin_start"
+            android:layout_marginLeft="@dimen/item_description_margin_start"
+            android:layout_marginEnd="@dimen/item_description_margin_start"
+            android:layout_marginRight="@dimen/item_description_margin_start"
+            android:layout_marginBottom="@dimen/pager_item_parent_margin"
+            android:gravity="center"
+            android:text="@{itemDataFake}"
+            android:id="@+id/item_name"
+            android:ellipsize="marquee"
+            android:maxLines="@integer/pager_item_max_lines_text"
+            app:layout_constraintTop_toBottomOf="@id/small_img"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/quizListItemTextColor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:text="Test Description"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

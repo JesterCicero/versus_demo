@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.base
 
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -10,7 +11,7 @@ abstract class BasePresenter<V : IBaseView> : IBaseStatefulPresenter<V>, Lifecyc
     private var mViewLifecycle: Lifecycle? = null
     protected var mView: V? by weak()
 
-    override fun attachView(view: V, viewLifecycle: Lifecycle) {
+    override fun attachView(view: V, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         mView = view
         viewLifecycle.addObserver(this)
         mViewLifecycle = viewLifecycle

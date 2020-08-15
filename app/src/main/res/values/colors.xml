@@ -11,4 +11,6 @@
     <color name="mainColor">#000</color>
     <color name="quizMenuItemSelectionColor">#2f2c2c</color>
     <color name="yellowButtonPressedColor">#ffe785</color>
+    <color name="scrollBarColor">#292525</color>
+    <color name="pagerBackgroundColor">#131010</color>
 </resources>

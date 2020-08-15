@@ -15,6 +15,10 @@ import com.rkhrapunov.versustest.presentation.main.IMainContract
 import com.rkhrapunov.versustest.presentation.main.MainPresenter
 import com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract
 import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailPresenter
+import com.rkhrapunov.versustest.presentation.quiz_page.IQuizPageContract
+import com.rkhrapunov.versustest.presentation.quiz_page.QuizPagePresenter
+import com.rkhrapunov.versustest.presentation.quiz_pager.IQuizPagerContract
+import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerPresenter
 import com.rkhrapunov.versustest.presentation.quizlist.IQuizListContract
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListPresenter
 import com.rkhrapunov.versustest.presentation.winner.IWinnerContract
@@ -50,8 +54,11 @@ val applicationModule = module(override = true) {
     factory { ResetInteractor() }
     factory { GetStatsInteractor() }
     factory { CancelQuizInteractor() }
+    factory { PageIndicatorTextInteractor() }
     factory<IMainContract.IMainPresenter> { MainPresenter() }
     factory<IQuizListContract.IQuizListPresenter> { QuizListPresenter() }
+    factory<IQuizPagerContract.IQuizPagerPresenter> { QuizPagerPresenter() }
+    factory<IQuizPageContract.IQuizPagePresenter> { QuizPagePresenter() }
     factory<IQuizItemDetailContract.IQuizItemDetailPresenter> { QuizItemDetailPresenter() }
     factory<IWinnerContract.IWinnerPresenter> { WinnerPresenter() }
 }

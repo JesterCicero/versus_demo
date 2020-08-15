@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.quiz_detail
 
+import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
@@ -30,8 +31,8 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     private var mCurrentState: IRenderState? = null
     private var mQuizItemStateUpdated = false
 
-    override fun attachView(view: IQuizItemDetailContract.IQuizItemDetailView, viewLifecycle: Lifecycle) {
-        super.attachView(view, viewLifecycle)
+    override fun attachView(view: IQuizItemDetailContract.IQuizItemDetailView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
+        super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
