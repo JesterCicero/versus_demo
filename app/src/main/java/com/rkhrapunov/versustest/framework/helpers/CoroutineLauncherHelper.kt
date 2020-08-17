@@ -24,7 +24,7 @@ class CoroutineLauncherHelper : KoinComponent {
     private val coroutineExceptionHandler: CoroutineExceptionHandler =
         CoroutineExceptionHandler { _, throwable ->
             coroutineScope.launch(Dispatchers.Main) { }
-            GlobalScope.launch { println("Caught $throwable") }
+            GlobalScope.launch { println("Caught ${throwable.printStackTrace()}") }
         }
 
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob + coroutineExceptionHandler)

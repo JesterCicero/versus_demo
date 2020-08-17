@@ -164,10 +164,12 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
         }
 
         private fun loadImage(fragment: Fragment?, url: String, quizList: Boolean = true) {
-            fragment?.let {
+            fragment?.let { nonNullableFragment ->
                 mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
-                        mImageLoader.loadImage(it, url, if (quizList) mQuizListPagerItemBinding.smallImg else mQuizListItemBinding.smallImg)
+                        fragment.activity?.let {
+                            mImageLoader.loadImage(nonNullableFragment, url, if (quizList) mQuizListPagerItemBinding.smallImg else mQuizListItemBinding.smallImg)
+                        }
                     }
                 }
             }

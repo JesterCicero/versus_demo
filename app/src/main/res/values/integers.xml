@@ -10,6 +10,8 @@
     <integer name="top_bar_back_button_space_weight">3</integer>
     <integer name="search_view_weight">64</integer>
     <integer name="view_pager_vertical_weight">93</integer>
+    <integer name="view_pager_land_vertical_weight">90</integer>
     <integer name="page_indicator_vertical_weight">7</integer>
+    <integer name="page_indicator_land_vertical_weight">10</integer>
     <integer name="pager_item_max_lines_text">2</integer>
 </resources>
