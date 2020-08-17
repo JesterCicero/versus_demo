@@ -52,10 +52,14 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
     }
 
     private suspend fun renderWinner(name: String, url: String) {
-        mBinding?.let {
-            it.name = name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
-            it.presenter = mPresenter
-            withContext(Dispatchers.IO) { mImageLoader.loadImage(this@WinnerFragment, url, it.winnerImgId) }
+        mBinding?.let {binding ->
+            binding.name = name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
+            binding.presenter = mPresenter
+            withContext(Dispatchers.IO) {
+                activity?.let {
+                    mImageLoader.loadImage(this@WinnerFragment, url, binding.winnerImgId)
+                }
+            }
         }
     }
 }

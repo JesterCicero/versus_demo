@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.quiz_page
 
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,7 +36,9 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
         val binding = QuizPageItemBinding.inflate(inflater, container, false)
         binding.quizGridRecyclerViewId.apply {
             setHasFixedSize(true)
-            layoutManager = GridLayoutManager(this@QuizPageFragment.activity, COLUMNS_NUMBER) //LinearLayoutManager(this@QuizPageFragment.activity)
+            val columnsNumber = if (inflater.context.resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_COLUMNS_NUMBER else LANDSCAPE_COLUMNS_NUMBER
+            Timber.d("onCreateView(): mColumnsNumber=$columnsNumber")
+            layoutManager = GridLayoutManager(this@QuizPageFragment.activity, columnsNumber)
             val quizListAdapter = QuizListAdapter<IQuizShortInfo>(mPresenter as IItemClickListener, this@QuizPageFragment)
             adapter = quizListAdapter
             quizListAdapter.updateData(mData)
@@ -45,6 +48,7 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
     }
 
     companion object {
-        private const val COLUMNS_NUMBER = 2
+        private const val PORTRAIT_COLUMNS_NUMBER = 2
+        private const val LANDSCAPE_COLUMNS_NUMBER = 3
     }
 }

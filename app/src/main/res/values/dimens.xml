@@ -31,4 +31,7 @@
     <dimen name="pager_item_parent_margin">8dp</dimen>
     <dimen name="pager_item_icon_width">120dp</dimen>
     <dimen name="pager_item_icon_height">80dp</dimen>
+    <dimen name="quiz_item_portrait_detail_item_margin_bottom">16dp</dimen>
+    <dimen name="quiz_item_land_detail_item_margin_bottom">24dp</dimen>
+    <dimen name="quiz_item_land_description_margin_top">16dp</dimen>
 </resources>

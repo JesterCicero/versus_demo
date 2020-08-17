@@ -1,5 +1,7 @@
 package com.rkhrapunov.versustest.presentation.quiz_page
 
+import android.content.Context
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -7,29 +9,30 @@ import com.rkhrapunov.core.data.IQuizShortInfo
 import timber.log.Timber
 
 @ExperimentalStdlibApi
-class ViewPagerFragmentStateAdapter(data: List<IQuizShortInfo>,
+class ViewPagerFragmentStateAdapter(context: Context,
+                                    data: List<IQuizShortInfo>,
                                     fm: FragmentManager,
                                     lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
 
     private var mData = data
 
+    private val mPageItemsNumber = if (context.resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_PAGE_ITEMS_NUMBER else LANDSCAPE_PAGE_ITEMS_NUMBER
+
     override fun getItemCount() = getTotalPages()
 
     override fun createFragment(position: Int): QuizPageFragment {
-        Timber.d("createFragment(): position=$position")
         val pagePosition = position + 1
-        val calculatedEndIndex = PAGE_ITEMS_NUMBER * pagePosition
-        Timber.d("createFragment(): calculatedEndIndex=$calculatedEndIndex")
+        val calculatedEndIndex = mPageItemsNumber * pagePosition
         val dataSize = mData.size
-        Timber.d("createFragment(): dataSize=$dataSize")
+        Timber.d("createFragment(): position=$position, pageItemsNumber=$mPageItemsNumber, calculatedEndIndex=$calculatedEndIndex, dataSize=$dataSize")
         val endIndex = if (calculatedEndIndex <= dataSize) calculatedEndIndex else dataSize
-        val remainder = dataSize % PAGE_ITEMS_NUMBER
-        val fullPagesNumber = dataSize / PAGE_ITEMS_NUMBER
+        val remainder = dataSize % mPageItemsNumber
+        val fullPagesNumber = dataSize / mPageItemsNumber
         val totalPages = fullPagesNumber + if (remainder == 0) 0 else 1
         val startIndex = when {
-            endIndex < PAGE_ITEMS_NUMBER -> 0
+            endIndex < mPageItemsNumber -> 0
             remainder > 0 && pagePosition == totalPages -> endIndex - remainder
-            else -> endIndex - PAGE_ITEMS_NUMBER
+            else -> endIndex - mPageItemsNumber
         }
         Timber.d("createFragment(): startIndex=$startIndex, endIndex=$endIndex")
         val quizPageFragment = QuizPageFragment()
@@ -40,8 +43,8 @@ class ViewPagerFragmentStateAdapter(data: List<IQuizShortInfo>,
     private fun getTotalPages(): Int {
         var resultsPageNumber = 0
         val dataSize = mData.size
-        val fullPagesNumber = dataSize / PAGE_ITEMS_NUMBER
-        if (fullPagesNumber == 0 || dataSize % PAGE_ITEMS_NUMBER > 0) {
+        val fullPagesNumber = dataSize / mPageItemsNumber
+        if (fullPagesNumber == 0 || dataSize % mPageItemsNumber > 0) {
             ++resultsPageNumber
         }
         resultsPageNumber += fullPagesNumber
@@ -50,6 +53,7 @@ class ViewPagerFragmentStateAdapter(data: List<IQuizShortInfo>,
     }
 
     companion object {
-        private const val PAGE_ITEMS_NUMBER = 10
+        private const val PORTRAIT_PAGE_ITEMS_NUMBER = 10
+        private const val LANDSCAPE_PAGE_ITEMS_NUMBER = 12
     }
 }

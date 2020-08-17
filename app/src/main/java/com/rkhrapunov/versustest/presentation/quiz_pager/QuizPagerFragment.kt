@@ -38,16 +38,18 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
 
     override fun renderQuizListState(renderState: RenderState.QuizListState) {
         mBinding?.let { binding ->
-            fragmentManager?.let {
-                val adapter = ViewPagerFragmentStateAdapter(renderState.allContestants, it, lifecycle)
-                binding.pager.adapter = adapter
-                mPager = binding.pager
-                mPager?.setCurrentItem(mPresenter.getCurrentPagePosition(), false)
-                val pageIndicatorText = mPresenter.getPageIndicatorText()
-                if (binding.pageIndicator.text != pageIndicatorText) {
-                    binding.pageIndicator.text = pageIndicatorText
+            fragmentManager?.let { fm ->
+                activity?.let {
+                    val adapter = ViewPagerFragmentStateAdapter(it, renderState.allContestants, fm, lifecycle)
+                    binding.pager.adapter = adapter
+                    mPager = binding.pager
+                    mPager?.setCurrentItem(mPresenter.getCurrentPagePosition(), false)
+                    val pageIndicatorText = mPresenter.getPageIndicatorText()
+                    if (binding.pageIndicator.text != pageIndicatorText) {
+                        binding.pageIndicator.text = pageIndicatorText
+                    }
+                    registerOnPageChangeCallback(binding, adapter.itemCount)
                 }
-                registerOnPageChangeCallback(binding, adapter.itemCount)
             }
         }
     }
