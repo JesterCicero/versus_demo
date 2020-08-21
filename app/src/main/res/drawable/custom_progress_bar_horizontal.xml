@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@android:id/background">
+        <shape>
+            <padding
+                android:bottom="@dimen/stats_progress_bar_shape_background_padding"
+                android:top="@dimen/stats_progress_bar_shape_background_padding"
+                android:left="@dimen/stats_progress_bar_shape_background_padding"
+                android:right="@dimen/stats_progress_bar_shape_background_padding"/>
+            <corners
+                android:radius="@dimen/stats_progress_bar_shape_background_corners_radius" />
+            <gradient
+                android:startColor="@color/statsProgressBarGradientColor"
+                android:centerColor="@color/statsProgressBarGradientColor"
+                android:centerY="@integer/stats_progress_bar_gradient_center_y"
+                android:endColor="@color/statsProgressBarGradientColor"
+                android:angle="@integer/stats_progress_bar_background_gradient_angle" />
+        </shape>
+    </item>
+    <item
+        android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners
+                    android:radius="@dimen/stats_progress_bar_shape_background_corners_radius" />
+                <gradient
+                    android:startColor="@color/quizListItemTextColor"
+                    android:endColor="@color/yellowButtonPressedColor"
+                    android:angle="@integer/stats_progress_bar_gradient_angle" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

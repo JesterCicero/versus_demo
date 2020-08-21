@@ -35,19 +35,35 @@
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/item_description_margin_start"
-            android:layout_marginLeft="@dimen/item_description_margin_start"
+            android:layout_marginStart="@dimen/quiz_list_item_name_margin_start_end"
+            android:layout_marginLeft="@dimen/quiz_list_item_name_margin_start_end"
+            android:layout_marginEnd="@dimen/quiz_list_item_name_margin_start_end"
             android:text="@{itemDataFake}"
             android:singleLine="true"
             android:id="@+id/item_name"
             android:ellipsize="marquee"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/progress_bar"
             app:layout_constraintStart_toEndOf="@id/small_img"
             app:layout_constraintEnd_toStartOf="@id/item_detail"
             android:textColor="@color/quizListItemTextColor"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             tools:text="Test Description"/>
+
+        <ProgressBar
+            android:layout_width="0dp"
+            android:layout_height="@dimen/quiz_list_progress_bar_height"
+            android:layout_marginStart="@dimen/quiz_list_progress_bar_margin_start_end"
+            android:layout_marginLeft="@dimen/quiz_list_progress_bar_margin_start_end"
+            android:layout_marginEnd="@dimen/quiz_list_progress_bar_margin_start_end"
+            android:id="@+id/progress_bar"
+            android:progress="75"
+            app:layout_constraintTop_toBottomOf="@id/item_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/small_img"
+            app:layout_constraintEnd_toStartOf="@id/item_detail"
+            style="@style/CustomProgressBar"
+            />
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:layout_width="wrap_content"

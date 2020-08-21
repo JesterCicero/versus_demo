@@ -128,7 +128,10 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 itemView.visibility = View.INVISIBLE
                 binding.firstImageId.setImageResource(R.drawable.empty_drawable)
                 binding.secondImageId.setImageResource(R.drawable.empty_drawable)
-                mImgReverseAnimation = animateView(itemView, -translationValue, true) {
+                mImgReverseAnimation = animateView(itemView, -translationValue,
+                    descriptionAnimation = false,
+                    reverseAnimation = true
+                ) {
                     mPresenter.onItemClickFinished(chosenFirst)
                     mSecondImgRunnable = Runnable {
                         Timber.d("Second img postDelayed()")
@@ -149,7 +152,11 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             }
             mFirstImgRunnable?.let { mHandler.postDelayed(it, CHOSEN_CONTESTANT_TIMEOUT) }
         }
-        mImgAnimation = animateView(itemView, translationValue, false, mImgAnimationEndAction)
+        mImgAnimation = animateView(itemView, translationValue,
+            descriptionAnimation = false,
+            reverseAnimation = false,
+            endAction = mImgAnimationEndAction
+        )
     }
 
     private fun animateDescription(binding: FragmentQuizItemDetailBinding, itemViewWidth: Int, itemViewHeight: Int, chosenFirst: Boolean) {
@@ -168,7 +175,10 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 mAnimationsStarted = false
                 Timber.d("First description postDelayed()")
                 descriptionViewToAnimate.visibility = View.INVISIBLE
-                mDescriptionReverseAnimation = animateView(descriptionViewToAnimate, -translationByCoordinateDescription, true) {
+                mDescriptionReverseAnimation = animateView(descriptionViewToAnimate, -translationByCoordinateDescription,
+                    descriptionAnimation = true,
+                    reverseAnimation = true
+                ) {
                     mSecondDescriptionRunnable = Runnable {
                         Timber.d("Second description postDelayed()")
                         binding.firstImgDescription.visibility = View.VISIBLE
@@ -179,10 +189,14 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             }
             mFirstDescriptionRunnable?.let { mHandler.postDelayed(it, CHOSEN_CONTESTANT_TIMEOUT) }
         }
-        mDescriptionAnimation = animateView(descriptionViewToAnimate, translationByCoordinateDescription, false, mDescriptionAnimationEndAction)
+        mDescriptionAnimation = animateView(descriptionViewToAnimate, translationByCoordinateDescription,
+            descriptionAnimation = true,
+            reverseAnimation = false,
+            endAction = mDescriptionAnimationEndAction
+        )
     }
 
-    private fun animateView(viewToAnimate: View, translationValue: Float,
+    private fun animateView(viewToAnimate: View, translationValue: Float, descriptionAnimation: Boolean,
                             reverseAnimation: Boolean, endAction: () -> Unit): ViewPropertyAnimator {
         val scaleFactorDependingOnOrientation = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_SCALE_FACTOR else LANDSCAPE_SCALE_FACTOR
         val scaleFactor = if (reverseAnimation) -scaleFactorDependingOnOrientation else scaleFactorDependingOnOrientation
@@ -190,7 +204,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         val animator = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
             viewPropertyAnimator.translationYBy(translationValue)
         } else {
-            viewPropertyAnimator.translationXBy(translationValue)
+            viewPropertyAnimator.translationXBy(translationValue).translationYBy(if (descriptionAnimation) LANDSCAPE_DESCRIPTION_Y_VALUE else LANDSCAPE_IMG_Y_VALUE)
         }
         animator.scaleXBy(scaleFactor)
                 .scaleYBy(scaleFactor)
@@ -203,13 +217,13 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
     override suspend fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState) {
         Timber.d("round: ${renderState.round}")
         mBinding?.let { binding ->
-            binding.round = renderState.round
+            binding.round = "${renderState.quizTitle.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()}: ${renderState.round}"
             binding.firstDescription = renderState.firstContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             binding.secondDescription = renderState.secondContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             withContext(Dispatchers.IO) {
                 activity?.let {
-                    mImageLoader.loadImage(this@QuizItemDetailFragment, renderState.firstContestant.url, binding.firstImageId)
-                    mImageLoader.loadImage(this@QuizItemDetailFragment, renderState.secondContestant.url, binding.secondImageId)
+                    mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
+                    mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
                 }
             }
         }
@@ -221,6 +235,8 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val LANDSCAPE_SCALE_FACTOR = 0.1F
         private const val CHOSEN_CONTESTANT_TIMEOUT = 750L
         private const val NEXT_ROUND_TIMEOUT = 30L
-        private const val TRANSLATION_DESCRIPTION_FACTOR = 0.8F
+        private const val TRANSLATION_DESCRIPTION_FACTOR = 0.9F
+        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -50F
+        private const val LANDSCAPE_IMG_Y_VALUE = -80F
     }
 }

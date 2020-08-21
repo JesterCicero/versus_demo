@@ -34,4 +34,17 @@
     <dimen name="quiz_item_portrait_detail_item_margin_bottom">16dp</dimen>
     <dimen name="quiz_item_land_detail_item_margin_bottom">24dp</dimen>
     <dimen name="quiz_item_land_description_margin_top">16dp</dimen>
+    <dimen name="stats_progress_bar_shape_background_padding">3dp</dimen>
+    <dimen name="stats_progress_bar_shape_background_corners_radius">5dp</dimen>
+    <dimen name="stats_button_width">65dp</dimen>
+    <dimen name="stats_icon_width">55dp</dimen>
+    <dimen name="stats_button_landscape_height">45dp</dimen>
+    <dimen name="stats_button_landscape_margin_end">16dp</dimen>
+    <dimen name="stats_button_landscape_margin_bottom">16dp</dimen>
+    <dimen name="quiz_list_margin_end">24dp</dimen>
+    <dimen name="quiz_list_margin_bottom">24dp</dimen>
+    <dimen name="quiz_list_next_button_width_height">45dp</dimen>
+    <dimen name="quiz_list_item_name_margin_start_end">16dp</dimen>
+    <dimen name="quiz_list_progress_bar_margin_start_end">16dp</dimen>
+    <dimen name="quiz_list_progress_bar_height">25dp</dimen>
 </resources>

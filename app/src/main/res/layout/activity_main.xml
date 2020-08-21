@@ -117,7 +117,7 @@
             android:paddingTop="@dimen/back_button_padding_top_bottom"
             android:paddingBottom="@dimen/back_button_padding_top_bottom"
             android:layout_gravity="center"
-            android:id="@+id/routes_list_icon_id"
+            android:id="@+id/stats_icon_id"
             android:src="@drawable/ic_menu" />
     </FrameLayout>
 

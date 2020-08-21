@@ -3,14 +3,14 @@
 
     <item android:state_pressed="true" android:state_focused="true">
         <shape>
-            <solid android:color="@color/quizListItemSelectionColor" />
+            <solid android:color="@color/quizListItemTileColor" />
             <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
         </shape>
     </item>
 
     <item android:state_pressed="true">
         <shape>
-            <solid android:color="@color/quizListItemSelectionColor" />
+            <solid android:color="@color/quizListItemTileColor" />
             <corners android:radius="@dimen/quiz_list_item_corner_radius"/>
         </shape>
     </item>

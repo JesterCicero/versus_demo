@@ -57,7 +57,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
             binding.presenter = mPresenter
             withContext(Dispatchers.IO) {
                 activity?.let {
-                    mImageLoader.loadImage(this@WinnerFragment, url, binding.winnerImgId)
+                    mImageLoader.loadImage(it, url, binding.winnerImgId)
                 }
             }
         }
