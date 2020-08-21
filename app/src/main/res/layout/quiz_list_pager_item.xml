@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/pager_item_parent_height"
         android:layout_margin="@dimen/pager_item_parent_margin"
-        android:background="@drawable/custom_list_selector"
+        android:background="@drawable/custom_page_item_selector"
         android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
 
         <ImageView

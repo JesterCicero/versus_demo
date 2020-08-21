@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.base
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
@@ -19,15 +20,13 @@ class ImageLoader : KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
 
-    fun loadImage(fragment: Fragment, url: String, imgView: ImageView) {
-        if (fragment.isAdded) {
-            Timber.d("url: $url")
-            Glide.with(fragment)
-                .asBitmap()
-                .load("http://$url")
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(GlideCustomTarget(imgView))
-        }
+    fun loadImage(context: Context, url: String, imgView: ImageView) {
+        Timber.d("url: $url")
+        Glide.with(context)
+            .asBitmap()
+            .load("http://$url")
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .into(GlideCustomTarget(imgView))
     }
 
     inner class GlideCustomTarget(private val mImgView: ImageView) : CustomTarget<Bitmap>() {

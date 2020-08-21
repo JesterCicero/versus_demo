@@ -154,6 +154,7 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
             mQuizListItemBinding.quizList = false
             val itemData = (data[position] as? IContestantsStatsInfo)?.let {
                 mQuizListItemBinding.itemDataDetail = it.percentage
+                mQuizListItemBinding.progressBar.progress = it.percentage.toFloat().toInt()
                 loadImage(fragment, it.minUrl, false)
                 it.name
             } ?: EMPTY_STRING
@@ -164,11 +165,11 @@ class QuizListAdapter<T>(private val mItemClickListener: IItemClickListener,
         }
 
         private fun loadImage(fragment: Fragment?, url: String, quizList: Boolean = true) {
-            fragment?.let { nonNullableFragment ->
+            fragment?.let {
                 mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     withContext(Dispatchers.IO) {
                         fragment.activity?.let {
-                            mImageLoader.loadImage(nonNullableFragment, url, if (quizList) mQuizListPagerItemBinding.smallImg else mQuizListItemBinding.smallImg)
+                            mImageLoader.loadImage(it, url, if (quizList) mQuizListPagerItemBinding.smallImg else mQuizListItemBinding.smallImg)
                         }
                     }
                 }

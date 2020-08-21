@@ -3,127 +3,204 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-        <data>
-            <import type="com.rkhrapunov.core.domain.RenderState.QuizItemDetailState"/>
-            <import type="com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter"/>
-            <variable
-                name="presenter"
-                type="IQuizItemDetailPresenter" />
-            <variable
-                name="round"
-                type="String" />
-            <variable
-                name="firstDescription"
-                type="String" />
-            <variable
-                name="secondDescription"
-                type="String" />
-        </data>
+    <data>
+
+        <import type="com.rkhrapunov.core.domain.RenderState.QuizItemDetailState" />
+
+        <import type="com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter" />
+
+        <variable
+            name="presenter"
+            type="IQuizItemDetailPresenter" />
+
+        <variable
+            name="round"
+            type="String" />
+
+        <variable
+            name="firstDescription"
+            type="String" />
+
+        <variable
+            name="secondDescription"
+            type="String" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/fragment_container"
         android:background="@color/backgroundMainColor"
         tools:context=".presentation.main.MainActivity">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/round_description"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/first_img_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                android:text="@{round}"
-                android:textColor="@color/quizListItemTextColor"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                tools:text="@string/round"/>
+        <Space
+            android:id="@+id/top_round_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/round_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_top_round_space_vertical_weight" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/first_img_description"
-                android:text="@{firstDescription}"
-                android:textColor="@color/quizListItemTextColor"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                app:layout_constraintTop_toBottomOf="@id/round_description"
-                app:layout_constraintBottom_toTopOf="@id/first_img"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:text="@string/first_img_description"/>
+        <TextView
+            android:id="@+id/round_description"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@{round}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toTopOf="@id/bottom_round_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_round_space"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_round_description_vertical_weight"
+            tools:text="@string/round" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/first_img"
-                android:onClick="@{ () -> presenter.onFirstImgClickedIntent() }"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                app:layout_constraintTop_toBottomOf="@id/first_img_description"
-                app:layout_constraintBottom_toTopOf="@id/vs_text_view"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
-                <ImageView
-                    android:layout_width="@dimen/contestant_img_width"
-                    android:layout_height="@dimen/contestant_img_height"
-                    android:id="@+id/first_image_id"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/empty_drawable"
-                    android:contentDescription="@string/first_img_description"
-                    tools:src="@drawable/charlize_theron"/>
+        <Space
+            android:id="@+id/bottom_round_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/first_img_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/round_description"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_bottom_round_space_vertical_weight" />
 
-            </androidx.cardview.widget.CardView>
+        <TextView
+            android:id="@+id/first_img_description"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:text="@{firstDescription}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_img_description_vertical_weight"
+            app:layout_constraintBottom_toTopOf="@id/top_first_img_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottom_round_space"
+            tools:text="@string/first_img_description" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/vs_text_view"
-                app:layout_constraintTop_toBottomOf="@id/first_img"
-                app:layout_constraintBottom_toTopOf="@id/second_img"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@string/vs_text"
-                android:textColor="@color/quizListItemTextColor"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"/>
+        <Space
+            android:id="@+id/top_first_img_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/first_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/first_img_description"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_top_first_img_space_vertical_weight" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/second_img"
-                android:onClick="@{ () -> presenter.onSecondImgClickedIntent() }"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                app:layout_constraintTop_toBottomOf="@id/vs_text_view"
-                app:layout_constraintBottom_toTopOf="@id/second_img_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:cardCornerRadius="@dimen/contestant_tile_corner_radius">
-                <ImageView
-                    android:layout_width="@dimen/contestant_img_width"
-                    android:layout_height="@dimen/contestant_img_height"
-                    android:id="@+id/second_image_id"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/empty_drawable"
-                    android:contentDescription="@string/second_img_description"
-                    tools:src="@drawable/jennifer_lawrence"/>
-            </androidx.cardview.widget.CardView>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/first_img"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:onClick="@{ () -> presenter.onFirstImgClickedIntent() }"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
+            app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
+            app:layout_constraintBottom_toTopOf="@id/top_vs_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_first_img_space">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/second_img_description"
-                app:layout_constraintTop_toBottomOf="@id/second_img"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="@{secondDescription}"
-                android:textColor="@color/quizListItemTextColor"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:layout_marginBottom="@dimen/quiz_item_portrait_detail_item_margin_bottom"
-                tools:text="@string/second_img_description"/>
+            <ImageView
+                android:id="@+id/first_image_id"
+                android:layout_width="@dimen/contestant_img_width"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/first_img_description"
+                android:scaleType="fitXY"
+                android:src="@drawable/empty_drawable"
+                tools:src="@drawable/charlize_theron" />
 
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:id="@+id/top_vs_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/vs_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/first_img"
+            app:layout_constraintVertical_weight="@integer/quiz_item_top_vs_space_vertical_weight" />
+
+        <TextView
+            android:id="@+id/vs_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="@integer/quiz_item_vs_text_view_vertical_weight"
+            android:text="@string/vs_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toTopOf="@id/bottom_vs_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_vs_space" />
+
+        <Space
+            android:id="@+id/bottom_vs_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/second_img"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/vs_text_view"
+            app:layout_constraintVertical_weight="@integer/quiz_item_bottom_vs_space_vertical_weight" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/second_img"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
+            android:onClick="@{ () -> presenter.onSecondImgClickedIntent() }"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
+            app:layout_constraintBottom_toTopOf="@id/top_second_img_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/bottom_vs_space">
+
+            <ImageView
+                android:id="@+id/second_image_id"
+                android:layout_width="@dimen/contestant_img_width"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/second_img_description"
+                android:scaleType="fitXY"
+                android:src="@drawable/empty_drawable"
+                tools:src="@drawable/jennifer_lawrence" />
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:id="@+id/top_second_img_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/second_img_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/second_img"
+            app:layout_constraintVertical_weight="@integer/quiz_item_top_second_img_space_vertical_weight" />
+
+        <TextView
+            android:id="@+id/second_img_description"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintVertical_weight="@integer/quiz_item_detail_img_description_vertical_weight"
+            android:text="@{secondDescription}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toTopOf="@id/bottom_second_img_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_second_img_space"
+            tools:text="@string/second_img_description" />
+
+        <Space
+            android:id="@+id/bottom_second_img_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/second_img_description"
+            app:layout_constraintVertical_weight="@integer/quiz_item_bottom_second_img_space_vertical_weight" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

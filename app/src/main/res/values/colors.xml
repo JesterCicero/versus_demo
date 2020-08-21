@@ -13,4 +13,6 @@
     <color name="yellowButtonPressedColor">#ffe785</color>
     <color name="scrollBarColor">#292525</color>
     <color name="pagerBackgroundColor">#131010</color>
+    <color name="statForwardButtonColor">#80000000</color>
+    <color name="statsProgressBarGradientColor">#2a2b2f</color>
 </resources>
