@@ -16,4 +16,10 @@
     <string name="about">About</string>
     <string name="sort_by_results">Sort by results</string>
     <string name="sort_by_name">Sort by name</string>
+    <string name="unable_to_get_quiz_list">Unable to get quiz list</string>
+    <string name="unable_to_get_quiz">Unable to get quiz</string>
+    <string name="unable_to_get_stats">Unable to get stats</string>
+    <string name="unable_to_post_winner">Unable to post winner</string>
+    <string name="quiz_updated_on_server">Quiz was updated</string>
+    <string name="retry_loading">Retry Loading</string>
 </resources>

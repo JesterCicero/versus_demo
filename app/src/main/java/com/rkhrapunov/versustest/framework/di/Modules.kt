@@ -1,6 +1,8 @@
 package com.rkhrapunov.versustest.framework.di
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.rkhrapunov.core.data.ContestantsRepository
 import com.rkhrapunov.core.data.IContestantsDataSource
 import com.rkhrapunov.core.domain.IRenderState
@@ -8,9 +10,14 @@ import com.rkhrapunov.core.interactors.*
 import com.rkhrapunov.versustest.framework.ContestantsCache
 import com.rkhrapunov.versustest.framework.ContestantsDataSource
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
+import com.rkhrapunov.versustest.framework.helpers.NetworkConnectivityHelper
 import com.rkhrapunov.versustest.framework.helpers.RestApiHelper
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.Preferences
+import com.rkhrapunov.versustest.presentation.empty_pager.EmptyPagerPresenter
+import com.rkhrapunov.versustest.presentation.empty_pager.IEmptyPagerContract
+import com.rkhrapunov.versustest.presentation.error.ErrorDialogPresenter
+import com.rkhrapunov.versustest.presentation.error.IErrorDialogContract
 import com.rkhrapunov.versustest.presentation.main.IMainContract
 import com.rkhrapunov.versustest.presentation.main.MainPresenter
 import com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract
@@ -25,6 +32,8 @@ import com.rkhrapunov.versustest.presentation.winner.IWinnerContract
 import com.rkhrapunov.versustest.presentation.winner.WinnerPresenter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
@@ -33,6 +42,7 @@ import org.koin.dsl.module
 
 private const val PREFS_NAME = "prefs_name"
 
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 @ExperimentalStdlibApi
 @FlowPreview
 @ExperimentalCoroutinesApi
@@ -44,10 +54,14 @@ val applicationModule = module(override = true) {
     single { ImageLoader() }
     single { Preferences() }
     single { ContestantsCache() }
+    single { NetworkConnectivityHelper() }
     single(named("RenderState")) { ConflatedBroadcastChannel<IRenderState>() }
+    single(named("ErrorMsg")) { BroadcastChannel<String>(Channel.BUFFERED) }
+    single(named("NetworkState")) { BroadcastChannel<Boolean>(Channel.BUFFERED) }
     factory { androidContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     factory<IContestantsDataSource> { ContestantsDataSource() }
     factory { GetRenderUiChannelInteractor() }
+    factory { GetErrorMsgChannelInteractor() }
     factory { ChosenContestantInteractor() }
     factory { GetQuizListInteractor() }
     factory { GetQuizItemDetailInteractor() }
@@ -61,4 +75,6 @@ val applicationModule = module(override = true) {
     factory<IQuizPageContract.IQuizPagePresenter> { QuizPagePresenter() }
     factory<IQuizItemDetailContract.IQuizItemDetailPresenter> { QuizItemDetailPresenter() }
     factory<IWinnerContract.IWinnerPresenter> { WinnerPresenter() }
+    factory<IErrorDialogContract.IErrorDialogPresenter> { ErrorDialogPresenter() }
+    factory<IEmptyPagerContract.IEmptyPagerPresenter> { EmptyPagerPresenter() }
 }

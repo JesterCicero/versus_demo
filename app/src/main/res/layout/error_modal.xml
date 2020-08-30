@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.rkhrapunov.versustest.presentation.error.IErrorDialogContract.IErrorDialogPresenter" />
+
+        <variable
+            name="presenter"
+            type="IErrorDialogPresenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/error_dialog_background_shape">
+
+        <Space
+            android:id="@+id/top_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/error_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="@integer/error_dialog_top_bottom_space_vertical_weight" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toTopOf="@id/middle_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_space"
+            app:layout_constraintVertical_weight="@integer/empty_pager_error_dialog_error_text_vertical_weight"
+            tools:text="TEST" />
+
+        <Space
+            android:id="@+id/middle_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/ok_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/error_text"
+            app:layout_constraintVertical_weight="@integer/empty_pager_error_dialog_middle_space_vertical_weight" />
+
+        <FrameLayout
+            android:id="@+id/ok_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/statistics_button_selector"
+            android:onClick="@{ () -> presenter.onErrorDialogFragmentDismissIntent() }"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toTopOf="@id/bottom_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/middle_space"
+            app:layout_constraintVertical_weight="@integer/error_dialog_ok_button_vertical_weight"
+            tools:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/back_to_quizzes"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/backgroundMainColor"
+                tools:text="OK" />
+        </FrameLayout>
+
+        <Space
+            android:id="@+id/bottom_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ok_button"
+            app:layout_constraintVertical_weight="@integer/error_dialog_top_bottom_space_vertical_weight" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

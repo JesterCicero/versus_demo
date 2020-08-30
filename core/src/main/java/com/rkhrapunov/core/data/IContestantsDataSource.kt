@@ -7,6 +7,8 @@ import kotlinx.coroutines.channels.BroadcastChannel
 interface IContestantsDataSource {
     @ExperimentalCoroutinesApi
     fun getRenderUiChannel(): BroadcastChannel<IRenderState>
+    @ExperimentalCoroutinesApi
+    fun getErrorMsgChannel(): BroadcastChannel<String>
     fun updateState(state: IRenderState, chosenFirst: Boolean)
     fun resetContest()
     fun getQuizList()

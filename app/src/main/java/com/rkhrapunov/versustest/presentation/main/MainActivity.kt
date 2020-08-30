@@ -16,6 +16,10 @@ import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.core.interactors.GetQuizListInteractor
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
+import com.rkhrapunov.versustest.presentation.base.weak
+import com.rkhrapunov.versustest.presentation.empty_pager.EmptyPagerFragment
+import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment
+import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment.Companion.ERROR_MSG_KEY
 import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListAdapter
@@ -31,6 +35,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     var activityMainBinding: ActivityMainBinding? = null
     private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private var mCurrentState: IRenderState? = null
+    private var mErrorDialogFragment: ErrorDialogFragment? by weak()
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -67,11 +72,30 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                 hideTopBar()
                 WinnerFragment()
             }
+            is RenderState.ErrorState -> {
+                showTopBar(true)
+                EmptyPagerFragment()
+            }
             is RenderState.WinnerFinalState -> return
             else -> onQuizListRenderState()
         }
         replaceFragmentIfNecessary(fragment)
         mCurrentState = renderState
+    }
+
+    override fun renderErrorState(errorMsg: String) {
+        Timber.d("errorMsg: $errorMsg")
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val tag = ErrorDialogFragment::class.simpleName
+        val prev = supportFragmentManager.findFragmentByTag(tag)
+        prev?.let { fragmentTransaction.remove(it) }
+        mErrorDialogFragment = ErrorDialogFragment()
+        mErrorDialogFragment?.let {
+            val bundle = Bundle()
+            bundle.putString(ERROR_MSG_KEY, errorMsg)
+            it.arguments = bundle
+            it.show(fragmentTransaction, tag)
+        }
     }
 
     private fun setOnQueryTextListener() {

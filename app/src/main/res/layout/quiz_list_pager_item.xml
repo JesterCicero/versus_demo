@@ -4,14 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener"/>
-        <import type="android.view.View"/>
-        <import type="com.rkhrapunov.versustest.presentation.base.Constants"/>
-        <variable name="itemDataFake" type="String" />
-        <variable name="itemDataReal" type="String" />
-        <variable name="itemDataDetail" type="String" />
-        <variable name="itemClickListener" type="IItemClickListener" />
-        <variable name="quizList" type="Boolean" />
+
+        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener" />
+
+        <import type="android.view.View" />
+
+        <import type="com.rkhrapunov.versustest.presentation.base.Constants" />
+
+        <variable
+            name="itemDataFake"
+            type="String" />
+
+        <variable
+            name="itemDataReal"
+            type="String" />
+
+        <variable
+            name="itemDataDetail"
+            type="String" />
+
+        <variable
+            name="itemClickListener"
+            type="IItemClickListener" />
+
+        <variable
+            name="quizList"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,18 +39,27 @@
         android:background="@drawable/custom_page_item_selector"
         android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
 
-        <ImageView
-            android:layout_width="@dimen/pager_item_icon_width"
-            android:layout_height="@dimen/pager_item_icon_height"
-            android:layout_marginTop="@dimen/pager_item_parent_margin"
-            android:id="@+id/small_img"
-            android:src="@drawable/empty_drawable"
-            android:contentDescription="@string/list_icon_description"
-            app:layout_constraintTop_toTopOf="parent"
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/small_img_container"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="@dimen/pager_item_parent_margin">
+
+            <ImageView
+                android:id="@+id/small_img"
+                android:layout_width="@dimen/pager_item_icon_width"
+                android:layout_height="@dimen/pager_item_icon_height"
+                android:contentDescription="@string/list_icon_description"
+                android:src="@drawable/empty_drawable" />
+        </androidx.cardview.widget.CardView>
+
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/item_description_margin_start"
@@ -40,18 +67,17 @@
             android:layout_marginEnd="@dimen/item_description_margin_start"
             android:layout_marginRight="@dimen/item_description_margin_start"
             android:layout_marginBottom="@dimen/pager_item_parent_margin"
-            android:gravity="center"
-            android:text="@{itemDataFake}"
-            android:id="@+id/item_name"
             android:ellipsize="marquee"
+            android:gravity="center"
             android:maxLines="@integer/pager_item_max_lines_text"
-            app:layout_constraintTop_toBottomOf="@id/small_img"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/quizListItemTextColor"
+            android:text="@{itemDataFake}"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            tools:text="Test Description"/>
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/small_img_container"
+            tools:text="Test Description" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

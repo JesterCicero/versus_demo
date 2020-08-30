@@ -52,7 +52,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
     }
 
     private suspend fun renderWinner(name: String, url: String) {
-        mBinding?.let {binding ->
+        mBinding?.let { binding ->
             binding.name = name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             binding.presenter = mPresenter
             withContext(Dispatchers.IO) {

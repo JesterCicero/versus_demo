@@ -43,4 +43,9 @@
         <item name="android:minHeight">10dp</item>
         <item name="android:maxHeight">20dp</item>
     </style>
+
+    <style name="DialogTheme_transparent" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--You can set other style items also, such as animations and etc-->
+    </style>
 </resources>

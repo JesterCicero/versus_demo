@@ -1,27 +1,37 @@
 package com.rkhrapunov.versustest.framework
 
+import android.content.Context
+import android.os.Handler
 import com.rkhrapunov.core.data.IContestantsDataSource
 import com.rkhrapunov.core.data.IContestantsInfo
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.framework.helpers.RestApiHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import org.koin.core.qualifier.named
 import retrofit2.Response
 import timber.log.Timber
 
+@FlowPreview
 @Suppress("UNCHECKED_CAST")
 @ExperimentalCoroutinesApi
 class ContestantsDataSource : IContestantsDataSource, KoinComponent {
 
     private val mRenderUiChannel by inject<ConflatedBroadcastChannel<IRenderState>>(named("RenderState"))
+    private val mErrorMsgChannel by inject<BroadcastChannel<String>>(named("ErrorMsg"))
+    private val mNetworkStateChannel by inject<BroadcastChannel<Boolean>>(named("NetworkState"))
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mRestApiHelper by inject<RestApiHelper>()
     private val mContestantsCache by inject<ContestantsCache>()
@@ -41,15 +51,45 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mQuizListUpdateUiJob: Job? = null
     private var mQuizStatsUpdateUiJob: Job? = null
     private var mPostWinnerSuccessUpdateUiJob: Job? = null
+    private var mUnableToGetQuizListJob: Job? = null
+    private var mUnableToGetQuizJob: Job? = null
+    private var mQuizUpdatedOnServerJob: Job? = null
+    private var mUnableToPostWinnerJob: Job? = null
     private var mPageIndicatorText: String = EMPTY_STRING
     private var mCurrentPagePosition: Int = 0
+    private val mContext by inject<Context>()
+    private val mDeferredWinnersList = mutableListOf<String>()
+    private var mDeferredPost = false
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
+        private const val POST_WINNER_SEPARATOR = ';'
+        private const val POST_WINNER_ERROR_TIMEOUT = 1000L
+    }
+
+    init {
+        mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+            mNetworkStateChannel
+                .asFlow()
+                .collect {
+                    if (it) {
+                        if (mDeferredWinnersList.isNotEmpty()) {
+                            mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+                                Timber.d("trying to post winners")
+                                mDeferredPost = true
+                                mDeferredWinnersList.forEach { winner -> postWinner(winner) }
+                            })
+                        }
+                    }
+                }
+        })
     }
 
     @ExperimentalCoroutinesApi
     override fun getRenderUiChannel() = mRenderUiChannel
+
+    @ExperimentalCoroutinesApi
+    override fun getErrorMsgChannel() = mErrorMsgChannel
 
     override fun updateState(state: IRenderState, chosenFirst: Boolean) {
         mUpdateStateJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
@@ -132,6 +172,10 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mQuizListUpdateUiJob?.cancel()
         mQuizStatsUpdateUiJob?.cancel()
         mPostWinnerSuccessUpdateUiJob?.cancel()
+        mUnableToGetQuizListJob?.cancel()
+        mUnableToGetQuizJob?.cancel()
+        mQuizUpdatedOnServerJob?.cancel()
+        mUnableToPostWinnerJob?.cancel()
         clearData()
     }
 
@@ -158,7 +202,18 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mRestApiHelper.makeRequest(
             RestApiHelper.RequestType.QUIZ,
             { onGetQuizApiSuccess(it as Response<List<ContestantsInfo>>) },
-            { Timber.d(it, "Error occurred while getting request for quiz!") },
+            {
+                Timber.d(it, "Error occurred while getting request for quiz!")
+                val quizCacheEmpty = mContestantsCache.quizCache?.isEmpty() ?: true
+                Timber.d("quizCacheEmpty: $quizCacheEmpty")
+                val quizFromCache = mContestantsCache.currentQuizTitle
+                Timber.d("current quiz from data source: $mCurrentQuiz, current quiz from cache: $quizFromCache")
+                if (quizCacheEmpty || mCurrentQuiz != quizFromCache) {
+                    mUnableToGetQuizJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                        mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_quiz))
+                    }
+                }
+            },
             mCurrentQuiz
         )
     }
@@ -175,6 +230,9 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                         Timber.d("quiz was updated from server")
                         mContestantsCache.updateQuizInfoCache(sortedQuizList, mCurrentQuiz)
                         getQuizList()
+                        mQuizUpdatedOnServerJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                            mErrorMsgChannel.send(mContext.getString(R.string.quiz_updated_on_server))
+                        }
                     }
                 }
             }
@@ -203,7 +261,16 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mRestApiHelper.makeRequest(
             RestApiHelper.RequestType.ALL_QUIZZES,
             { onGetAllQuizzesApiSuccess(it as Response<List<QuizShortInfo>>) },
-            { Timber.d(it, "Error occurred while getting response for quizzes list!") }
+            {
+                Timber.d(it, "Error occurred while getting response for quizzes list!")
+                val quizzesCacheEmpty = mContestantsCache.quizzesInfoCache?.isEmpty() ?: true
+                Timber.d("quizzesCacheEmpty: $quizzesCacheEmpty")
+                if (quizzesCacheEmpty) {
+                    mUnableToGetQuizListJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                        mRenderUiChannel.send(RenderState.ErrorState(mContext.getString(R.string.unable_to_get_quiz_list)))
+                    }
+                }
+            }
         )
     }
 
@@ -228,7 +295,9 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mRestApiHelper.makeRequest(
             RestApiHelper.RequestType.QUIZ_STATS,
             { onGetQuizStatsApiSuccess(it as Response<List<ContestantsStatsInfo>>) },
-            { Timber.d(it, "Error occurred while getting request for contestants stats!") },
+            {
+                Timber.d(it, "Error occurred while getting request for contestants stats!")
+            },
             mCurrentQuiz
         )
     }
@@ -243,21 +312,49 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     }
 
     private fun postWinner(winner: String) {
-        Timber.d("postWinner()")
         mRestApiHelper.makeRequest(
             RestApiHelper.RequestType.WINNER,
             { onPostWinnerSuccess(it as Response<String>) },
-            { Timber.d(it, "Error occurred while getting response for sending winner!") },
-            "$winner;$mCurrentQuiz"
+            {
+                Timber.d(it, "Error occurred while getting response for sending winner!")
+                if (mDeferredPost) {
+                    Timber.d("Some of the deferred requests failed")
+                    mDeferredPost = false
+                } else {
+                    Handler().postDelayed({
+                        mUnableToPostWinnerJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                            mErrorMsgChannel.send(mContext.getString(R.string.unable_to_post_winner))
+                            val winnerItem = if (winner.contains(POST_WINNER_SEPARATOR)) winner else "$winner$POST_WINNER_SEPARATOR$mCurrentQuiz"
+                            if (!mDeferredWinnersList.contains(winnerItem)) {
+                                Timber.d("adding winnerItem: $winnerItem")
+                                mDeferredWinnersList.add(winnerItem)
+                            }
+                        }
+                    }, POST_WINNER_ERROR_TIMEOUT)
+                }
+            },
+            if (mDeferredPost) winner else "$winner;$mCurrentQuiz"
         )
     }
 
     private fun onPostWinnerSuccess(response: Response<String>) {
-        response.body()?.let {
-            if (it == WINNER_RESPONSE) {
-                mPostWinnerSuccessUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mLastWinnerState?.let { lastWinnerState ->
-                        mRenderUiChannel.send(RenderState.WinnerFinalState(lastWinnerState.winner))
+        if (mDeferredPost) {
+            Timber.d("mDeferredWinnersList size: ${mDeferredWinnersList.size}")
+            if (mDeferredWinnersList.isNotEmpty()) {
+                mDeferredWinnersList.removeAt(0)
+            }
+            if (mDeferredWinnersList.isEmpty()) {
+                Timber.d("all deferred responses are successful")
+                mDeferredPost = false
+            }
+        } else {
+            response.body()?.let {
+                if (it == WINNER_RESPONSE) {
+                    mPostWinnerSuccessUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                        mLastWinnerState?.let { lastWinnerState ->
+                            Timber.d("onPostWinnerSuccess(): ${lastWinnerState.winner}")
+                            mRenderUiChannel.send(RenderState.WinnerFinalState(lastWinnerState.winner))
+                        }
                     }
                 }
             }

@@ -4,85 +4,109 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener"/>
-        <import type="android.view.View"/>
-        <import type="com.rkhrapunov.versustest.presentation.base.Constants"/>
-        <variable name="itemDataFake" type="String" />
-        <variable name="itemDataReal" type="String" />
-        <variable name="itemDataDetail" type="String" />
-        <variable name="itemClickListener" type="IItemClickListener" />
-        <variable name="quizList" type="Boolean" />
+
+        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener" />
+
+        <import type="android.view.View" />
+
+        <import type="com.rkhrapunov.versustest.presentation.base.Constants" />
+
+        <variable
+            name="itemDataFake"
+            type="String" />
+
+        <variable
+            name="itemDataReal"
+            type="String" />
+
+        <variable
+            name="itemDataDetail"
+            type="String" />
+
+        <variable
+            name="itemClickListener"
+            type="IItemClickListener" />
+
+        <variable
+            name="quizList"
+            type="Boolean" />
     </data>
-    
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/quiz_list_item_parent_height"
         android:background="@drawable/custom_list_selector"
         android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
 
-        <ImageView
-            android:layout_width="@dimen/quiz_list_icon_height"
-            android:layout_height="@dimen/quiz_list_icon_height"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/small_img_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/item_icon_margin_start"
             android:layout_marginLeft="@dimen/item_icon_margin_start"
-            android:id="@+id/small_img"
-            android:src="@drawable/empty_drawable"
-            android:contentDescription="@string/list_icon_description"
-            app:layout_constraintTop_toTopOf="parent"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/small_img"
+                android:layout_width="@dimen/quiz_list_icon_height"
+                android:layout_height="@dimen/quiz_list_icon_height"
+                android:contentDescription="@string/list_icon_description"
+                android:src="@drawable/empty_drawable" />
+        </androidx.cardview.widget.CardView>
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/quiz_list_item_name_margin_start_end"
             android:layout_marginLeft="@dimen/quiz_list_item_name_margin_start_end"
             android:layout_marginEnd="@dimen/quiz_list_item_name_margin_start_end"
-            android:text="@{itemDataFake}"
-            android:singleLine="true"
-            android:id="@+id/item_name"
             android:ellipsize="marquee"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/progress_bar"
-            app:layout_constraintStart_toEndOf="@id/small_img"
-            app:layout_constraintEnd_toStartOf="@id/item_detail"
-            android:textColor="@color/quizListItemTextColor"
+            android:singleLine="true"
+            android:text="@{itemDataFake}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:text="Test Description"/>
+            android:textColor="@color/quizListItemTextColor"
+            app:layout_constraintBottom_toTopOf="@id/progress_bar"
+            app:layout_constraintEnd_toStartOf="@id/item_detail"
+            app:layout_constraintStart_toEndOf="@id/small_img_container"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Test Description" />
 
         <ProgressBar
+            android:id="@+id/progress_bar"
+            style="@style/CustomProgressBar"
             android:layout_width="0dp"
             android:layout_height="@dimen/quiz_list_progress_bar_height"
             android:layout_marginStart="@dimen/quiz_list_progress_bar_margin_start_end"
             android:layout_marginLeft="@dimen/quiz_list_progress_bar_margin_start_end"
             android:layout_marginEnd="@dimen/quiz_list_progress_bar_margin_start_end"
-            android:id="@+id/progress_bar"
             android:progress="75"
-            app:layout_constraintTop_toBottomOf="@id/item_name"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/small_img"
             app:layout_constraintEnd_toStartOf="@id/item_detail"
-            style="@style/CustomProgressBar"
-            />
+            app:layout_constraintStart_toEndOf="@id/small_img_container"
+            app:layout_constraintTop_toBottomOf="@id/item_name" />
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/item_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:id="@+id/item_detail"
-            android:ellipsize="end"
-            android:gravity="center"
             android:layout_marginEnd="@dimen/item_percentage_margin_end"
             android:layout_marginRight="@dimen/item_percentage_margin_end"
-            app:layout_constraintTop_toTopOf="parent"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@{(itemDataDetail.length() == Constants.MAX_PERCENTAGE_SYMBOLS ? Constants.MAX_PERCENTAGE_VALUE : itemDataDetail) + ` ` + Constants.PERCENTAGE_SYMBOL}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            android:visibility="@{quizList ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/quizListItemTextColor"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:text="@{(itemDataDetail.length() == Constants.MAX_PERCENTAGE_SYMBOLS ? Constants.MAX_PERCENTAGE_VALUE : itemDataDetail) + ` ` + Constants.PERCENTAGE_SYMBOL}"
-            android:visibility="@{quizList ? View.GONE : View.VISIBLE}"
-            tools:visibility="visible"
-            tools:text="100.00%"/>
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="100.00%"
+            tools:visibility="visible" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

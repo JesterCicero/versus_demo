@@ -47,4 +47,5 @@
     <dimen name="quiz_list_item_name_margin_start_end">16dp</dimen>
     <dimen name="quiz_list_progress_bar_margin_start_end">16dp</dimen>
     <dimen name="quiz_list_progress_bar_height">25dp</dimen>
+    <dimen name="error_dialog_radius">20dp</dimen>
 </resources>
