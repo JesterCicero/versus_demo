@@ -15,4 +15,6 @@ sealed class RenderState : IRenderState {
     data class WinnerState(val winner: IContestantsInfo): RenderState()
 
     data class WinnerFinalState(val winner: IContestantsInfo) : RenderState()
+
+    data class ErrorState(val errorMsg: String) : RenderState()
 }

@@ -231,7 +231,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
 
     companion object {
         private const val ANIM_DURATION_MS = 300L
-        private const val PORTRAIT_SCALE_FACTOR = 0.2F
+        private const val PORTRAIT_SCALE_FACTOR = 0.1F
         private const val LANDSCAPE_SCALE_FACTOR = 0.1F
         private const val CHOSEN_CONTESTANT_TIMEOUT = 750L
         private const val NEXT_ROUND_TIMEOUT = 30L

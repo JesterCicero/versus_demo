@@ -1,12 +1,11 @@
-package com.rkhrapunov.versustest.presentation.winner
+package com.rkhrapunov.versustest.presentation.empty_pager
 
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.core.interactors.GetQuizListInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
-import com.rkhrapunov.core.interactors.ResetInteractor
-import com.rkhrapunov.core.interactors.GetStatsInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
 import kotlinx.coroutines.Dispatchers
@@ -22,39 +21,34 @@ import timber.log.Timber
 
 @FlowPreview
 @ExperimentalCoroutinesApi
-class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
-    IWinnerContract.IWinnerPresenter, KoinComponent {
+class EmptyPagerPresenter : BasePresenter<IEmptyPagerContract.IEmptyPagerView>(),
+    IEmptyPagerContract.IEmptyPagerPresenter, KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
+    private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
-    private val mResetInteractor by inject<ResetInteractor>()
-    private val mGetStatsInteractor by inject<GetStatsInteractor>()
     private var mJob: Job? = null
     private var mCurrentState: IRenderState? = null
 
-    override fun attachView(view: IWinnerContract.IWinnerView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
+    override fun attachView(view: IEmptyPagerContract.IEmptyPagerView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .filter {
-                    (it is RenderState.WinnerState || it is RenderState.WinnerFinalState) && it != mCurrentState
-                }
+                .filter { it is RenderState.ErrorState }
                 .collect { renderState ->
                     Timber.d("attachView(): renderState=$renderState")
-                    mView?.renderWinnerState(renderState)
-                    mCurrentState = renderState
+                    if (renderState is RenderState.ErrorState) {
+                        mCurrentState?.let {
+                            mView?.showToast()
+                        } ?: mView?.renderErrorState(renderState)
+                        mCurrentState = renderState
+                    }
                 }
         }
     }
 
-    override fun onWinnerClickedIntent() {
-//        if (mCurrentState is RenderState.WinnerFinalState) {
-//            mResetInteractor.resetContest()
-//        }
-    }
-
-    override fun onViewStatsClickedIntent() = mGetStatsInteractor.getStats()
+    override fun onRetryLoadingClickedIntent() = mGetQuizListInteractor.getQuizList()
 
     override fun onViewDestroyed() {
         mJob?.cancel()

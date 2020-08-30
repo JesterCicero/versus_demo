@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.interactors.CancelQuizInteractor
+import com.rkhrapunov.core.interactors.GetErrorMsgChannelInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
@@ -23,14 +24,29 @@ import timber.log.Timber
 class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IMainPresenter, KoinComponent {
 
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
+    private val mErrorMsgChannelInteractor by inject<GetErrorMsgChannelInteractor>()
     private val mCancelQuizInteractor by inject<CancelQuizInteractor>()
-    private var mJob: Job? = null
+    private var mRenderUiJob: Job? = null
+    private var mErrorMsgJob: Job? = null
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private var mCurrentState: IRenderState? = null
 
     override fun attachView(view: IMainContract.IMainView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         super.attachView(view, viewLifecycle, savedInstanceState)
-        mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+        subscribeRenderUiChannel()
+        subscribeErrorMsgChannel()
+    }
+
+    override fun cancelQuiz() = mCancelQuizInteractor.cancelQuiz()
+
+    override fun onViewDestroyed() {
+        mRenderUiJob?.cancel()
+        mErrorMsgJob?.cancel()
+        super.onViewDestroyed()
+    }
+
+    private fun subscribeRenderUiChannel() {
+        mRenderUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
                 .filter { it != mCurrentState }
@@ -38,14 +54,18 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
                     Timber.d("$mCurrentState -> $it")
                     mView?.render(it)
                     mCurrentState = it
-            }
+                }
         }
     }
 
-    override fun cancelQuiz() = mCancelQuizInteractor.cancelQuiz()
-
-    override fun onViewDestroyed() {
-        mJob?.cancel()
-        super.onViewDestroyed()
+    private fun subscribeErrorMsgChannel() {
+        mErrorMsgJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mErrorMsgChannelInteractor.getErrorMsgChannel()
+                .asFlow()
+                .collect {
+                    Timber.d("Error message: $it")
+                    mView?.renderErrorState(it)
+                }
+        }
     }
 }

@@ -24,6 +24,9 @@ class ContestantsCache : KoinComponent {
     var quizCache: List<IContestantsInfo>? = null
         private set
 
+    val currentQuizTitle: String
+        get() = mCurrentQuizTitle
+
     private var mCurrentQuizTitle = EMPTY_STRING
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
