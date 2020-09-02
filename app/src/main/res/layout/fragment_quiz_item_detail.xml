@@ -43,11 +43,37 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_top_round_space_vertical_weight" />
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_button_frame_layout_id"
+            android:background="@drawable/next_button_selector"
+            android:onClick="@{ () -> presenter.onNextButtonClickedIntent() }"
+            android:layout_marginEnd="@dimen/next_button_margin_end"
+            android:layout_marginRight="@dimen/next_button_margin_end"
+            app:layout_constraintTop_toTopOf="@id/vs_text_view"
+            app:layout_constraintBottom_toBottomOf="@id/vs_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:scaleType="centerCrop"
+            tools:visibility="visible">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/quiz_list_next_button_width_height"
+                android:layout_height="@dimen/quiz_list_next_button_width_height"
+                android:paddingTop="@dimen/quiz_list_item_name_padding"
+                android:paddingBottom="@dimen/quiz_list_item_name_padding"
+                android:layout_gravity="center"
+                android:id="@+id/nav_back_btn_icon_id"
+                android:src="@drawable/ic_right_chevron"/>
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/round_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="@{round}"
+            android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintBottom_toTopOf="@id/bottom_round_space"
@@ -129,6 +155,7 @@
             android:id="@+id/vs_text_view"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:gravity="center"
             app:layout_constraintVertical_weight="@integer/quiz_item_vs_text_view_vertical_weight"
             android:text="@string/vs_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -152,6 +179,7 @@
             android:id="@+id/second_img"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:padding="4dp"
             app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
             android:onClick="@{ () -> presenter.onSecondImgClickedIntent() }"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"

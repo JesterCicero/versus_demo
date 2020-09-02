@@ -24,4 +24,6 @@ class ContestantsRepository : KoinComponent {
     fun getPageIndicatorText() = mContestantsDataSource.getPageIndicatorText()
     fun saveCurrentPagePosition(currentPosition: Int) = mContestantsDataSource.saveCurrentPagePosition(currentPosition)
     fun getCurrentPagePosition() = mContestantsDataSource.getCurrentPagePosition()
+    fun saveChosenContestant(chosenContestant: ChosenContestant) = mContestantsDataSource.saveChosenContestant(chosenContestant)
+    fun getChosenContestant() = mContestantsDataSource.getChosenContestant()
 }

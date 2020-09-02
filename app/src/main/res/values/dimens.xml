@@ -48,4 +48,8 @@
     <dimen name="quiz_list_progress_bar_margin_start_end">16dp</dimen>
     <dimen name="quiz_list_progress_bar_height">25dp</dimen>
     <dimen name="error_dialog_radius">20dp</dimen>
+    <dimen name="next_button_shape_land_width_height">35dp</dimen>
+    <dimen name="contestant_shape_padding">6dp</dimen>
+    <dimen name="contestant_shape_stroke_width">6dp</dimen>
+    <dimen name="next_button_margin_end">8dp</dimen>
 </resources>

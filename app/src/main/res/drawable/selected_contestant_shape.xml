@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@android:color/transparent" />
+    <padding android:left="@dimen/contestant_shape_padding"
+        android:top="@dimen/contestant_shape_padding"
+        android:right="@dimen/contestant_shape_padding"
+        android:bottom="@dimen/contestant_shape_padding"
+        />
+    <stroke
+        android:width="@dimen/contestant_shape_stroke_width"
+        android:color="@color/quizListItemTextColor" />
+    <corners android:radius="@dimen/contestant_tile_corner_radius" />
+</shape>

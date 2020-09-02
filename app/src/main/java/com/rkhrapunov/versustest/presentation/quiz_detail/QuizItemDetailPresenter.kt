@@ -2,10 +2,12 @@ package com.rkhrapunov.versustest.presentation.quiz_detail
 
 import android.os.Bundle
 import androidx.lifecycle.Lifecycle
+import com.rkhrapunov.core.data.ChosenContestant
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.core.interactors.ChosenContestantInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
+import com.rkhrapunov.core.interactors.RetrieveChosenContestantInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +32,7 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     private var mJob: Job? = null
     private var mCurrentState: IRenderState? = null
     private var mQuizItemStateUpdated = false
+    private val mRetrieveChosenContestantInteractor by inject<RetrieveChosenContestantInteractor>()
 
     override fun attachView(view: IQuizItemDetailContract.IQuizItemDetailView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         super.attachView(view, viewLifecycle, savedInstanceState)
@@ -48,13 +51,38 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
         }
     }
 
-    override fun onFirstImgClickedIntent() = onItemClicked(true)
+    override fun onFirstImgClickedIntent() {
+        val chosenContestant = mRetrieveChosenContestantInteractor.getChosenContestant()
+        if (chosenContestant == ChosenContestant.UNKNOWN
+            || chosenContestant == ChosenContestant.CHOSEN_SECOND) {
+            mView?.onItemChosen(true)
+        }
+    }
 
-    override fun onSecondImgClickedIntent() = onItemClicked(false)
+    override fun onSecondImgClickedIntent() {
+        val chosenContestant = mRetrieveChosenContestantInteractor.getChosenContestant()
+        if (chosenContestant == ChosenContestant.UNKNOWN
+            || chosenContestant == ChosenContestant.CHOSEN_FIRST) {
+            mView?.onItemChosen(false)
+        }
+    }
+
+    override fun onNextButtonClickedIntent() {
+        Timber.d("onNextButtonClickedIntent()")
+        val chosenContestant = mRetrieveChosenContestantInteractor.getChosenContestant()
+        if (chosenContestant != ChosenContestant.UNKNOWN) {
+            onItemClicked(chosenContestant == ChosenContestant.CHOSEN_FIRST)
+            mRetrieveChosenContestantInteractor.saveChosenContestant(ChosenContestant.UNKNOWN)
+        }
+    }
 
     override fun onItemClickFinished(chosenFirst: Boolean) {
         mCurrentState?.let { mChosenContestantInteractor.onChosenContestant(it, chosenFirst) }
     }
+
+    override fun retrieveChosenContestant() = mRetrieveChosenContestantInteractor.getChosenContestant()
+
+    override fun saveChosenContestant(chosenContestant: ChosenContestant) = mRetrieveChosenContestantInteractor.saveChosenContestant(chosenContestant)
 
     private fun onItemClicked(chosenFirst: Boolean) {
         if (mQuizItemStateUpdated) {
