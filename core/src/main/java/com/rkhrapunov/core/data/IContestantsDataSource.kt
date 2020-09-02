@@ -20,4 +20,6 @@ interface IContestantsDataSource {
     fun getPageIndicatorText(): String
     fun saveCurrentPagePosition(currentPosition: Int)
     fun getCurrentPagePosition(): Int
+    fun saveChosenContestant(chosenContestant: ChosenContestant)
+    fun getChosenContestant(): ChosenContestant
 }

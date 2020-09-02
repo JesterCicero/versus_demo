@@ -69,6 +69,7 @@ val applicationModule = module(override = true) {
     factory { GetStatsInteractor() }
     factory { CancelQuizInteractor() }
     factory { PageIndicatorTextInteractor() }
+    factory { RetrieveChosenContestantInteractor() }
     factory<IMainContract.IMainPresenter> { MainPresenter() }
     factory<IQuizListContract.IQuizListPresenter> { QuizListPresenter() }
     factory<IQuizPagerContract.IQuizPagerPresenter> { QuizPagerPresenter() }

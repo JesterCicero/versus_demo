@@ -31,6 +31,30 @@
         android:background="@color/backgroundMainColor"
         tools:context=".presentation.main.MainActivity">
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/next_button_frame_layout_id"
+            android:background="@drawable/next_button_selector"
+            android:onClick="@{ () -> presenter.onNextButtonClickedIntent() }"
+            app:layout_constraintTop_toTopOf="@id/first_img_description"
+            app:layout_constraintBottom_toBottomOf="@id/first_img_description"
+            app:layout_constraintStart_toEndOf="@id/first_img"
+            app:layout_constraintEnd_toStartOf="@id/second_img"
+            android:scaleType="centerCrop"
+            tools:visibility="visible">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/quiz_list_next_button_width_height"
+                android:layout_height="@dimen/quiz_list_next_button_width_height"
+                android:paddingTop="@dimen/quiz_list_item_name_padding"
+                android:paddingBottom="@dimen/quiz_list_item_name_padding"
+                android:layout_gravity="center"
+                android:id="@+id/nav_back_btn_icon_id"
+                android:src="@drawable/ic_right_chevron"/>
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/round_description"
             android:layout_width="wrap_content"

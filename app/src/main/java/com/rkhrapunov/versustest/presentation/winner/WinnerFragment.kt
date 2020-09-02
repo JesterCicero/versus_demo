@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.FragmentWinnerBinding
-import com.rkhrapunov.versustest.presentation.base.Constants
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
@@ -35,6 +35,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentWinnerBinding.inflate(inflater, container, false)
+        binding.winner.setBackgroundResource(R.drawable.selected_contestant_shape)
         mBinding = binding
         return binding.root
     }

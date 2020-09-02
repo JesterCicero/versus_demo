@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import androidx.fragment.app.Fragment
+import com.rkhrapunov.core.data.ChosenContestant
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
 import com.rkhrapunov.versustest.databinding.FragmentQuizItemDetailBinding
+import com.rkhrapunov.versustest.presentation.base.Constants.DISABLED_ALPHA
+import com.rkhrapunov.versustest.presentation.base.Constants.ENABLED_ALPHA
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
@@ -48,8 +51,14 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentQuizItemDetailBinding.inflate(inflater, container, false)
+        binding.presenter = mPresenter
+        val chosenContestant = mPresenter.retrieveChosenContestant()
+        Timber.d("onCreateView(): chosenContestant=$chosenContestant")
+        binding.firstImg.setBackgroundResource(if (chosenContestant == ChosenContestant.CHOSEN_FIRST) R.drawable.selected_contestant_shape else R.drawable.unselected_contestant_shape)
+        binding.secondImg.setBackgroundResource(if (chosenContestant == ChosenContestant.CHOSEN_SECOND) R.drawable.selected_contestant_shape else R.drawable.unselected_contestant_shape)
+        binding.nextButtonFrameLayoutId.isEnabled = chosenContestant == ChosenContestant.CHOSEN_FIRST || chosenContestant == ChosenContestant.CHOSEN_SECOND
+        binding.nextButtonFrameLayoutId.alpha = if (binding.nextButtonFrameLayoutId.isEnabled) ENABLED_ALPHA else DISABLED_ALPHA
         mBinding = binding
-        mBinding?.presenter = mPresenter
         return binding.root
     }
 
@@ -89,10 +98,33 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                     it.roundDescription.visibility = View.INVISIBLE
                     it.firstImgDescription.visibility = View.INVISIBLE
                     it.secondImgDescription.visibility = View.INVISIBLE
+                    it.nextButtonFrameLayoutId.visibility = View.INVISIBLE
+                    it.nextButtonFrameLayoutId.isEnabled = false
+                    it.nextButtonFrameLayoutId.alpha = DISABLED_ALPHA
                     mAnimationsStarted = true
                     animateImg(it, itemView, getTranslationCoordinate(activityBinding, it, chosenFirst, itemView), chosenFirst)
                     animateDescription(it, itemView.width, itemView.height, chosenFirst)
                 }
+            }
+        }
+    }
+
+    override fun onItemChosen(chosenFirst: Boolean) {
+        mBinding?.let {
+            if (chosenFirst) {
+                Timber.d("onItemChosen(): chosen first")
+                it.firstImg.setBackgroundResource(R.drawable.selected_contestant_shape)
+                it.secondImg.setBackgroundResource(R.drawable.unselected_contestant_shape)
+                mPresenter.saveChosenContestant(ChosenContestant.CHOSEN_FIRST)
+            } else {
+                Timber.d("onItemChosen(): chosen second")
+                it.firstImg.setBackgroundResource(R.drawable.unselected_contestant_shape)
+                it.secondImg.setBackgroundResource(R.drawable.selected_contestant_shape)
+                mPresenter.saveChosenContestant(ChosenContestant.CHOSEN_SECOND)
+            }
+            if (!it.nextButtonFrameLayoutId.isEnabled) {
+                it.nextButtonFrameLayoutId.isEnabled = true
+                it.nextButtonFrameLayoutId.alpha = ENABLED_ALPHA
             }
         }
     }
@@ -144,6 +176,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                         }
                         binding.vsTextView.visibility = View.VISIBLE
                         binding.roundDescription.visibility = View.VISIBLE
+                        binding.nextButtonFrameLayoutId.visibility = View.VISIBLE
                         itemView.isEnabled = true
                         itemView.visibility = View.VISIBLE
                     }
@@ -228,6 +261,8 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             }
         }
     }
+
+    fun onBackPressed() = mPresenter.saveChosenContestant(ChosenContestant.UNKNOWN)
 
     companion object {
         private const val ANIM_DURATION_MS = 300L

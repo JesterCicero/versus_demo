@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="oval">
-            <solid android:color="@color/mainColor"/>
+            <solid android:color="@color/quizListItemSelectionColor"/>
             <size
                 android:width="@dimen/quiz_list_icon_height"
                 android:height="@dimen/quiz_list_icon_height"/>

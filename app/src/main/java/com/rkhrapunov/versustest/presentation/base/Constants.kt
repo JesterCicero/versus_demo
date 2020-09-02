@@ -8,4 +8,6 @@ object Constants {
     const val PERCENTAGE_SYMBOL = "%"
     const val UNDERSCORE_SYMBOL = '_'
     const val SPACE_SYMBOL = ' '
+    const val ENABLED_ALPHA = 1F
+    const val DISABLED_ALPHA = .5F
 }

@@ -229,16 +229,22 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         subMenu.setHeaderTitle(headerTitle)
     }
 
+    private fun cancelQuizAndGetQuizList() {
+        mPresenter.cancelQuiz()
+        mGetQuizListInteractor.getQuizList()
+    }
+
     override fun onBackPressed() {
-        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
-        Timber.d("onBackPressed() current fragment: $currentFragment")
-        if (currentFragment == QuizListFragment::class.simpleName
-            || currentFragment == QuizItemDetailFragment::class.simpleName
-            || currentFragment == WinnerFragment::class.simpleName) {
-            mPresenter.cancelQuiz()
-            mGetQuizListInteractor.getQuizList()
-        } else {
-            super.onBackPressed()
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        Timber.d("onBackPressed() current fragment: ${currentFragment?.tag}")
+        when (currentFragment) {
+            is QuizListFragment,
+            is WinnerFragment -> cancelQuizAndGetQuizList()
+            is QuizItemDetailFragment -> {
+                cancelQuizAndGetQuizList()
+                (currentFragment as? QuizItemDetailFragment)?.onBackPressed()
+            }
+            else -> super.onBackPressed()
         }
     }
 }

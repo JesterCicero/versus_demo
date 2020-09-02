@@ -5,8 +5,8 @@
         <shape android:shape="oval">
             <solid android:color="@color/mainColor"/>
             <size
-                android:width="@dimen/quiz_list_icon_height"
-                android:height="@dimen/quiz_list_icon_height"/>
+                android:width="@dimen/next_button_shape_land_width_height"
+                android:height="@dimen/next_button_shape_land_width_height"/>
         </shape>
     </item>
 </selector>

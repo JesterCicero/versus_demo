@@ -2,6 +2,7 @@ package com.rkhrapunov.versustest.framework
 
 import android.content.Context
 import android.os.Handler
+import com.rkhrapunov.core.data.ChosenContestant
 import com.rkhrapunov.core.data.IContestantsDataSource
 import com.rkhrapunov.core.data.IContestantsInfo
 import com.rkhrapunov.core.domain.IRenderState
@@ -60,6 +61,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private val mContext by inject<Context>()
     private val mDeferredWinnersList = mutableListOf<String>()
     private var mDeferredPost = false
+    private var mChosenContestant = ChosenContestant.UNKNOWN
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
@@ -190,6 +192,12 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     }
 
     override fun getCurrentPagePosition() = mCurrentPagePosition
+
+    override fun saveChosenContestant(chosenContestant: ChosenContestant) {
+        mChosenContestant = chosenContestant
+    }
+
+    override fun getChosenContestant() = mChosenContestant
 
     private fun clearData() {
         mInterimContestants.clear()
