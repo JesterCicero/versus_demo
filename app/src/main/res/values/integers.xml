@@ -49,4 +49,5 @@
     <integer name="empty_pager_error_dialog_middle_space_vertical_weight">6</integer>
     <integer name="empty_pager_error_dialog_ok_button_vertical_weight">12</integer>
     <integer name="error_dialog_ok_button_vertical_weight">16</integer>
+    <integer name="top_snack_bar_button_gradient_angle">270</integer>
 </resources>

@@ -28,6 +28,9 @@ import com.rkhrapunov.versustest.presentation.quiz_pager.IQuizPagerContract
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerPresenter
 import com.rkhrapunov.versustest.presentation.quizlist.IQuizListContract
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListPresenter
+import com.rkhrapunov.versustest.presentation.topsnackbar.ITopBarNotification
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarHelper
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarType
 import com.rkhrapunov.versustest.presentation.winner.IWinnerContract
 import com.rkhrapunov.versustest.presentation.winner.WinnerPresenter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -55,9 +58,12 @@ val applicationModule = module(override = true) {
     single { Preferences() }
     single { ContestantsCache() }
     single { NetworkConnectivityHelper() }
+    single { TopSnackBarHelper() }
     single(named("RenderState")) { ConflatedBroadcastChannel<IRenderState>() }
     single(named("ErrorMsg")) { BroadcastChannel<String>(Channel.BUFFERED) }
     single(named("NetworkState")) { BroadcastChannel<Boolean>(Channel.BUFFERED) }
+    single(named("Notification")) { BroadcastChannel<ITopBarNotification>(Channel.BUFFERED) }
+    single(named("NotificationDismiss")) { BroadcastChannel<TopSnackBarType>(Channel.BUFFERED) }
     factory { androidContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     factory<IContestantsDataSource> { ContestantsDataSource() }
     factory { GetRenderUiChannelInteractor() }

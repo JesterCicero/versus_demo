@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBar" />
+
+        <variable
+            name="topSnackBar"
+            type="TopSnackBar" />
+
+    </data>
+
+    <com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarView
+        android:id="@+id/parent_view"
+        android:layout_width="@dimen/top_snack_bar_parent_width"
+        android:layout_height="@dimen/top_snack_bar_parent_height"
+        android:background="@drawable/shape_top_snack_bar"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/snack_bar_icon"
+            android:layout_width="@dimen/top_snack_bar_icon_width_height"
+            android:layout_height="@dimen/top_snack_bar_icon_width_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/top_snack_bar_margin"
+            android:contentDescription="@string/top_snack_bar_icon_description"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_no_internet"
+            android:layout_marginLeft="@dimen/top_snack_bar_margin" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/snack_bar_text"
+            android:layout_width="@dimen/top_snack_bar_description_width"
+            android:layout_height="@dimen/top_snack_bar_description_height"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:textColor="@color/pagerBackgroundColor"
+            android:maxLines="1"
+            android:textSize="@dimen/top_snack_bar_description_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/snack_bar_icon"
+            app:layout_constraintEnd_toStartOf="@id/snack_bar_left_button"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Primary text"
+            tools:ignore="SpUsage" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/snack_bar_left_button"
+            android:layout_width="@dimen/top_snack_bar_button_width"
+            android:layout_height="@dimen/top_snack_bar_button_height"
+            android:padding="@dimen/top_snack_bar_button_padding"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/top_snack_bar_margin"
+            android:background="@drawable/top_bar_button_selector"
+            android:gravity="center"
+            android:textColor="@color/backgroundMainColor"
+            android:text="@string/back_to_quizzes"
+            android:onClick="@{ () -> topSnackBar.onButtonClicked() }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="OK"
+            android:layout_marginRight="@dimen/top_snack_bar_margin" />
+    </com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarView>
+</layout>

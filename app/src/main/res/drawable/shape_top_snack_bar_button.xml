@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <corners android:radius="@dimen/contestant_tile_corner_radius"/>
+    <gradient
+        android:startColor="@color/quizListItemTextColor"
+        android:endColor="@color/yellowButtonPressedColor"
+        android:angle="@integer/top_snack_bar_button_gradient_angle" />
+</shape>
