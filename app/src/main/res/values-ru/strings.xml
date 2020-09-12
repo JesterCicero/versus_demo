@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Викторины</string>
+    <string name="vs_text">VS</string>
+    <string name="first_img_description">первая картинка</string>
+    <string name="second_img_description">вторая картинка</string>
+    <string name="winner_img_description">картинка победителя</string>
+    <string name="list_icon_description">иконка списка</string>
+    <string name="round">раунд</string>
+    <string name="back_to_quizzes">OK</string>
+    <string name="winner_title">Победитель</string>
+    <string name="view_stats">Просмотр статистики</string>
+    <string name="search_hint">поиск…</string>
+    <string name="ascending">По возрастанию</string>
+    <string name="descending">По убыванию</string>
+    <string name="sort">Сортировать</string>
+    <string name="about">О нас</string>
+    <string name="sort_by_results">Сортировка по %</string>
+    <string name="sort_by_name">Сортировка по имени</string>
+    <string name="unable_to_get_quiz_list">Невозможно получить список викторин</string>
+    <string name="unable_to_get_quiz">Невозможно получить викторину</string>
+    <string name="unable_to_get_stats">Невозмоно получить статистику</string>
+    <string name="unable_to_post_winner">Невозможно отправить победителя</string>
+    <string name="quiz_updated_on_server">Викторина обновилась</string>
+    <string name="retry_loading">Загрузить</string>
+    <string name="top_snack_bar_icon_description">Иконка уведомления</string>
+    <string name="no_internet_connection">Нет Подключения</string>
+    <string name="final_round">Финал</string>
+</resources>

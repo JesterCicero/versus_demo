@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.EmptyPagerBinding
 import org.koin.android.ext.android.inject
 
@@ -28,7 +29,7 @@ class EmptyPagerFragment : Fragment(), IEmptyPagerContract.IEmptyPagerView {
     }
 
     override fun showToast() {
-        Toast.makeText(activity,"Unable to get quizzes", Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity,getString(R.string.unable_to_get_quiz_list), Toast.LENGTH_SHORT).show()
     }
 
     override suspend fun renderErrorState(renderState: RenderState.ErrorState) {

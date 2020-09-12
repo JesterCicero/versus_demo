@@ -34,6 +34,7 @@
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
+            android:lines="@integer/error_dialog_lines_number"
             app:layout_constraintBottom_toTopOf="@id/middle_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

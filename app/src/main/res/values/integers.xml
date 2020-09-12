@@ -44,10 +44,11 @@
     <integer name="quiz_item_top_second_img_space_vertical_weight">2</integer>
     <integer name="quiz_item_bottom_second_img_space_vertical_weight">2</integer>
     <integer name="empty_pager_error_dialog_top_bottom_space_vertical_weight">36</integer>
-    <integer name="error_dialog_top_bottom_space_vertical_weight">34</integer>
-    <integer name="empty_pager_error_dialog_error_text_vertical_weight">10</integer>
+    <integer name="error_dialog_top_bottom_space_vertical_weight">28</integer>
+    <integer name="empty_pager_error_dialog_error_text_vertical_weight">18</integer>
     <integer name="empty_pager_error_dialog_middle_space_vertical_weight">6</integer>
     <integer name="empty_pager_error_dialog_ok_button_vertical_weight">12</integer>
     <integer name="error_dialog_ok_button_vertical_weight">16</integer>
     <integer name="top_snack_bar_button_gradient_angle">270</integer>
+    <integer name="error_dialog_lines_number">2</integer>
 </resources>

@@ -5,9 +5,6 @@
         <shape android:shape="rectangle">
             <solid android:color="@color/backgroundMainColor"/>
             <corners android:radius="@dimen/error_dialog_radius"/>
-            <stroke
-                android:width="@dimen/error_dialog_border_width"
-                android:color="@color/yellowButtonPressedColor" />
         </shape>
     </item>
 </selector>
