@@ -375,6 +375,6 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         val secondContestant = mInterimContestants.random()
         mInterimContestants.remove(secondContestant)
         return RenderState.QuizItemDetailState(
-            firstContestant, secondContestant, if (mCurrentRound == 1) "Final" else "1/$mCurrentRound", mCurrentQuiz)
+            firstContestant, secondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz)
     }
 }

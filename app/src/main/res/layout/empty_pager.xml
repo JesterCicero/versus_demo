@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/error_dialog_background_shape">
+        android:background="@drawable/error_dialog_background_shape_no_border">
 
         <Space
             android:id="@+id/top_space"
