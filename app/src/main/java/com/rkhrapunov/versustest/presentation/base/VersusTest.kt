@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import com.rkhrapunov.versustest.framework.di.applicationModule
 import com.rkhrapunov.versustest.BuildConfig
 import com.rkhrapunov.versustest.framework.helpers.NetworkConnectivityHelper
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.android.inject
@@ -20,6 +21,7 @@ import timber.log.Timber.DebugTree
 class VersusTest : Application() {
 
     private val mConnectivityHelper by inject<NetworkConnectivityHelper>()
+    private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
 
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate() {
@@ -32,5 +34,6 @@ class VersusTest : Application() {
             modules(applicationModule)
         }
         mConnectivityHelper.subscribeNetworkStatus()
+        mTopSnackBarHelper.init()
     }
 }

@@ -1,11 +1,13 @@
 package com.rkhrapunov.versustest.presentation.main
 
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
 import android.view.Gravity
 import android.view.Menu
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
@@ -24,10 +26,15 @@ import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListAdapter
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarHelper
 import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @ExperimentalStdlibApi
 class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
@@ -36,6 +43,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private var mCurrentState: IRenderState? = null
     private var mErrorDialogFragment: ErrorDialogFragment? by weak()
+    private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -51,6 +59,17 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             mGetQuizListInteractor.getQuizList()
         }
         mPresenter.attachView(this, lifecycle)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onResume() {
+        super.onResume()
+        mTopSnackBarHelper.setActivity(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mTopSnackBarHelper.reset()
     }
 
     override suspend fun render(renderState: IRenderState) {

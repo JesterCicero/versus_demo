@@ -272,6 +272,6 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val NEXT_ROUND_TIMEOUT = 30L
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.9F
         private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -50F
-        private const val LANDSCAPE_IMG_Y_VALUE = -80F
+        private const val LANDSCAPE_IMG_Y_VALUE = -50F
     }
 }

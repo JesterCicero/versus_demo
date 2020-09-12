@@ -7,6 +7,11 @@ import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.rkhrapunov.versustest.R
+import com.rkhrapunov.versustest.presentation.topsnackbar.ITopBarNotification
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopBarNotification
+import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarType
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import org.koin.core.KoinComponent
@@ -41,12 +46,27 @@ class NetworkConnectivityHelper : KoinComponent {
     inner class ConnectionStatusCallback : ConnectivityManager.NetworkCallback() {
 
         private val activeNetworks: MutableList<Network> = mutableListOf()
+        private val mNotificationChannel by inject<BroadcastChannel<ITopBarNotification>>(named("Notification"))
+        private val mNotificationDismissChannel by inject<BroadcastChannel<TopSnackBarType>>(named("NotificationDismiss"))
 
         override fun onLost(network: Network) {
             super.onLost(network)
             activeNetworks.removeAll { activeNetwork -> activeNetwork == network }
             mOnline = activeNetworks.isNotEmpty()
             Timber.d("onLost(): online: $mOnline")
+            mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                mNotificationChannel.send(TopBarNotification(
+                    TopSnackBarType.NO_CONNECTION,
+                    R.string.no_internet_connection,
+                    R.drawable.ic_no_internet,
+                    notificationTimeout = NO_CONNECTION_TIMEOUT_MS,
+                    action = {
+                        mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                            mNotificationDismissChannel.send(TopSnackBarType.NO_CONNECTION)
+                        }
+                    }
+                ))
+            }
             mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.send(mOnline) })
         }
 
@@ -57,6 +77,9 @@ class NetworkConnectivityHelper : KoinComponent {
             }
             mOnline = activeNetworks.isNotEmpty()
             Timber.d("onAvailable(): online: $mOnline")
+            mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                mNotificationDismissChannel.send(TopSnackBarType.NO_CONNECTION)
+            }
             mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.send(mOnline) })
         }
     }
@@ -69,5 +92,9 @@ class NetworkConnectivityHelper : KoinComponent {
             Timber.w("NetworkCallback for Wi-fi was not registered or already unregistered\"")
         }
         mConnectivityManager.registerNetworkCallback(NetworkRequest.Builder().build(), callback)
+    }
+
+    companion object {
+        private const val NO_CONNECTION_TIMEOUT_MS = 15000
     }
 }

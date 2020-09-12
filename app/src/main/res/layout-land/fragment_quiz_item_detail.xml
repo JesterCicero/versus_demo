@@ -62,7 +62,7 @@
             android:text="@{round}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
-            android:layout_marginBottom="@dimen/quiz_item_land_detail_item_margin_bottom"
+            android:layout_marginBottom="@dimen/quiz_item_detail_round_description_margin_bottom"
             app:layout_constraintBottom_toTopOf="@id/first_img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
