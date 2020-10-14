@@ -78,6 +78,9 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mDeferredPost = false
     private var mChosenContestant = ChosenContestant.UNKNOWN
     private var mResultsStats = true
+    private var mWinnerDetected = false
+    private lateinit var mFirstContestant: IContestantsInfo
+    private lateinit var mSecondContestant: IContestantsInfo
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
@@ -129,6 +132,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                     mPostWinnerJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ postWinner(winnerName) })
                     mWinnersList.clear()
                     mLastWinnerState = winnerState
+                    mWinnerDetected = true
                     winnerState
                 } else {
                     getQuizItemDetailState()
@@ -203,14 +207,21 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     }
 
     override fun getQuizItemDetail(itemData: String) {
-        mCurrentQuiz = itemData
-        mGetQuizItemDetailJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
-            mContestantsCache.tryToGetQuizInfoCache(mCurrentQuiz)?.let {
-                Timber.d("starting quiz with values from cache")
-                startQuiz(it)
+        if (mCurrentQuiz == itemData && !mWinnerDetected) {
+            mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                mRenderUiChannel.send(getQuizItemDetailState(true))
             }
-            getQuizApi()
-        })
+        } else {
+            mWinnerDetected = false
+            mCurrentQuiz = itemData
+            mGetQuizItemDetailJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+                mContestantsCache.tryToGetQuizInfoCache(mCurrentQuiz)?.let {
+                    Timber.d("starting quiz with values from cache")
+                    startQuiz(it)
+                }
+                getQuizApi()
+            })
+        }
     }
 
     override fun getStats() {
@@ -242,7 +253,6 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mUnableToGetStatsJob?.cancel()
         mQuizUpdatedOnServerJob?.cancel()
         mUnableToPostWinnerJob?.cancel()
-        clearData()
     }
 
     override fun savePageIndicatorText(pageIndicatorText: String) {
@@ -562,12 +572,14 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         }
     }
 
-    private fun getQuizItemDetailState(): RenderState.QuizItemDetailState {
-        val firstContestant = mInterimContestants.random()
-        mInterimContestants.remove(firstContestant)
-        val secondContestant = mInterimContestants.random()
-        mInterimContestants.remove(secondContestant)
+    private fun getQuizItemDetailState(sameQuiz: Boolean = false): RenderState.QuizItemDetailState {
+        if (!sameQuiz) {
+            mFirstContestant = mInterimContestants.random()
+            mInterimContestants.remove(mFirstContestant)
+            mSecondContestant = mInterimContestants.random()
+            mInterimContestants.remove(mSecondContestant)
+        }
         return RenderState.QuizItemDetailState(
-            firstContestant, secondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz)
+            mFirstContestant, mSecondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz)
     }
 }
