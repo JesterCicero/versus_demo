@@ -29,7 +29,7 @@ class EmptyPagerFragment : Fragment(), IEmptyPagerContract.IEmptyPagerView {
     }
 
     override fun showToast() {
-        Toast.makeText(activity,getString(R.string.unable_to_get_quiz_list), Toast.LENGTH_SHORT).show()
+        Toast.makeText(activity,getString(R.string.unable_to_get_super_categories), Toast.LENGTH_SHORT).show()
     }
 
     override suspend fun renderErrorState(renderState: RenderState.ErrorState) {
