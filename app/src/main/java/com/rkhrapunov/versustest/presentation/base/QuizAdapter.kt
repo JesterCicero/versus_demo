@@ -21,10 +21,8 @@ import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import com.rkhrapunov.versustest.presentation.base.Constants.INVALID_VALUE
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.withContext
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -231,7 +229,11 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
                 parent.isEnabled = false
             }
             val itemData = (data[position] as? ISuperCategory)?.let {
-                activity?.let { fragmentActivity -> mImageLoader.loadImage(fragmentActivity, it.url, mSuperCategoryItemBinding.smallImg) }
+                activity?.let { fragmentActivity ->
+                    mCoroutineLauncherHelper.launchImgLoading {
+                        mImageLoader.loadImage(fragmentActivity, it.url, mSuperCategoryItemBinding.smallImg)
+                    }
+                }
                 it.name
             } ?: EMPTY_STRING
             setSuperCategoriesBindingItemData(itemData)
@@ -296,11 +298,9 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
 
         private fun loadImage(fragment: Fragment?, url: String, quizStatsList: Boolean = false) {
             fragment?.let {
-                mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    withContext(Dispatchers.IO) {
-                        fragment.activity?.let {
-                            mImageLoader.loadImage(it, url, if (quizStatsList) mQuizListItemBinding.smallImg else mQuizListPagerItemBinding.smallImg)
-                        }
+                fragment.activity?.let {
+                    mCoroutineLauncherHelper.launchImgLoading {
+                        mImageLoader.loadImage(it, url, if (quizStatsList) mQuizListItemBinding.smallImg else mQuizListPagerItemBinding.smallImg)
                     }
                 }
             }
