@@ -8,5 +8,5 @@ class GetQuizListInteractor : KoinComponent {
 
     private val mContestantsRepo by inject<ContestantsRepository>()
 
-    fun getQuizList() = mContestantsRepo.getQuizList()
+    fun getQuizList(itemData: String) = mContestantsRepo.getQuizList(itemData)
 }

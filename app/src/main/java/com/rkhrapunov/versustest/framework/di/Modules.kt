@@ -69,13 +69,21 @@ val applicationModule = module(override = true) {
     factory { GetRenderUiChannelInteractor() }
     factory { GetErrorMsgChannelInteractor() }
     factory { ChosenContestantInteractor() }
+    factory { GetSuperCategoriesInteractor() }
+    factory { GetCategoriesInteractor() }
     factory { GetQuizListInteractor() }
     factory { GetQuizItemDetailInteractor() }
+    factory { GetCurrentQuizListInteractor() }
+    factory { GetCurrentSuperCategoryInteractor() }
+    factory { GetCurrentCategoryInteractor() }
+    factory { GetCurrentQuizInteractor() }
     factory { ResetInteractor() }
     factory { GetStatsInteractor() }
     factory { CancelQuizInteractor() }
     factory { PageIndicatorTextInteractor() }
     factory { RetrieveChosenContestantInteractor() }
+    factory { CurrentSuperCategoryInteractor() }
+    factory { GetStatsOptionInteractor() }
     factory<IMainContract.IMainPresenter> { MainPresenter() }
     factory<IQuizListContract.IQuizListPresenter> { QuizListPresenter() }
     factory<IQuizPagerContract.IQuizPagerPresenter> { QuizPagerPresenter() }

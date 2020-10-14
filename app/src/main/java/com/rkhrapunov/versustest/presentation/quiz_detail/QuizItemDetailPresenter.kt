@@ -6,10 +6,13 @@ import com.rkhrapunov.core.data.ChosenContestant
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.core.interactors.ChosenContestantInteractor
+import com.rkhrapunov.core.interactors.GetCurrentQuizInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
 import com.rkhrapunov.core.interactors.RetrieveChosenContestantInteractor
+import com.rkhrapunov.versustest.framework.ContestantsCache
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
+import com.rkhrapunov.versustest.presentation.base.Constants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -29,6 +32,8 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
     private val mChosenContestantInteractor by inject<ChosenContestantInteractor>()
+    private val mGetCurrentQuizInteractor by inject<GetCurrentQuizInteractor>()
+    private val mContestantsCache by inject<ContestantsCache>()
     private var mJob: Job? = null
     private var mCurrentState: IRenderState? = null
     private var mQuizItemStateUpdated = false
@@ -83,6 +88,15 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     override fun retrieveChosenContestant() = mRetrieveChosenContestantInteractor.getChosenContestant()
 
     override fun saveChosenContestant(chosenContestant: ChosenContestant) = mRetrieveChosenContestantInteractor.saveChosenContestant(chosenContestant)
+
+    override fun getCurrentQuizBackgroundUrl(): String {
+        val filteredQuizzes = mContestantsCache.quizzesInfoCache?.filter {
+            it.title == mGetCurrentQuizInteractor.getCurrentQuiz()
+        }
+        return filteredQuizzes?.let {
+            if (it.isNotEmpty()) it[0].backgroundUrl else Constants.EMPTY_STRING
+        } ?: Constants.EMPTY_STRING
+    }
 
     private fun onItemClicked(chosenFirst: Boolean) {
         if (mQuizItemStateUpdated) {

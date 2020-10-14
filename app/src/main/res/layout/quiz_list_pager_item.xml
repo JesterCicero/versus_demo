@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener" />
+        <import type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
 
         <import type="android.view.View" />
 
@@ -20,16 +20,12 @@
             type="String" />
 
         <variable
-            name="itemDataDetail"
-            type="String" />
+            name="position"
+            type="int" />
 
         <variable
             name="itemClickListener"
-            type="IItemClickListener" />
-
-        <variable
-            name="quizList"
-            type="Boolean" />
+            type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,7 +33,7 @@
         android:layout_height="@dimen/pager_item_parent_height"
         android:layout_margin="@dimen/pager_item_parent_margin"
         android:background="@drawable/custom_page_item_selector"
-        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
+        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position) }">
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"

@@ -6,6 +6,7 @@ import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.core.interactors.GetQuizListInteractor
 import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
+import com.rkhrapunov.core.interactors.GetSuperCategoriesInteractor
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.BasePresenter
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,7 @@ class EmptyPagerPresenter : BasePresenter<IEmptyPagerContract.IEmptyPagerView>()
     IEmptyPagerContract.IEmptyPagerPresenter, KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
+    private val mGetSuperCategoriesInteractor by inject<GetSuperCategoriesInteractor>()
     private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
     private var mJob: Job? = null
@@ -48,7 +50,7 @@ class EmptyPagerPresenter : BasePresenter<IEmptyPagerContract.IEmptyPagerView>()
         }
     }
 
-    override fun onRetryLoadingClickedIntent() = mGetQuizListInteractor.getQuizList()
+    override fun onRetryLoadingClickedIntent() = mGetSuperCategoriesInteractor.getSuperCategories()
 
     override fun onViewDestroyed() {
         mJob?.cancel()

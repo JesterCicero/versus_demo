@@ -21,6 +21,8 @@ import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import com.rkhrapunov.versustest.presentation.main.MainActivity
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import timber.log.Timber
@@ -88,6 +90,8 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         }
     }
 
+    @FlowPreview
+    @ExperimentalCoroutinesApi
     override fun onItemClicked(chosenFirst: Boolean) {
         mBinding?.let {
             (activity as? MainActivity)?.let { activity ->
@@ -103,7 +107,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                     it.nextButtonFrameLayoutId.alpha = DISABLED_ALPHA
                     mAnimationsStarted = true
                     animateImg(it, itemView, getTranslationCoordinate(activityBinding, it, chosenFirst, itemView), chosenFirst)
-                    animateDescription(it, itemView.width, itemView.height, chosenFirst)
+                    animateDescription(activityBinding, it, itemView.width, itemView.height, chosenFirst)
                 }
             }
         }
@@ -141,7 +145,11 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             fragmentQuizItemDetailBinding.firstImg.visibility = View.INVISIBLE
         }
         val translationValue = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
-            val translationPortraitValue = (activityBinding.parent.height / 2 - itemView.height + if (chosenFirst) -itemHalfHeight else itemHalfHeight).toFloat()
+            val translationPortraitValue = if (chosenFirst) {
+                activityBinding.parent.height / 2 - fragmentQuizItemDetailBinding.firstImg.y - itemHalfHeight
+            } else {
+                fragmentQuizItemDetailBinding.secondImg.y - activityBinding.parent.height / 2 + itemHalfHeight
+            }
             Timber.d("getTranslationCoordinate(): chosenFirstTranslationPortraitValue: $translationPortraitValue")
             translationPortraitValue
         } else {
@@ -192,10 +200,10 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         )
     }
 
-    private fun animateDescription(binding: FragmentQuizItemDetailBinding, itemViewWidth: Int, itemViewHeight: Int, chosenFirst: Boolean) {
+    private fun animateDescription(activityBinding: ActivityMainBinding, binding: FragmentQuizItemDetailBinding, itemViewWidth: Int, itemViewHeight: Int, chosenFirst: Boolean) {
         val descriptionViewToAnimate = binding.secondImgDescription
         val translationByCoordinateDescription = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
-            (-itemViewHeight / 2 - (binding.firstImg.y - binding.fragmentContainer.y)) * TRANSLATION_DESCRIPTION_FACTOR
+            (activityBinding.parent.height / 2 - itemViewHeight / 2 - binding.secondImg.y) * TRANSLATION_DESCRIPTION_FACTOR
         } else {
             val translationValue = itemViewWidth / 2 + binding.vsTextView.width / 2 + (binding.vsTextView.x - (binding.firstImg.x + binding.firstImg.width))
             Timber.d("animateDescription(): translationValue=$translationValue")
@@ -257,6 +265,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 activity?.let {
                     mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
                     mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
+                    mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
                 }
             }
         }

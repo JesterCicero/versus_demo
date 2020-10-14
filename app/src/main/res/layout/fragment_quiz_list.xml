@@ -8,23 +8,67 @@ xmlns:tools="http://schemas.android.com/tools">
         <variable
             name="presenter"
             type="IQuizListPresenter" />
+        <variable
+            name="results"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/stats"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/stats_header_button_height"
+            android:background="@drawable/stats_tab_button_selector"
+            android:textColor="@color/quizListItemTextColor"
+            android:gravity="center"
+            android:text="@string/results"
+            android:layout_marginTop="@dimen/stats_header_button_margin_top"
+            android:layout_marginEnd="@dimen/stats_header_button_margin_start_end"
+            android:paddingHorizontal="@dimen/stats_header_button_padding_horizontal"
+            android:textSize="@dimen/stats_header_button_text_size"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:onClick="@{ () -> presenter.onStatsTabClicked(true) }"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/quiz_list_recycler_view_id"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/top_4"
+            tools:ignore="SpUsage" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/top_4"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/stats_header_button_height"
+            android:background="@drawable/stats_tab_button_selector"
+            android:textColor="@color/quizListItemTextColor"
+            android:gravity="center"
+            android:text="@string/top_4"
+            android:paddingHorizontal="@dimen/stats_header_button_padding_horizontal"
+            android:textSize="@dimen/stats_header_button_text_size"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:onClick="@{ () -> presenter.onStatsTabClicked(false) }"
+            android:layout_marginStart="@dimen/stats_header_button_margin_start_end"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintTop_toTopOf="@id/stats"
+            app:layout_constraintBottom_toBottomOf="@id/stats"
+            app:layout_constraintStart_toEndOf="@id/stats"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="SpUsage" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/quiz_list_recycler_view_id"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/quiz_list_recycler_view_margin_top_bottom"
-            android:layout_marginBottom="@dimen/quiz_list_recycler_view_margin_top_bottom"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/stats_recycler_view_margin_top_bottom"
+            android:layout_marginBottom="@dimen/stats_recycler_view_margin_top_bottom"
             android:scrollbarSize="@dimen/quiz_list_recycler_view_scroll_bar_size"
             android:scrollbars="vertical"
             android:scrollbarThumbVertical="@color/mainColor"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/next_button_frame_layout_id"
+            app:layout_constraintTop_toBottomOf="@id/stats"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:clickable="true"
@@ -36,10 +80,9 @@ xmlns:tools="http://schemas.android.com/tools">
             android:layout_height="0dp"
             android:id="@+id/next_button_frame_layout_id"
             android:background="@drawable/next_button_stats_selector"
-            android:onClick="@{ () -> presenter.onBackToQuizzesButtonClickedIntent()}"
+            android:onClick="@{ () -> presenter.onBackToQuizzesButtonClickedIntent() }"
             android:layout_marginEnd="@dimen/quiz_list_margin_end"
-            android:layout_marginRight="@dimen/quiz_list_margin_end"
-            android:layout_marginBottom="@dimen/quiz_list_margin_bottom"
+            android:layout_marginBottom="@dimen/stats_next_button_margin_bottom"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:scaleType="centerCrop"
@@ -47,8 +90,8 @@ xmlns:tools="http://schemas.android.com/tools">
             tools:visibility="visible">
             <ImageView
                 tools:ignore="ContentDescription"
-                android:layout_width="@dimen/quiz_list_next_button_width_height"
-                android:layout_height="@dimen/quiz_list_next_button_width_height"
+                android:layout_width="@dimen/stats_next_button_width_height"
+                android:layout_height="@dimen/stats_next_button_width_height"
                 android:paddingTop="@dimen/quiz_list_item_name_padding"
                 android:paddingBottom="@dimen/quiz_list_item_name_padding"
                 android:layout_gravity="center"

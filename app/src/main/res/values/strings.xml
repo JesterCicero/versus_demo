@@ -16,6 +16,8 @@
     <string name="about">About</string>
     <string name="sort_by_results">Sort by results</string>
     <string name="sort_by_name">Sort by name</string>
+    <string name="unable_to_get_super_categories">Unable to get super categories</string>
+    <string name="unable_to_get_categories">Unable to get categories</string>
     <string name="unable_to_get_quiz_list">Unable to get quiz list</string>
     <string name="unable_to_get_quiz">Unable to get quiz</string>
     <string name="unable_to_get_stats">Unable to get stats</string>
@@ -25,4 +27,6 @@
     <string name="top_snack_bar_icon_description">Top Snack Bar icon</string>
     <string name="no_internet_connection">No Internet Connection</string>
     <string name="final_round">Final</string>
+    <string name="results">Results</string>
+    <string name="top_4">Recent Top 4</string>
 </resources>

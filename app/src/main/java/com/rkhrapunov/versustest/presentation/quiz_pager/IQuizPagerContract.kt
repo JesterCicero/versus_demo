@@ -1,12 +1,13 @@
 package com.rkhrapunov.versustest.presentation.quiz_pager
 
-import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.versustest.presentation.base.IBaseStatefulPresenter
 import com.rkhrapunov.versustest.presentation.base.IBaseView
 
 interface IQuizPagerContract {
     interface IQuizPagerView : IBaseView {
-        fun renderQuizListState(renderState: RenderState.QuizListState)
+        fun renderState(renderState: IRenderState)
+        fun onSuperCategoriesBack()
     }
 
     interface IQuizPagerPresenter : IBaseStatefulPresenter<IQuizPagerView> {
@@ -14,5 +15,8 @@ interface IQuizPagerContract {
         fun getPageIndicatorText(): String
         fun saveCurrentPagePosition(currentPosition: Int)
         fun getCurrentPagePosition(): Int
+        fun onBackPressed()
+        fun getCurrentSuperCategoryBackgroundUrl(): String
+        fun getCurrentCategoryBackgroundUrl(): String
     }
 }
