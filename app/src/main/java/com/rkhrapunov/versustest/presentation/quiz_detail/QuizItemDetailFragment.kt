@@ -13,6 +13,7 @@ import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
 import com.rkhrapunov.versustest.databinding.FragmentQuizItemDetailBinding
+import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.DISABLED_ALPHA
 import com.rkhrapunov.versustest.presentation.base.Constants.ENABLED_ALPHA
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
@@ -20,10 +21,8 @@ import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import com.rkhrapunov.versustest.presentation.main.MainActivity
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -31,6 +30,7 @@ import timber.log.Timber
 class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDetailView {
 
     private val mPresenter by inject<IQuizItemDetailContract.IQuizItemDetailPresenter>()
+    private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private var mBinding: FragmentQuizItemDetailBinding? = null
     private val mImageLoader by inject<ImageLoader>()
     private val mHandler = Handler()
@@ -255,14 +255,14 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         return viewPropertyAnimator
     }
 
-    override suspend fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState) {
+    override fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState) {
         Timber.d("round: ${renderState.round}")
         mBinding?.let { binding ->
             binding.round = "${renderState.quizTitle.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()}: ${renderState.round}"
             binding.firstDescription = renderState.firstContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             binding.secondDescription = renderState.secondContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
-            withContext(Dispatchers.IO) {
-                activity?.let {
+            activity?.let {
+                mCoroutineLauncherHelper.launchImgLoading {
                     mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
                     mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
                     mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)

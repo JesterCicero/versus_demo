@@ -67,6 +67,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mUnableToGetCategoriesJob: Job? = null
     private var mUnableToGetQuizListJob: Job? = null
     private var mUnableToGetQuizJob: Job? = null
+    private var mUnableToGetStatsJob: Job? = null
     private var mQuizUpdatedOnServerJob: Job? = null
     private var mUnableToPostWinnerJob: Job? = null
     private var mPageIndicatorText: String = EMPTY_STRING
@@ -238,6 +239,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mUnableToGetCategoriesJob?.cancel()
         mUnableToGetQuizListJob?.cancel()
         mUnableToGetQuizJob?.cancel()
+        mUnableToGetStatsJob?.cancel()
         mQuizUpdatedOnServerJob?.cancel()
         mUnableToPostWinnerJob?.cancel()
         clearData()
@@ -477,6 +479,9 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             { onGetQuizStatsApiSuccess(it as Response<List<ContestantsStatsInfo>>) },
             {
                 Timber.d(it, "Error occurred while getting request for contestants stats!")
+                mUnableToGetStatsJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                    mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_stats))
+                }
             },
             lang = Locale.getDefault().language,
             public_super_category = mCurrentSuperCategory,

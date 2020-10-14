@@ -13,6 +13,7 @@ import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.databinding.FragmentQuizPagerBinding
+import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.main.MainActivity
 import com.rkhrapunov.versustest.presentation.quiz_page.QuizPageFragment
@@ -27,6 +28,7 @@ import timber.log.Timber
 class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
 
     private val mPresenter by inject<IQuizPagerContract.IQuizPagerPresenter>()
+    private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private var mBinding: FragmentQuizPagerBinding? = null
     private val mImageLoader by inject<ImageLoader>()
     private var mPositionChanged = false
@@ -95,7 +97,9 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
                     return
                 }
             }
-            mImageLoader.loadImage(it, url, viewGroup)
+            mCoroutineLauncherHelper.launchImgLoading {
+                mImageLoader.loadImage(it, url, viewGroup)
+            }
         }
     }
 

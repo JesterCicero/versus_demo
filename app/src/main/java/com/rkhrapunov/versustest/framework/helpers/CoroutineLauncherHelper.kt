@@ -34,8 +34,14 @@ class CoroutineLauncherHelper : KoinComponent {
 
     fun launchWithSingleCoroutineDispatcher(singleContextAction: suspend CoroutineScope.() -> Unit,
                                             coroutineDispatcher: CoroutineDispatcher = Dispatchers.Default,
-                                            coroutineAction: suspend () -> Unit = { }) = coroutineScope.launch(coroutineDispatcher) {
+                                            coroutineAction: suspend () -> Unit = { }) =
+        coroutineScope.launch(coroutineDispatcher) {
             withContext(singleCoroutineDispatcher, singleContextAction)
             coroutineAction()
+        }
+
+    fun launchImgLoading(action: suspend CoroutineScope.() -> Unit) =
+        coroutineScope.launch {
+            withContext(Dispatchers.IO, action)
         }
 }

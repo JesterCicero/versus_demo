@@ -9,12 +9,11 @@ import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.FragmentWinnerBinding
+import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
 
 @ExperimentalStdlibApi
@@ -23,6 +22,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
     private val mPresenter by inject<IWinnerContract.IWinnerPresenter>()
     private var mBinding: FragmentWinnerBinding? = null
     private val mImageLoader by inject<ImageLoader>()
+    private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private var mShouldShowWinnerFinalState = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,12 +59,12 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
         mBinding?.let { it.progressBar.visibility = View.GONE }
     }
 
-    private suspend fun renderWinner(name: String, url: String) {
+    private fun renderWinner(name: String, url: String) {
         mBinding?.let { binding ->
             binding.name = name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             binding.presenter = mPresenter
-            withContext(Dispatchers.IO) {
-                activity?.let {
+            activity?.let {
+                mCoroutineLauncherHelper.launchImgLoading {
                     mImageLoader.loadImage(it, url, binding.winnerImgId)
                     mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
                 }
