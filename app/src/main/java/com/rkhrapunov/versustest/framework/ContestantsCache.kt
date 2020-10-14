@@ -1,7 +1,9 @@
 package com.rkhrapunov.versustest.framework
 
+import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.data.IContestantsInfo
 import com.rkhrapunov.core.data.IQuizShortInfo
+import com.rkhrapunov.core.data.ISuperCategory
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
@@ -18,6 +20,12 @@ import timber.log.Timber
 @ExperimentalCoroutinesApi
 class ContestantsCache : KoinComponent {
 
+    var superCategoriesCache: List<ISuperCategory>? = null
+        private set
+
+    var categoriesCache: List<ICategory>? = null
+        private set
+
     var quizzesInfoCache: List<IQuizShortInfo>? = null
         private set
 
@@ -27,38 +35,82 @@ class ContestantsCache : KoinComponent {
     val currentQuizTitle: String
         get() = mCurrentQuizTitle
 
+    val currentSuperCategoryName: String
+        get() = mCurrentSuperCategoryName
+
+    val currentCategoryName: String
+        get() = mCurrentCategoryName
+
     private var mCurrentQuizTitle = EMPTY_STRING
+    private var mCurrentSuperCategoryName = EMPTY_STRING
+    private var mCurrentCategoryName = EMPTY_STRING
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mRenderUiChannel by inject<ConflatedBroadcastChannel<IRenderState>>(named("RenderState"))
     private val mPreferences by inject<Preferences>()
 
-    fun tryToGetQuizzesInfoCache() {
-        Timber.d("tryToGetQuizzesInfoCache()")
-        quizzesInfoCache?.let {
-            Timber.d("tryToGetQuizzesInfoCache(): cache from memory")
-            sendQuizzesList(it)
+    fun tryToGetSuperCategoriesCache() {
+        Timber.d("tryToGetSuperCategoriesCache()")
+        superCategoriesCache?.let {
+            Timber.d("tryToGetSuperCategoriesCache(): cache from memory")
+            sendSuperCategories(it)
         } ?: run {
-            mPreferences.quizzes?.let {
+            mPreferences.superCategories?.let {
                 if (it.isEmpty()) { return@let null }
-                val quizShortInfoList = it.toList().map { element ->
+                val superCategories = it.toList().map { element ->
                     val list = element.split(DELIMITER)
-                    QuizShortInfo(list[0], list[1])
-                }.sortedBy { element -> element.title }
-                if (quizShortInfoList.isEmpty()) { return@let null }
+                    SuperCategory(list[0], list[1], list[2])
+                }.sortedBy { element -> element.name }
+                if (superCategories.isEmpty()) { return@let null }
                 Timber.d("tryToGetQuizzesInfoCache(): cache from preferences")
-                quizzesInfoCache = quizShortInfoList
-                sendQuizzesList(quizShortInfoList)
+                superCategoriesCache = superCategories
+                sendSuperCategories(superCategories)
             }
         }
     }
 
-    fun updateQuizzesInfoCache(updatedQuizzesInfoCache: List<IQuizShortInfo>) {
-        Timber.d("updateQuizzesInfoCache()")
-        quizzesInfoCache = updatedQuizzesInfoCache
-        quizCache = null
-        mPreferences.quizzes?.forEach { mPreferences.removeQuiz(it.substring(0, it.indexOf(DELIMITER))) }
-        mPreferences.quizzes = updatedQuizzesInfoCache.map { "${it.title}$DELIMITER${it.url}" }.toSet()
+    fun tryToGetCategoriesCache(superCategoryName: String) {
+        Timber.d("tryToGetCategoriesCache()")
+        categoriesCache?.let {
+            Timber.d("current superCategory: $mCurrentSuperCategoryName, superCategory: $superCategoryName")
+            if (mCurrentSuperCategoryName.isNotEmpty() && mCurrentSuperCategoryName != superCategoryName) { return@let null }
+            Timber.d("tryToGetCategoriesCache(): cache from memory")
+            setCurrentSuperCategoryAndSendCategories(superCategoryName, it)
+        } ?: run {
+            mPreferences.getSuperCategory(superCategoryName)?.let {
+                if (it.isEmpty()) { return@let null }
+                val categories = it.toList().map { element ->
+                    val list = element.split(DELIMITER)
+                    Category(list[0], list[1], list[2])
+                }.sortedBy { element -> element.name }
+                if (categories.isEmpty()) { return@let null }
+                Timber.d("tryToGetCategoriesCache(): cache from preferences")
+                categoriesCache = categories
+                setCurrentSuperCategoryAndSendCategories(superCategoryName, categories)
+            }
+        }
+    }
+
+    fun tryToGetQuizzesInfoCache(categoryName: String) {
+        Timber.d("tryToGetQuizzesInfoCache()")
+        quizzesInfoCache?.let {
+            Timber.d("current category: $mCurrentCategoryName, category: $categoryName")
+            if (mCurrentCategoryName.isNotEmpty() && mCurrentCategoryName != categoryName) { return@let null }
+            Timber.d("tryToGetQuizzesInfoCache(): cache from memory")
+            setCurrentCategoryAndSendQuizzes(categoryName, it)
+        } ?: run {
+            mPreferences.getCategory(categoryName)?.let {
+                if (it.isEmpty()) { return@let null }
+                val quizShortInfoList = it.toList().map { element ->
+                    val list = element.split(DELIMITER)
+                    QuizShortInfo(list[0], list[1], list[2])
+                }.sortedBy { element -> element.title }
+                if (quizShortInfoList.isEmpty()) { return@let null }
+                Timber.d("tryToGetQuizzesInfoCache(): cache from preferences")
+                quizzesInfoCache = quizShortInfoList
+                setCurrentCategoryAndSendQuizzes(categoryName, quizShortInfoList)
+            }
+        }
     }
 
     fun tryToGetQuizInfoCache(quizTitle: String): List<IContestantsInfo>? {
@@ -74,7 +126,7 @@ class ContestantsCache : KoinComponent {
                 if (it.isEmpty()) { return@let null }
                 val contestantsList = it.toList().map { element ->
                     val list = element.split(DELIMITER)
-                    ContestantsInfo(list[0], list[1])
+                    ContestantsInfo(list[0], list[1], list[2], list[3])
                 }.sortedBy { element -> element.name }
                 if (contestantsList.isEmpty()) { return@let null }
                 Timber.d("tryToGetQuizInfoCache(): cache from preferences")
@@ -85,14 +137,99 @@ class ContestantsCache : KoinComponent {
         }
     }
 
+    private fun setCurrentSuperCategoryAndSendCategories(superCategoryName: String, categories: List<ICategory>) {
+        mCurrentSuperCategoryName = superCategoryName
+        sendCategories(categories)
+    }
+
+    private fun setCurrentCategoryAndSendQuizzes(categoryName: String, quizzes: List<IQuizShortInfo>) {
+        mCurrentCategoryName = categoryName
+        sendQuizzesList(quizzes)
+    }
+
+    fun updateSuperCategoriesCache(updatedSuperCategoriesCache: List<ISuperCategory>) {
+        Timber.d("updateSuperCategoriesCache()")
+        superCategoriesCache = updatedSuperCategoriesCache
+        categoriesCache = null
+        quizzesInfoCache = null
+        quizCache = null
+        clearAllPreferencesCache()
+        mPreferences.superCategories = updatedSuperCategoriesCache.map { "${it.name}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet()
+    }
+
+    fun updateCategoriesCache(updatedCategoriesCache: List<ICategory>, currentSuperCategory: String) {
+        Timber.d("updateCategoriesCache()")
+        mCurrentSuperCategoryName = currentSuperCategory
+        categoriesCache = updatedCategoriesCache
+        quizzesInfoCache = null
+        quizCache = null
+        clearCategoriesPreferencesCache()
+        mPreferences.saveSuperCategory(mCurrentSuperCategoryName, updatedCategoriesCache.map { "${it.name}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet())
+    }
+
+    fun updateQuizzesInfoCache(updatedQuizzesInfoCache: List<IQuizShortInfo>, currentCategory: String) {
+        Timber.d("updateQuizzesInfoCache()")
+        mCurrentCategoryName = currentCategory
+        quizzesInfoCache = updatedQuizzesInfoCache
+        quizCache = null
+        clearQuizzesPreferencesCache()
+        mPreferences.saveCategory(mCurrentCategoryName, updatedQuizzesInfoCache.map { "${it.title}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet())
+    }
+
     fun updateQuizInfoCache(updatedQuizInfoCache: List<IContestantsInfo>, currentQuiz: String) {
         Timber.d("updateQuizInfoCache()")
         mCurrentQuizTitle = currentQuiz
         quizCache = updatedQuizInfoCache
-        mPreferences.saveQuiz(mCurrentQuizTitle, updatedQuizInfoCache.map { "${it.name};${it.url}" }.toSet())
+        mPreferences.saveQuiz(mCurrentQuizTitle, updatedQuizInfoCache.map { "${it.name}$DELIMITER${it.url}$DELIMITER${it.minUrl}$DELIMITER${it.shortDescription}" }.toSet())
     }
 
+    fun isCategoriesCacheEmpty(currentSuperCategory: String) = mPreferences.getSuperCategory(currentSuperCategory)?.isEmpty() ?: true
+    fun isQuizzesCacheEmpty(currentCategory: String) =  mPreferences.getCategory(currentCategory)?.isEmpty() ?: true
     fun isQuizCacheEmpty(currentQuiz: String) = mPreferences.getQuiz(currentQuiz)?.isEmpty() ?: true
+
+    private fun clearAllPreferencesCache() {
+        mPreferences.superCategories?.forEach {
+            val superCategory = it.substring(0, it.indexOf(DELIMITER))
+            mPreferences.getSuperCategory(superCategory)?.forEach { categoryInfo ->
+                mPreferences.getCategory(categoryInfo.substring(0, it.indexOf(DELIMITER)))?.forEach { quizInfo ->
+                    mPreferences.removeQuiz(quizInfo)
+                }
+                mPreferences.removeCategory(categoryInfo)
+            }
+            mPreferences.removeSuperCategory(superCategory)
+        }
+    }
+
+    private fun clearCategoriesPreferencesCache() {
+        mPreferences.getSuperCategory(mCurrentSuperCategoryName)?.forEach {
+            val category = it.substring(0, it.indexOf(DELIMITER))
+            Timber.d("category: $category")
+            mPreferences.getCategory(category)?.forEach { quizInfo ->
+                mPreferences.removeQuiz(quizInfo)
+            }
+            mPreferences.removeCategory(category)
+        }
+    }
+
+    private fun clearQuizzesPreferencesCache() {
+        mPreferences.getCategory(mCurrentCategoryName)?.forEach {
+            val quiz = it.substring(0, it.indexOf(DELIMITER))
+            Timber.d("quiz: $quiz")
+            mPreferences.removeQuiz(quiz)
+        }
+    }
+
+    private fun sendSuperCategories(superCategories: List<ISuperCategory>) {
+        mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mRenderUiChannel.send(RenderState.SuperCategoriesState(superCategories))
+        }
+    }
+
+    private fun sendCategories(categories: List<ICategory>) {
+        mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+            mRenderUiChannel.send(RenderState.CategoriesState(categories))
+        }
+    }
 
     private fun sendQuizzesList(quizzesList: List<IQuizShortInfo>) {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {

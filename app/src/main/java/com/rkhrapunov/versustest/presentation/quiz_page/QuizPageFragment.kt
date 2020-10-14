@@ -7,10 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.data.IQuizShortInfo
+import com.rkhrapunov.core.data.ISuperCategory
 import com.rkhrapunov.versustest.databinding.QuizPageItemBinding
-import com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener
-import com.rkhrapunov.versustest.presentation.quizlist.QuizListAdapter
+import com.rkhrapunov.versustest.presentation.base.IItemClickListener
+import com.rkhrapunov.versustest.presentation.base.QuizAdapter
+import com.rkhrapunov.versustest.presentation.base.QuizDataType
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
@@ -18,11 +21,25 @@ import timber.log.Timber
 class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
 
     private val mPresenter by inject<IQuizPageContract.IQuizPagePresenter>()
-    private var mData = emptyList<IQuizShortInfo>()
-    private var mAdapter: QuizListAdapter<*>? = null
+    private var mData: List<*>? = null
+    private var mAdapter: QuizAdapter<*>? = null
 
-    fun updateData(data: List<IQuizShortInfo>) {
+    fun updateData(data: List<*>) {
         mData = data
+    }
+
+    override fun getSelectedDataType(): SelectedData {
+        val dataListNotEmpty = mData?.isNotEmpty() ?: false
+        return if (dataListNotEmpty) {
+            mData?.let {
+                when (it[0]) {
+                    is ISuperCategory -> SelectedData.SUPER_CATEGORY
+                    is ICategory -> SelectedData.CATEGORY
+                    is IQuizShortInfo -> SelectedData.QUIZ
+                    else -> SelectedData.NONE
+                }
+            } ?: SelectedData.NONE
+        } else SelectedData.NONE
     }
 
     fun getAdapter() = mAdapter
@@ -32,6 +49,7 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
         mPresenter.attachView(this, lifecycle)
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = QuizPageItemBinding.inflate(inflater, container, false)
         binding.quizGridRecyclerViewId.apply {
@@ -39,12 +57,43 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
             val columnsNumber = if (inflater.context.resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_COLUMNS_NUMBER else LANDSCAPE_COLUMNS_NUMBER
             Timber.d("onCreateView(): mColumnsNumber=$columnsNumber")
             layoutManager = GridLayoutManager(this@QuizPageFragment.activity, columnsNumber)
-            val quizListAdapter = QuizListAdapter<IQuizShortInfo>(mPresenter as IItemClickListener, this@QuizPageFragment)
-            adapter = quizListAdapter
-            quizListAdapter.updateData(mData)
-            mAdapter = quizListAdapter
+            createAdapter()?.let {
+                adapter = it
+                mData?.let { dataList ->
+                    when (dataList[0]) {
+                        is ICategory -> (it as QuizAdapter<ICategory>).updateData(dataList as List<ICategory>)
+                        is IQuizShortInfo -> (it as QuizAdapter<IQuizShortInfo>).updateData(dataList as List<IQuizShortInfo>)
+                        else -> Timber.w("Unknown data list type")
+                    }
+                }
+                mAdapter = it
+            }
+
         }
         return binding.root
+    }
+
+    private fun createAdapter(): QuizAdapter<*>? {
+        val dataListNotEmpty = mData?.isNotEmpty() ?: false
+        return if (dataListNotEmpty) {
+            mData?.let {
+                when (it[0]) {
+                    is ICategory -> {
+                        QuizAdapter<ICategory>(
+                            mPresenter as IItemClickListener,
+                            this,
+                            QuizDataType.QUIZ_LIST
+                        )
+                    }
+                    is IQuizShortInfo -> QuizAdapter<IQuizShortInfo>(
+                        mPresenter as IItemClickListener,
+                        this,
+                        QuizDataType.QUIZ_LIST
+                    )
+                    else -> null
+                }
+            }
+        } else null
     }
 
     companion object {

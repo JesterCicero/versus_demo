@@ -8,10 +8,12 @@ interface IWinnerContract {
 
     interface IWinnerView : IBaseView {
         suspend fun renderWinnerState(renderState: IRenderState)
+        fun hideProgressBar()
     }
 
     interface IWinnerPresenter : IBaseStatefulPresenter<IWinnerView> {
         fun onWinnerClickedIntent()
         fun onViewStatsClickedIntent()
+        fun getCurrentQuizBackgroundUrl(): String
     }
 }

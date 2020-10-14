@@ -20,5 +20,6 @@ interface IQuizItemDetailContract {
         fun onItemClickFinished(chosenFirst: Boolean)
         fun retrieveChosenContestant(): ChosenContestant
         fun saveChosenContestant(chosenContestant: ChosenContestant)
+        fun getCurrentQuizBackgroundUrl(): String
     }
 }

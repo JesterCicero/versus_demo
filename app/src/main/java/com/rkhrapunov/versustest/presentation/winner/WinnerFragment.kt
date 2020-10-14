@@ -48,8 +48,15 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
                 renderWinner(renderState.winner.name, renderState.winner.url)
                 mShouldShowWinnerFinalState = false
             }
-            mBinding?.let{ it.statsButton.visibility = View.VISIBLE }
+            mBinding?.let{
+                it.statsButton.visibility = View.VISIBLE
+                it.progressBar.visibility = View.GONE
+            }
         }
+    }
+
+    override fun hideProgressBar() {
+        mBinding?.let { it.progressBar.visibility = View.GONE }
     }
 
     private suspend fun renderWinner(name: String, url: String) {
@@ -59,6 +66,7 @@ class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
             withContext(Dispatchers.IO) {
                 activity?.let {
                     mImageLoader.loadImage(it, url, binding.winnerImgId)
+                    mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
                 }
             }
         }

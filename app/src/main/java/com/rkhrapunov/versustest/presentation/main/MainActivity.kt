@@ -13,18 +13,22 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.rkhrapunov.core.data.ISuperCategory
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
-import com.rkhrapunov.core.interactors.GetQuizListInteractor
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
+import com.rkhrapunov.versustest.presentation.base.Constants.INVALID_VALUE
+import com.rkhrapunov.versustest.presentation.base.IItemClickListener
 import com.rkhrapunov.versustest.presentation.base.weak
 import com.rkhrapunov.versustest.presentation.empty_pager.EmptyPagerFragment
 import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment
 import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment.Companion.ERROR_MSG_KEY
 import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
-import com.rkhrapunov.versustest.presentation.quizlist.QuizListAdapter
+import com.rkhrapunov.versustest.presentation.base.QuizAdapter
+import com.rkhrapunov.versustest.presentation.base.QuizDataType
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
 import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarHelper
 import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
@@ -40,23 +44,39 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private val mPresenter by inject<IMainContract.IMainPresenter>()
     var activityMainBinding: ActivityMainBinding? = null
-    private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private var mCurrentState: IRenderState? = null
     private var mErrorDialogFragment: ErrorDialogFragment? by weak()
+    private var mAdapter: QuizAdapter<*>? = null
     private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
+    private var mFirstSuperCategorySelected = false
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.recyclerView.apply {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+            adapter = QuizAdapter<ISuperCategory>(
+                mPresenter as IItemClickListener,
+                this@MainActivity,
+                QuizDataType.QUIZ_SUPER_CATEGORIES
+            )
+            mAdapter = adapter as? QuizAdapter<*>
+        }
         activityMainBinding = binding
         setOnQueryTextListener()
         if (savedInstanceState == null) {
-            mGetQuizListInteractor.getQuizList()
+            mPresenter.getSuperCategories()
+        } else {
+            mPresenter.getSuperCategoriesFromCache()?.let {
+                (mAdapter as? QuizAdapter<ISuperCategory>)?.updateData(it)
+            }
         }
         mPresenter.attachView(this, lifecycle)
     }
@@ -72,34 +92,87 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         mTopSnackBarHelper.reset()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mFirstSuperCategorySelected = false
+    }
+
+    @Suppress("UNCHECKED_CAST")
     override suspend fun render(renderState: IRenderState) {
         Timber.d("render(): renderState=$renderState")
         val fragment: Fragment = when (renderState) {
-            is RenderState.QuizListState -> {
-                showTopBar(true)
-                QuizPagerFragment()
+            is RenderState.SuperCategoriesState -> {
+                showSuperCategories(true)
+                val superCategories = renderState.superCategories
+                (mAdapter as? QuizAdapter<ISuperCategory>)?.updateData(superCategories)
+                if (superCategories.isNotEmpty()) {
+                    mPresenter.onInitialSuperCategory()
+                }
+                return
             }
-            is RenderState.StatsListState -> {
-                showTopBar(true)
-                getQuizListFragment(false)
+            is RenderState.CategoriesState,
+            is RenderState.QuizListState -> onCategoriesState()
+            is RenderState.StatsListState -> onStatsListState()
+            is RenderState.QuizItemDetailState -> onQuizItemDetailState()
+            is RenderState.WinnerState -> onWinnerState()
+            is RenderState.ErrorState -> onErrorState()
+            is RenderState.WinnerFinalState -> {
+                showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
+                return
             }
-            is RenderState.QuizItemDetailState -> {
-                hideTopBar()
-                QuizItemDetailFragment()
-            }
-            is RenderState.WinnerState -> {
-                hideTopBar()
-                WinnerFragment()
-            }
-            is RenderState.ErrorState -> {
-                showTopBar(true)
-                EmptyPagerFragment()
-            }
-            is RenderState.WinnerFinalState -> return
             else -> onQuizListRenderState()
         }
         replaceFragmentIfNecessary(fragment)
         mCurrentState = renderState
+    }
+
+    private fun showTopBarAndSuperCategories(showTopBar: Boolean, showSuperCategories: Boolean) {
+        showTopBar(showTopBar)
+        showSuperCategories(showSuperCategories)
+    }
+
+    private fun onCategoriesState(): QuizPagerFragment {
+        showTopBarAndSuperCategories(showTopBar = true, showSuperCategories = true)
+        return QuizPagerFragment()
+    }
+
+    private fun onStatsListState(): QuizListFragment {
+        showTopBarAndSuperCategories(showTopBar = true, showSuperCategories = false)
+        return getQuizListFragment(false)
+    }
+
+    private fun onQuizItemDetailState(): QuizItemDetailFragment {
+        showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
+        return QuizItemDetailFragment()
+    }
+
+    private fun onWinnerState(): WinnerFragment {
+        showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
+        return WinnerFragment()
+    }
+
+    private fun onErrorState(): EmptyPagerFragment {
+        showTopBarAndSuperCategories(showTopBar = true, showSuperCategories = false)
+        return EmptyPagerFragment()
+    }
+
+    override fun onSuperCategoriesBack() = super.onBackPressed()
+
+    override fun onSuperCategoryChanged(previousPosition: Int, currentPosition: Int) {
+        activityMainBinding?.let { binding ->
+            binding.recyclerView.layoutManager?.findViewByPosition(currentPosition)?.let {
+                mPresenter.updateSuperCategoryPosition(currentPosition)
+                it.setBackgroundResource(R.drawable.selected_super_category_background)
+                it.isEnabled = false
+                if (previousPosition != INVALID_VALUE) {
+                    binding.recyclerView.layoutManager?.findViewByPosition(previousPosition)
+                        ?.let { view ->
+                            view.setBackgroundResource(R.drawable.custom_page_item_selector)
+                            view.isEnabled = true
+                        }
+                }
+            }
+        }
     }
 
     override fun renderErrorState(errorMsg: String) {
@@ -122,23 +195,26 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
                     Timber.d("onQueryTextSubmit()")
-                    getQuizListAdapter(mCurrentState is RenderState.QuizListState)?.filter(query)
+                    getQuizListAdapter(mCurrentState is RenderState.SuperCategoriesState
+                            || mCurrentState is RenderState.CategoriesState
+                            || mCurrentState is RenderState.QuizListState)?.filter(query)
                     return true
                 }
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     Timber.d("onQueryTextChange()")
-                    getQuizListAdapter(mCurrentState is RenderState.QuizListState)?.filter(newText)
+                    getQuizListAdapter(mCurrentState is RenderState.SuperCategoriesState
+                            || mCurrentState is RenderState.CategoriesState
+                            ||mCurrentState is RenderState.QuizListState)?.filter(newText)
                     return true
                 }
             }
         )
     }
 
-    private fun hideTopBar() {
+    private fun showSuperCategories(showSuperCategories: Boolean) {
         activityMainBinding?.let {
-            it.searchView.visibility = View.INVISIBLE
-            it.menuId.visibility =  View.INVISIBLE
+            it.recyclerView.visibility = if (showSuperCategories) View.VISIBLE else View.GONE
         }
     }
 
@@ -147,6 +223,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         return getQuizListFragment(true)
     }
 
+    @Suppress("SameParameterValue")
     private fun showTopBar(showTopBar: Boolean) {
         activityMainBinding?.let {
             it.nextButtonFrameLayoutId.visibility = if (showTopBar) View.VISIBLE else View.GONE
@@ -154,6 +231,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             it.searchView.visibility = if (showTopBar) View.VISIBLE else View.GONE
             it.topBarSpaceEnd.visibility = if (showTopBar) View.VISIBLE else View.GONE
             it.menuId.visibility = if (showTopBar) View.VISIBLE else View.GONE
+            it.topBarSpaceTop.visibility = if (showTopBar) View.VISIBLE else View.GONE
         }
     }
 
@@ -178,7 +256,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             .commit()
     }
 
-    private fun getQuizListAdapter(quizList: Boolean = true): QuizListAdapter<*>? = supportFragmentManager.findFragmentById(
+    private fun getQuizListAdapter(quizList: Boolean = true): QuizAdapter<*>? = supportFragmentManager.findFragmentById(
         R.id.fragment_container)?.let {
             if (quizList) {
                 (it as? QuizPagerFragment)?.getCurrentPageFragment()?.getAdapter()
@@ -195,7 +273,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             PopupMenu(this, it.anchorMenu, Gravity.END, 0, R.style.CustomPopupMenu).apply {
                 setMenuItemClickListener(this)
                 val fragmentTag = supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
-                if (fragmentTag == QuizPagerFragment::class.simpleName /*&& mQuizList*/) {
+                if (fragmentTag == QuizPagerFragment::class.simpleName) {
                     menuInflater.inflate(R.menu.topbar_menu, menu)
                     setupSubmenu(menu, R.id.refresh)
                 } else {
@@ -250,19 +328,22 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private fun cancelQuizAndGetQuizList() {
         mPresenter.cancelQuiz()
-        mGetQuizListInteractor.getQuizList()
     }
 
     override fun onBackPressed() {
         val currentFragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         Timber.d("onBackPressed() current fragment: ${currentFragment?.tag}")
         when (currentFragment) {
-            is QuizListFragment,
+            is QuizListFragment -> {
+                cancelQuizAndGetQuizList()
+                mPresenter.resetResultsStatsOption()
+            }
             is WinnerFragment -> cancelQuizAndGetQuizList()
             is QuizItemDetailFragment -> {
                 cancelQuizAndGetQuizList()
                 (currentFragment as? QuizItemDetailFragment)?.onBackPressed()
             }
+            is QuizPagerFragment -> (currentFragment as? QuizPagerFragment)?.onBackPressed()
             else -> super.onBackPressed()
         }
     }

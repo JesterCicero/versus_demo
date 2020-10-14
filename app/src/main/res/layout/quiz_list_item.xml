@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.quizlist.IItemClickListener" />
+        <import type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
 
         <import type="android.view.View" />
 
@@ -25,7 +25,11 @@
 
         <variable
             name="itemClickListener"
-            type="IItemClickListener" />
+            type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
+
+        <variable
+            name="position"
+            type="int" />
 
         <variable
             name="quizList"
@@ -36,17 +40,33 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/quiz_list_item_parent_height"
         android:background="@drawable/custom_list_selector"
-        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal)}">
+        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position) }">
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/number"
+            android:layout_width="@dimen/top_4_number_text_width"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/item_percentage_margin_end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@{ (position + 1) == Constants.STATS_THIRD_POSITION || (position + 1) == Constants.STATS_FOURTH_POSITION ? Constants.STATS_THIRD_FOURTH_POSITION : (position + 1) + `.` }"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            android:visibility="@{quizList ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1."
+            tools:visibility="visible" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/small_img_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/item_icon_margin_start"
-            android:layout_marginLeft="@dimen/item_icon_margin_start"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/number"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -62,7 +82,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/quiz_list_item_name_margin_start_end"
-            android:layout_marginLeft="@dimen/quiz_list_item_name_margin_start_end"
             android:layout_marginEnd="@dimen/quiz_list_item_name_margin_start_end"
             android:ellipsize="marquee"
             android:singleLine="true"
@@ -81,9 +100,9 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/quiz_list_progress_bar_height"
             android:layout_marginStart="@dimen/quiz_list_progress_bar_margin_start_end"
-            android:layout_marginLeft="@dimen/quiz_list_progress_bar_margin_start_end"
             android:layout_marginEnd="@dimen/quiz_list_progress_bar_margin_start_end"
             android:progress="75"
+            android:visibility="@{quizList ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/item_detail"
             app:layout_constraintStart_toEndOf="@id/small_img_container"
@@ -94,7 +113,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/item_percentage_margin_end"
-            android:layout_marginRight="@dimen/item_percentage_margin_end"
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"

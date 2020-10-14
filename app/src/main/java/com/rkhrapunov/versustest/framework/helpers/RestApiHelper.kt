@@ -5,6 +5,8 @@ import com.rkhrapunov.versustest.framework.ContestantsApi
 import com.rkhrapunov.versustest.framework.ContestantsInfo
 import com.rkhrapunov.versustest.framework.ContestantsStatsInfo
 import com.rkhrapunov.versustest.framework.QuizShortInfo
+import com.rkhrapunov.versustest.framework.SuperCategory
+import com.rkhrapunov.versustest.framework.Category
 import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,6 +24,8 @@ import javax.net.ssl.SSLContext
 class RestApiHelper {
 
     enum class RequestType {
+        SUPER_CATEGORIES,
+        CATEGORIES,
         QUIZ,
         ALL_QUIZZES,
         QUIZ_STATS,
@@ -52,22 +56,30 @@ class RestApiHelper {
     }
 
     companion object {
-        private const val BASE_URL = "https://185.177.114.72"
+        private const val BASE_URL = "http://192.168.0.11"
     }
 
     init {
         setupRetrofit()
     }
 
-    fun makeRequest(requestType: RequestType, onSuccessAction: (response: Response<*>) -> Unit,
-                    onFailAction: (t: Throwable) -> Unit, requestData: String = EMPTY_STRING) {
+    fun makeRequest(requestType: RequestType,
+                    onSuccessAction: (response: Response<*>) -> Unit,
+                    onFailAction: (t: Throwable) -> Unit,
+                    lang: String = EMPTY_STRING,
+                    public_super_category: String = EMPTY_STRING,
+                    public_category: String = EMPTY_STRING,
+                    public_quiz: String = EMPTY_STRING,
+                    bodyData: String = EMPTY_STRING) {
         Timber.d("makeRequest()")
         val creationPart = mRetrofit.create(ContestantsApi::class.java)
         when (requestType) {
-            RequestType.QUIZ -> creationPart.getQuiz(requestData).enqueue(ServerResponseCallback<List<ContestantsInfo>>(onSuccessAction, onFailAction))
-            RequestType.ALL_QUIZZES -> creationPart.getAllQuizzes().enqueue(ServerResponseCallback<List<QuizShortInfo>>(onSuccessAction, onFailAction))
-            RequestType.QUIZ_STATS -> creationPart.getQuizStats(requestData).enqueue(ServerResponseCallback<List<ContestantsStatsInfo>>(onSuccessAction, onFailAction))
-            RequestType.WINNER -> creationPart.postWinnerInfo(requestData).enqueue(ServerResponseCallback<String>(onSuccessAction, onFailAction))
+            RequestType.SUPER_CATEGORIES -> creationPart.getSuperCategories(lang).enqueue(ServerResponseCallback<List<SuperCategory>>(onSuccessAction, onFailAction))
+            RequestType.CATEGORIES -> creationPart.getCategories(lang, public_super_category).enqueue(ServerResponseCallback<List<Category>>(onSuccessAction, onFailAction))
+            RequestType.ALL_QUIZZES -> creationPart.getAllQuizzes(lang, public_super_category, public_category).enqueue(ServerResponseCallback<List<QuizShortInfo>>(onSuccessAction, onFailAction))
+            RequestType.QUIZ -> creationPart.getQuiz(lang, public_super_category, public_category, public_quiz).enqueue(ServerResponseCallback<List<ContestantsInfo>>(onSuccessAction, onFailAction))
+            RequestType.QUIZ_STATS -> creationPart.getQuizStats(lang, public_super_category, public_category, public_quiz).enqueue(ServerResponseCallback<List<ContestantsStatsInfo>>(onSuccessAction, onFailAction))
+            RequestType.WINNER -> creationPart.postWinnerInfo(lang, public_super_category, public_category, public_quiz, bodyData).enqueue(ServerResponseCallback<String>(onSuccessAction, onFailAction))
         }
     }
 

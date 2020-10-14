@@ -59,6 +59,7 @@ class NetworkConnectivityHelper : KoinComponent {
                     TopSnackBarType.NO_CONNECTION,
                     R.string.no_internet_connection,
                     R.drawable.ic_no_internet,
+                    unique = true,
                     notificationTimeout = NO_CONNECTION_TIMEOUT_MS,
                     action = {
                         mCoroutineLauncherHelper.launch(Dispatchers.Main) {

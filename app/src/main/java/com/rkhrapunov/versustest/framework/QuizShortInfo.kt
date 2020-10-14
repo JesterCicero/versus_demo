@@ -7,5 +7,7 @@ data class QuizShortInfo(
     @SerializedName("quiz_title")
     override val title: String,
     @SerializedName("url")
-    override val url: String
+    override val url: String,
+    @SerializedName("background_url")
+    override val backgroundUrl: String
 ) : IQuizShortInfo

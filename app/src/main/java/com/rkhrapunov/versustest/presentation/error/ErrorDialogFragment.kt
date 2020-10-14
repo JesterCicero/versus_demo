@@ -13,8 +13,11 @@ import com.rkhrapunov.versustest.presentation.base.getScreenHeight
 import com.rkhrapunov.versustest.presentation.base.getScreenWidth
 import com.rkhrapunov.versustest.presentation.main.MainActivity
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.android.inject
 
+@FlowPreview
 class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogView {
 
     private val mPresenter by inject<IErrorDialogContract.IErrorDialogPresenter>()
@@ -51,6 +54,7 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
         return binding.root
     }
 
+    @ExperimentalCoroutinesApi
     @ExperimentalStdlibApi
     override fun dismissRecognitionDialog() {
         dismiss()

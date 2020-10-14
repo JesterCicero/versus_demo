@@ -9,8 +9,8 @@ import com.rkhrapunov.core.data.IQuizShortInfo
 import timber.log.Timber
 
 @ExperimentalStdlibApi
-class ViewPagerFragmentStateAdapter(context: Context,
-                                    data: List<IQuizShortInfo>,
+class ViewPagerFragmentStateAdapter<T>(context: Context,
+                                    data: List<T>,
                                     fm: FragmentManager,
                                     lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
 
