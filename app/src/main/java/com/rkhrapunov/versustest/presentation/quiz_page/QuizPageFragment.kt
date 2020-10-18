@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.data.IQuizShortInfo
 import com.rkhrapunov.core.data.ISuperCategory
@@ -47,6 +48,11 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPresenter.attachView(this, lifecycle)
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide.with(this).onLowMemory()
     }
 
     @Suppress("UNCHECKED_CAST")

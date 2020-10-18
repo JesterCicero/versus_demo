@@ -6,6 +6,7 @@
     <color name="transparentColor">#00000000</color>
     <color name="quizListItemSelectionColor">#6b6868</color>
     <color name="quizListItemTextColor">#ffb80a</color>
+    <color name="tooltipColor">#90ffb80a</color>
     <color name="quizListItemTileColor">#494545</color>
     <color name="backgroundMainColor">#232323</color>
     <color name="mainColor">#000</color>
@@ -15,4 +16,6 @@
     <color name="pagerBackgroundColor">#131010</color>
     <color name="statForwardButtonColor">#80000000</color>
     <color name="statsProgressBarGradientColor">#2a2b2f</color>
+    <color name="coachbubble">#cf1e1e</color>
+    <color name="coachbubble_bg">#b60035</color>
 </resources>

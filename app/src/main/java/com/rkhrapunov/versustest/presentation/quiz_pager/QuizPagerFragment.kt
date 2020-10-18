@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
+import com.bumptech.glide.Glide
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.databinding.FragmentQuizPagerBinding
@@ -74,6 +75,11 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
     @ExperimentalCoroutinesApi
     override fun onSuperCategoriesBack() {
         (activity as? MainActivity)?.onSuperCategoriesBack()
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide.with(this).onLowMemory()
     }
 
     fun onBackPressed() = mPresenter.onBackPressed()
