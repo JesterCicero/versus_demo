@@ -16,6 +16,4 @@
     <color name="pagerBackgroundColor">#131010</color>
     <color name="statForwardButtonColor">#80000000</color>
     <color name="statsProgressBarGradientColor">#2a2b2f</color>
-    <color name="coachbubble">#cf1e1e</color>
-    <color name="coachbubble_bg">#b60035</color>
 </resources>
