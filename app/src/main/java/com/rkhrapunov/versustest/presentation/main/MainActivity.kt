@@ -14,6 +14,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.rkhrapunov.core.data.ISuperCategory
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
@@ -266,6 +267,16 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         }
 
     fun onBackButtonClick(@Suppress("UNUSED_PARAMETER") view: View) = onBackPressed()
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        Glide.with(this).onLowMemory()
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        Glide.with(this).onTrimMemory(level)
+    }
 
     @Suppress("UNUSED_PARAMETER")
     fun showPopupMenu(v: View) {

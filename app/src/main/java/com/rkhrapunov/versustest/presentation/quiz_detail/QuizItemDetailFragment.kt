@@ -105,6 +105,12 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                     it.nextButtonFrameLayoutId.visibility = View.INVISIBLE
                     it.nextButtonFrameLayoutId.isEnabled = false
                     it.nextButtonFrameLayoutId.alpha = DISABLED_ALPHA
+                    it.questionButtonImg1FrameLayoutId.visibility = View.GONE
+                    it.questionButtonImg2FrameLayoutId.visibility = View.GONE
+                    it.tooltipNavUp1.visibility = View.GONE
+                    it.tooltipText1.visibility = View.GONE
+                    it.tooltipNavUp2.visibility = View.GONE
+                    it.tooltipText2.visibility = View.GONE
                     mAnimationsStarted = true
                     animateImg(it, itemView, getTranslationCoordinate(activityBinding, it, chosenFirst, itemView), chosenFirst)
                     animateDescription(activityBinding, it, itemView.width, itemView.height, chosenFirst)
@@ -261,6 +267,26 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             binding.round = "${renderState.quizTitle.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()}: ${renderState.round}"
             binding.firstDescription = renderState.firstContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
             binding.secondDescription = renderState.secondContestant.name.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()
+            binding.firstContestantTooltipVisible = renderState.firstContestant.shortDescription.isNotEmpty()
+            binding.questionButtonImg1FrameLayoutId.setOnClickListener {
+                val tooltipNavUp1Visible = binding.tooltipNavUp1.visibility == View.VISIBLE
+                binding.tooltipNavUp1.visibility = if (tooltipNavUp1Visible) View.GONE else View.VISIBLE
+                val tooltipText1Visible = binding.tooltipText1.visibility == View.VISIBLE
+                binding.tooltipText1.visibility = if (tooltipText1Visible) View.GONE else View.VISIBLE
+                if (binding.tooltipText1.visibility == View.VISIBLE) {
+                    binding.tooltipText1.text = renderState.firstContestant.shortDescription
+                }
+            }
+            binding.secondContestantTooltipVisible = renderState.secondContestant.shortDescription.isNotEmpty()
+            binding.questionButtonImg2FrameLayoutId.setOnClickListener {
+                val tooltipNavUp2Visible = binding.tooltipNavUp2.visibility == View.VISIBLE
+                binding.tooltipNavUp2.visibility =if (tooltipNavUp2Visible) View.GONE else View.VISIBLE
+                val tooltipText2Visible = binding.tooltipText2.visibility == View.VISIBLE
+                binding.tooltipText2.visibility = if (tooltipText2Visible) View.GONE else View.VISIBLE
+                if (binding.tooltipText2.visibility == View.VISIBLE) {
+                    binding.tooltipText2.text = renderState.secondContestant.shortDescription
+                }
+            }
             activity?.let {
                 mCoroutineLauncherHelper.launchImgLoading {
                     mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)

@@ -6,6 +6,7 @@
     <color name="transparentColor">#00000000</color>
     <color name="quizListItemSelectionColor">#6b6868</color>
     <color name="quizListItemTextColor">#ffb80a</color>
+    <color name="tooltipColor">#90ffb80a</color>
     <color name="quizListItemTileColor">#494545</color>
     <color name="backgroundMainColor">#232323</color>
     <color name="mainColor">#000</color>

@@ -115,9 +115,11 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
 
     @ExperimentalCoroutinesApi
     @FlowPreview
-    override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) =
+    override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         if (mQuizDataType == QuizDataType.QUIZ_SUPER_CATEGORIES) holder.bindSuperCategory(
             position, mData, mActivity) else holder.bind(position, mData, mFragment)
+    }
 
     private fun onSortCategories(ascending: Boolean) {
         val list = mData as? MutableList<ICategory>

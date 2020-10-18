@@ -51,4 +51,5 @@
     <integer name="error_dialog_ok_button_vertical_weight">16</integer>
     <integer name="top_snack_bar_button_gradient_angle">270</integer>
     <integer name="error_dialog_lines_number">2</integer>
+    <integer name="tooltip_max_lines_number">6</integer>
 </resources>

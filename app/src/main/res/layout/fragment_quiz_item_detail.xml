@@ -6,8 +6,8 @@
     <data>
 
         <import type="com.rkhrapunov.core.domain.RenderState.QuizItemDetailState" />
-
         <import type="com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter" />
+        <import type="android.view.View" />
 
         <variable
             name="presenter"
@@ -24,6 +24,14 @@
         <variable
             name="secondDescription"
             type="String" />
+
+        <variable
+            name="firstContestantTooltipVisible"
+            type="Boolean" />
+
+        <variable
+            name="secondContestantTooltipVisible"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,7 +81,6 @@
             android:background="@drawable/next_button_selector"
             android:onClick="@{ () -> presenter.onNextButtonClickedIntent() }"
             android:layout_marginEnd="@dimen/next_button_margin_end"
-            android:layout_marginRight="@dimen/next_button_margin_end"
             app:layout_constraintTop_toTopOf="@id/vs_text_view"
             app:layout_constraintBottom_toBottomOf="@id/vs_text_view"
             app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +98,7 @@
 
         </FrameLayout>
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/round_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -116,7 +123,7 @@
             app:layout_constraintTop_toBottomOf="@id/round_description"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_bottom_round_space_vertical_weight" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/first_img_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -164,6 +171,65 @@
 
         </androidx.cardview.widget.CardView>
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/question_button_img1_frame_layout_id"
+            android:background="@drawable/back_button_selector"
+            android:layout_marginEnd="@dimen/item_icon_margin_start"
+            android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
+            android:elevation="@dimen/question_mark_elevation"
+            app:layout_constraintTop_toTopOf="@id/first_img"
+            app:layout_constraintEnd_toEndOf="@id/first_img"
+            android:scaleType="centerCrop"
+            android:visibility="@{ firstContestantTooltipVisible ? View.VISIBLE : View.GONE }"
+            tools:visibility="visible">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/back_button_width_height"
+                android:layout_height="@dimen/back_button_width_height"
+                android:paddingTop="@dimen/back_button_padding_top_bottom"
+                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_gravity="center"
+                android:id="@+id/question_btn_img1_icon_id"
+                android:src="@drawable/ic_question_mark"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/tooltip_nav_up1"
+            android:layout_width="@dimen/tooltip_nav_up_width_height"
+            android:layout_height="@dimen/tooltip_nav_up_width_height"
+            android:elevation="@dimen/question_mark_elevation"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/tooltip_nav_up_margin_top"
+            android:layout_marginStart="@dimen/tooltip_nav_up_margin_start"
+            app:layout_constraintTop_toTopOf="@id/question_button_img1_frame_layout_id"
+            app:layout_constraintEnd_toStartOf="@id/question_button_img1_frame_layout_id"
+            android:background="@drawable/nav_right"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="ContentDescription" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/tooltip_text1"
+            android:layout_width="@dimen/tooltip_width"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/question_mark_elevation"
+            android:background="@drawable/tooltip_bg"
+            android:gravity="center"
+            android:padding="@dimen/tooltip_padding"
+            android:layout_marginTop="@dimen/tooltip_margin_top"
+            android:lines="@integer/tooltip_max_lines_number"
+            app:layout_constraintEnd_toStartOf="@id/tooltip_nav_up1"
+            app:layout_constraintTop_toTopOf="@id/question_button_img1_frame_layout_id"
+            android:textColor="@color/pagerBackgroundColor"
+            android:textSize="@dimen/tooltip_text_size"
+            android:textStyle="normal"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="SpUsage" />
+
         <Space
             android:id="@+id/top_vs_space"
             android:layout_width="match_parent"
@@ -174,7 +240,7 @@
             app:layout_constraintTop_toBottomOf="@id/first_img"
             app:layout_constraintVertical_weight="@integer/quiz_item_top_vs_space_vertical_weight" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/vs_text_view"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -202,7 +268,6 @@
             android:id="@+id/second_img"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:padding="4dp"
             app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
             android:onClick="@{ () -> presenter.onSecondImgClickedIntent() }"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
@@ -221,6 +286,65 @@
                 tools:src="@drawable/jennifer_lawrence" />
         </androidx.cardview.widget.CardView>
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/question_button_img2_frame_layout_id"
+            android:background="@drawable/back_button_selector"
+            android:layout_marginEnd="@dimen/item_icon_margin_start"
+            android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
+            android:elevation="@dimen/question_mark_elevation"
+            app:layout_constraintTop_toTopOf="@id/second_img"
+            app:layout_constraintEnd_toEndOf="@id/second_img"
+            android:scaleType="centerCrop"
+            android:visibility="@{ secondContestantTooltipVisible ? View.VISIBLE : View.GONE }"
+            tools:visibility="visible">
+            <ImageView
+                tools:ignore="ContentDescription"
+                android:layout_width="@dimen/back_button_width_height"
+                android:layout_height="@dimen/back_button_width_height"
+                android:paddingTop="@dimen/back_button_padding_top_bottom"
+                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_gravity="center"
+                android:id="@+id/question_btn_img2_icon_id"
+                android:src="@drawable/ic_question_mark"/>
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/tooltip_nav_up2"
+            android:layout_width="@dimen/tooltip_nav_up_width_height"
+            android:layout_height="@dimen/tooltip_nav_up_width_height"
+            android:elevation="@dimen/question_mark_elevation"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/tooltip_nav_up_margin_top"
+            android:layout_marginStart="@dimen/tooltip_nav_up_margin_start"
+            app:layout_constraintTop_toTopOf="@id/question_button_img2_frame_layout_id"
+            app:layout_constraintEnd_toStartOf="@id/question_button_img2_frame_layout_id"
+            android:background="@drawable/nav_right"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="ContentDescription" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/tooltip_text2"
+            android:layout_width="@dimen/tooltip_width"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/question_mark_elevation"
+            android:background="@drawable/tooltip_bg"
+            android:gravity="center"
+            android:padding="@dimen/tooltip_padding"
+            android:layout_marginTop="@dimen/tooltip_margin_top"
+            android:lines="@integer/tooltip_max_lines_number"
+            app:layout_constraintEnd_toStartOf="@id/tooltip_nav_up2"
+            app:layout_constraintTop_toTopOf="@id/question_button_img2_frame_layout_id"
+            android:textColor="@color/pagerBackgroundColor"
+            android:textSize="@dimen/tooltip_text_size"
+            android:textStyle="normal"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:ignore="SpUsage" />
+
         <Space
             android:id="@+id/top_second_img_space"
             android:layout_width="match_parent"
@@ -231,7 +355,7 @@
             app:layout_constraintTop_toBottomOf="@id/second_img"
             app:layout_constraintVertical_weight="@integer/quiz_item_top_second_img_space_vertical_weight" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/second_img_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

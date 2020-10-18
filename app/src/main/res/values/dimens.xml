@@ -84,4 +84,13 @@
     <dimen name="super_category_item_parent_height">44dp</dimen>
     <dimen name="super_category_item_img_width">60dp</dimen>
     <dimen name="super_category_item_img_height">35dp</dimen>
+    <dimen name="question_mark_elevation">2dp</dimen>
+    <dimen name="tooltip_nav_up_width_height">25dp</dimen>
+    <dimen name="tooltip_nav_up_margin_top">41dp</dimen>
+    <dimen name="tooltip_nav_up_margin_start">200dp</dimen>
+    <dimen name="tooltip_text_size">17dp</dimen>
+    <dimen name="tooltip_padding">8dp</dimen>
+    <dimen name="tooltip_margin_top">16dp</dimen>
+    <dimen name="tooltip_width">160dp</dimen>
+    <dimen name="tooltip_bg_corners_radius">25dp</dimen>
 </resources>
