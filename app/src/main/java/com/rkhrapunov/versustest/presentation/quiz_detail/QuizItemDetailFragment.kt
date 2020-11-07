@@ -21,6 +21,7 @@ import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.capitalizeWords
 import com.rkhrapunov.versustest.presentation.main.MainActivity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.android.inject
@@ -261,7 +262,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         return viewPropertyAnimator
     }
 
-    override fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState) {
+    override fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState) {
         Timber.d("round: ${renderState.round}")
         mBinding?.let { binding ->
             binding.round = "${renderState.quizTitle.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()}: ${renderState.round}"
@@ -288,10 +289,13 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 }
             }
             activity?.let {
-                mCoroutineLauncherHelper.launchImgLoading {
-                    mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
-                    mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
-                    mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
+                mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                    mCoroutineLauncherHelper.launchImgLoading {
+                        Timber.d("launch img loading coroutine")
+                        mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
+                        mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
+                        mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
+                    }
                 }
             }
         }

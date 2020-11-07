@@ -83,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{round}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/quizListItemTextColor"
             android:layout_marginBottom="@dimen/quiz_item_detail_round_description_margin_bottom"
             app:layout_constraintBottom_toTopOf="@id/first_img"

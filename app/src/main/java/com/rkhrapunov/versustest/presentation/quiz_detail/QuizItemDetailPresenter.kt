@@ -38,18 +38,20 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     private var mCurrentState: IRenderState? = null
     private var mQuizItemStateUpdated = false
     private val mRetrieveChosenContestantInteractor by inject<RetrieveChosenContestantInteractor>()
+    private var mNextButtonClicked = false
 
     override fun attachView(view: IQuizItemDetailContract.IQuizItemDetailView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         super.attachView(view, viewLifecycle, savedInstanceState)
+        Timber.d("attachView()")
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .filter { it is RenderState.QuizItemDetailState && it != mCurrentState }
+                .filter { it is RenderState.QuizItemDetailState && it != mCurrentState && !mNextButtonClicked}
                 .collect { renderState ->
                     Timber.d("attachView(): renderState=$renderState")
                     if (renderState is RenderState.QuizItemDetailState) {
                         mQuizItemStateUpdated = true
-                        mView?.renderQuitItemDetailState(renderState)
+                        mView?.renderQuizItemDetailState(renderState)
                         mCurrentState = renderState
                     }
                 }
@@ -74,6 +76,7 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
 
     override fun onNextButtonClickedIntent() {
         Timber.d("onNextButtonClickedIntent()")
+        mNextButtonClicked = true
         val chosenContestant = mRetrieveChosenContestantInteractor.getChosenContestant()
         if (chosenContestant != ChosenContestant.UNKNOWN) {
             onItemClicked(chosenContestant == ChosenContestant.CHOSEN_FIRST)

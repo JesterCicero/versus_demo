@@ -113,6 +113,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     override fun getErrorMsgChannel() = mErrorMsgChannel
 
     override fun updateState(state: IRenderState, chosenFirst: Boolean) {
+        Timber.d("updateState()")
         mUpdateStateJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             if (state is RenderState.QuizItemDetailState) {
                 onQuizItemDetailState(state, chosenFirst)
