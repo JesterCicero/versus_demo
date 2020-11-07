@@ -221,21 +221,22 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
             val currentSuperCategoryPositionFromSource = mCurrentSuperCategoryInteractor.getCurrentSuperCategoryPosition()
             Timber.d("position from data source: $currentSuperCategoryPositionFromSource")
             if (position == 0 && currentSuperCategoryPositionFromSource == INVALID_VALUE) {
-                val parent = mSuperCategoryItemBinding.parent
+                val parent = mSuperCategoryItemBinding.itemName
                 parent.setBackgroundResource(R.drawable.selected_super_category_background)
                 parent.isEnabled = false
                 mCurrentSuperCategoryInteractor.saveCurrentSuperCategoryPosition(position)
             } else if (position == currentSuperCategoryPositionFromSource) {
-                val parent = mSuperCategoryItemBinding.parent
+                val parent = mSuperCategoryItemBinding.itemName
                 parent.setBackgroundResource(R.drawable.selected_super_category_background)
                 parent.isEnabled = false
             }
             val itemData = (data[position] as? ISuperCategory)?.let {
-                activity?.let { fragmentActivity ->
-                    mCoroutineLauncherHelper.launchImgLoading {
-                        mImageLoader.loadImage(fragmentActivity, it.url, mSuperCategoryItemBinding.smallImg)
-                    }
-                }
+                // Leave this code for possible future super category icon use
+//                activity?.let { fragmentActivity ->
+//                    mCoroutineLauncherHelper.launchImgLoading {
+//                        mImageLoader.loadImage(fragmentActivity, it.url, mSuperCategoryItemBinding.smallImg)
+//                    }
+//                }
                 it.name
             } ?: EMPTY_STRING
             setSuperCategoriesBindingItemData(itemData)

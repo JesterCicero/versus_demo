@@ -24,31 +24,52 @@
             type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/parent"
-        android:layout_width="@dimen/super_category_item_parent_width"
-        android:layout_height="@dimen/super_category_item_parent_height"
-        android:layout_margin="@dimen/pager_item_parent_margin"
+    <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        android:id="@+id/item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/super_category_item_height"
+        android:paddingHorizontal="@dimen/super_category_item_margin_padding_value"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@{itemDataFake}"
+        android:layout_marginStart="@dimen/super_category_item_margin_padding_value"
+        android:layout_marginEnd="@dimen/super_category_item_margin_padding_value"
+        android:layout_marginTop="@dimen/super_category_item_margin_padding_value"
+        android:layout_marginBottom="@dimen/super_category_item_margin_padding_value"
         android:background="@drawable/custom_page_item_selector"
-        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position)}">
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@color/quizListItemTextColor"
+        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position)}"
+        android:textSize="@dimen/super_category_item_text_size"
+        android:visibility="visible"
+        tools:text="Test Description"
+        tools:ignore="SpUsage" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/small_img_container"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/parent"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="20dp"-->
+<!--        android:layout_margin="@dimen/pager_item_parent_margin"-->
+<!--        android:background="@drawable/custom_page_item_selector"-->
+<!--        android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position)}">-->
 
-            <ImageView
-                android:id="@+id/small_img"
-                android:layout_width="@dimen/super_category_item_img_width"
-                android:layout_height="@dimen/super_category_item_img_height"
-                android:contentDescription="@string/list_icon_description"
-                android:src="@drawable/empty_drawable" />
-        </androidx.cardview.widget.CardView>
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:id="@+id/small_img_container"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/small_img"-->
+<!--                android:layout_width="@dimen/super_category_item_img_width"-->
+<!--                android:layout_height="@dimen/super_category_item_img_height"-->
+<!--                android:contentDescription="@string/list_icon_description"-->
+<!--                android:src="@drawable/empty_drawable" />-->
+<!--        </androidx.cardview.widget.CardView>-->
 
         <!-- Leave for possible future use -->
 <!--        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView-->
@@ -75,5 +96,5 @@
 <!--            app:layout_constraintTop_toBottomOf="@id/small_img_container"-->
 <!--            tools:text="Test Description" />-->
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </layout>

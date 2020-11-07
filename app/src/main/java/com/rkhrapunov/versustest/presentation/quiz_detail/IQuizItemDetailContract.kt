@@ -8,7 +8,7 @@ import com.rkhrapunov.versustest.presentation.base.IBaseView
 interface IQuizItemDetailContract {
 
     interface IQuizItemDetailView : IBaseView {
-        fun renderQuitItemDetailState(renderState: RenderState.QuizItemDetailState)
+        fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState)
         fun onItemClicked(chosenFirst: Boolean)
         fun onItemChosen(chosenFirst: Boolean)
     }
