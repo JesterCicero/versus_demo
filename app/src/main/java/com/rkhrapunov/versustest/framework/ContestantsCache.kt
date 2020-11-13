@@ -91,25 +91,27 @@ class ContestantsCache : KoinComponent {
         }
     }
 
-    fun tryToGetQuizzesInfoCache(categoryName: String) {
+    fun tryToGetQuizzesInfoCache(categoryName: String): Boolean {
         Timber.d("tryToGetQuizzesInfoCache()")
-        quizzesInfoCache?.let {
+        return quizzesInfoCache?.let {
             Timber.d("current category: $mCurrentCategoryName, category: $categoryName")
             if (mCurrentCategoryName.isNotEmpty() && mCurrentCategoryName != categoryName) { return@let null }
             Timber.d("tryToGetQuizzesInfoCache(): cache from memory")
             setCurrentCategoryAndSendQuizzes(categoryName, it)
+            true
         } ?: run {
             mPreferences.getCategory(categoryName)?.let {
                 if (it.isEmpty()) { return@let null }
                 val quizShortInfoList = it.toList().map { element ->
                     val list = element.split(DELIMITER)
-                    QuizShortInfo(list[0], list[1], list[2])
+                    QuizShortInfo(list[0], list[1], list[2], list[3])
                 }.sortedBy { element -> element.title }
                 if (quizShortInfoList.isEmpty()) { return@let null }
                 Timber.d("tryToGetQuizzesInfoCache(): cache from preferences")
                 quizzesInfoCache = quizShortInfoList
                 setCurrentCategoryAndSendQuizzes(categoryName, quizShortInfoList)
-            }
+                true
+            } ?: false
         }
     }
 
@@ -173,7 +175,7 @@ class ContestantsCache : KoinComponent {
         quizzesInfoCache = updatedQuizzesInfoCache
         quizCache = null
         clearQuizzesPreferencesCache()
-        mPreferences.saveCategory(mCurrentCategoryName, updatedQuizzesInfoCache.map { "${it.title}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet())
+        mPreferences.saveCategory(mCurrentCategoryName, updatedQuizzesInfoCache.map { "${it.title}$DELIMITER${it.description}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet())
     }
 
     fun updateQuizInfoCache(updatedQuizInfoCache: List<IContestantsInfo>, currentQuiz: String) {

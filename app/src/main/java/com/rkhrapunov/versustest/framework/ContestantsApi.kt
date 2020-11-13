@@ -17,12 +17,15 @@ interface ContestantsApi {
                       public_super_category: String): Call<List<Category>>
 
     @GET(PUBLIC_CATEGORY_PATH)
-    fun getAllQuizzes(@Path(LANG_PATH_NAME)
+    fun getQuizzes(@Path(LANG_PATH_NAME)
                       lang: String,
                       @Path(PUBLIC_SUPER_CATEGORY_PATH_NAME)
                       public_super_category: String,
                       @Path(PUBLIC_CATEGORY_PATH_NAME)
                       public_category: String): Call<List<QuizShortInfo>>
+
+    @GET(ALL_PUBLIC_QUIZZES_PATH)
+    fun getAllQuizzes(@Path(LANG_PATH_NAME) lang: String): Call<List<QuizShortInfo>>
 
     @GET(PUBLIC_QUIZ_PATH)
     fun getQuiz(@Path(LANG_PATH_NAME)
@@ -64,6 +67,7 @@ interface ContestantsApi {
         private const val PUBLIC_SUPER_CATEGORIES_PATH = "/public_supercategories/{$LANG_PATH_NAME}"
         private const val PUBLIC_SUPER_CATEGORY_PATH = "$PUBLIC_SUPER_CATEGORIES_PATH/{$PUBLIC_SUPER_CATEGORY_PATH_NAME}"
         private const val PUBLIC_CATEGORY_PATH = "$PUBLIC_SUPER_CATEGORY_PATH/{$PUBLIC_CATEGORY_PATH_NAME}"
+        private const val ALL_PUBLIC_QUIZZES_PATH = "${PUBLIC_SUPER_CATEGORIES_PATH}/all_public_quizzes/"
         private const val PUBLIC_QUIZ_PATH = "$PUBLIC_CATEGORY_PATH/{$PUBLIC_QUIZ_TITLE_PATH_NAME}"
         private const val PUBLIC_QUIZ_STATS_PATH = "${PUBLIC_QUIZ_PATH}/stats/"
         private const val PUBLIC_QUIZ_WINNER_PATH = "${PUBLIC_QUIZ_PATH}/winner/"

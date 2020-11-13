@@ -9,6 +9,8 @@
                 android:title="@string/descending" />
         </menu>
     </item>
+    <item android:id="@+id/licenses"
+        android:title="@string/licenses" />
     <item android:id="@+id/about"
         android:title="@string/about" />
 </menu>

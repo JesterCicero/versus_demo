@@ -12,6 +12,7 @@ import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import com.rkhrapunov.versustest.presentation.base.getScreenHeight
 import com.rkhrapunov.versustest.presentation.base.getScreenWidth
 import com.rkhrapunov.versustest.presentation.main.MainActivity
+import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,8 +24,8 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
     private val mPresenter by inject<IErrorDialogContract.IErrorDialogPresenter>()
 
     companion object {
-        private const val SCREEN_WIDTH_PERCENTAGE = 0.7
-        private const val SCREEN_HEIGHT_PERCENTAGE = 0.4
+        private const val SCREEN_WIDTH_PERCENTAGE = 0.8
+        private const val SCREEN_HEIGHT_PERCENTAGE = 0.5
         const val ERROR_MSG_KEY = "error_msg"
     }
 
@@ -56,11 +57,12 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
 
     @ExperimentalCoroutinesApi
     @ExperimentalStdlibApi
-    override fun dismissRecognitionDialog() {
+    override fun dismissDialog() {
         dismiss()
         (activity as? MainActivity)?.let {
             val currentFragment = it.supportFragmentManager.findFragmentById(R.id.fragment_container)?.tag
-            if (currentFragment != QuizPagerFragment::class.simpleName) {
+            if (currentFragment != QuizPagerFragment::class.simpleName
+                && currentFragment != QuizItemDetailFragment::class.simpleName) {
                 it.onBackPressed()
             }
         }

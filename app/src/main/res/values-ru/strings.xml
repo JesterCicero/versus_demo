@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Викторины</string>
+    <string name="app_name">Выбери Лучшего</string>
     <string name="vs_text">VS</string>
     <string name="first_img_description">первая картинка</string>
     <string name="second_img_description">вторая картинка</string>
@@ -14,6 +14,7 @@
     <string name="ascending">По возрастанию</string>
     <string name="descending">По убыванию</string>
     <string name="sort">Сортировать</string>
+    <string name="licenses">Лицензии</string>
     <string name="about">О нас</string>
     <string name="sort_by_results">Сортировка по %</string>
     <string name="sort_by_name">Сортировка по имени</string>
@@ -30,4 +31,14 @@
     <string name="final_round">Финал</string>
     <string name="results">Результаты</string>
     <string name="top_4">Последние Топ 4</string>
+    <string name="all">Все</string>
+    <string name="default_quiz_description">Выберите лучшего</string>
+    <string name="disclaimer">Данное приложение носит исключительно развлекательный характер и не имеет цели кого-то оскорбить,
+        все предоставленные материалы не направлены на оскорбление, уничижение достоинства человека. Приложение рекомендуется лицам не моложе 18 лет.</string>
+    <string name="collaboration_text">По вопросам сотрудничества обращайтесь:\nКувалдин Андрей Игоревич\nandy.kuvaldin@yandex.ru</string>
+    <string name="licenses_title">Free Licenses For Development:</string>
+    <string name="licenses_text"><font color="#ffe785"><u>MinIO</u></font> - Apache V2 license and Affero General Public License Version 3 (AGPLv3);\n
+                                 <font color="#ffe785"><u>Glide</u></font> - MIT License;\n
+                                 <font color="#ffe785"><u>Retrofit2</u></font> - Apache License, Version 2.0;\n
+                                 <font color="#ffe785"><u>Django</u></font> - 3-clause license ("BSD License 2.0", "Revised BSD License", "New BSD License", or "Modified BSD License")</string>
 </resources>

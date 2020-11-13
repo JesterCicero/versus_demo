@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.rkhrapunov.versustest.presentation.about.IAboutDialogContract.IAboutDialogPresenter" />
+
+        <variable
+            name="presenter"
+            type="IAboutDialogPresenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/pagerBackgroundColor">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/close_button_padding"
+            android:src="@drawable/ic_close"
+            android:background="@drawable/close_button_selector"
+            android:onClick="@{ () -> presenter.onAboutDialogFragmentDismissIntent() }"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <Space
+            android:id="@+id/top_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/small_img_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="@integer/about_top_space_vertical_weight" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:id="@+id/small_img_container"
+            app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_space"
+            app:layout_constraintBottom_toTopOf="@id/top_space_disclaimer"
+            app:layout_constraintVertical_weight="@integer/about_logo_vertical_weight">
+
+            <ImageView
+                android:id="@+id/small_img"
+                android:padding="@dimen/logo_padding"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:layout_width="@dimen/logo_width"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/list_icon_description"
+                android:src="@drawable/avp_logo" />
+        </androidx.cardview.widget.CardView>
+
+        <Space
+            android:id="@+id/top_space_disclaimer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/disclaimer_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/small_img_container"
+            app:layout_constraintVertical_weight="@integer/about_top_space_disclaimer_land_vertical_weight" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/disclaimer_text"
+            android:layout_width="@dimen/disclaimer_width"
+            android:layout_height="0dp"
+            android:background="@drawable/custom_page_item_selector"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/disclaimer_padding_horizontal"
+            android:text="@string/disclaimer"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/quizListItemTextColor"
+            android:textSize="@dimen/disclaimer_land_text_size"
+            app:layout_constraintBottom_toTopOf="@id/middle_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/top_space_disclaimer"
+            app:layout_constraintVertical_weight="@integer/about_disclaimer_land_vertical_weight"
+            tools:ignore="SpUsage" />
+
+        <Space
+            android:id="@+id/middle_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/ok_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/disclaimer_text"
+            app:layout_constraintVertical_weight="@integer/about_middle_space_land_vertical_weight" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/ok_button"
+            android:layout_width="@dimen/about_bottom_text_width"
+            android:layout_height="0dp"
+            android:background="@drawable/custom_page_item_selector"
+            android:text="@string/collaboration_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/quizListItemTextColor"
+            android:gravity="center"
+            android:autoLink="email"
+            android:textSize="@dimen/about_bottom_land_text_size"
+            android:paddingHorizontal="@dimen/about_bottom_text_padding_horizontal"
+            tools:text="@string/collaboration_text"
+            app:layout_constraintBottom_toTopOf="@id/bottom_space"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/middle_space"
+            app:layout_constraintVertical_weight="@integer/about_bottom_text_land_vertical_weight"
+            tools:visibility="visible"
+            tools:ignore="SpUsage" />
+
+        <Space
+            android:id="@+id/bottom_space"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ok_button"
+            app:layout_constraintVertical_weight="@integer/about_bottom_space_land_vertical_weight" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

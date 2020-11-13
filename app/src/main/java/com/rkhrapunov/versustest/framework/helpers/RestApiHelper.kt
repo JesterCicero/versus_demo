@@ -27,6 +27,7 @@ class RestApiHelper {
         SUPER_CATEGORIES,
         CATEGORIES,
         QUIZ,
+        QUIZZES,
         ALL_QUIZZES,
         QUIZ_STATS,
         WINNER
@@ -56,7 +57,7 @@ class RestApiHelper {
     }
 
     companion object {
-        private const val BASE_URL = "https://185.177.114.72/"
+        private const val BASE_URL = "http://192.168.0.10/"
     }
 
     init {
@@ -76,7 +77,8 @@ class RestApiHelper {
         when (requestType) {
             RequestType.SUPER_CATEGORIES -> creationPart.getSuperCategories(lang).enqueue(ServerResponseCallback<List<SuperCategory>>(onSuccessAction, onFailAction))
             RequestType.CATEGORIES -> creationPart.getCategories(lang, public_super_category).enqueue(ServerResponseCallback<List<Category>>(onSuccessAction, onFailAction))
-            RequestType.ALL_QUIZZES -> creationPart.getAllQuizzes(lang, public_super_category, public_category).enqueue(ServerResponseCallback<List<QuizShortInfo>>(onSuccessAction, onFailAction))
+            RequestType.QUIZZES -> creationPart.getQuizzes(lang, public_super_category, public_category).enqueue(ServerResponseCallback<List<QuizShortInfo>>(onSuccessAction, onFailAction))
+            RequestType.ALL_QUIZZES -> creationPart.getAllQuizzes(lang).enqueue(ServerResponseCallback<List<QuizShortInfo>>(onSuccessAction, onFailAction))
             RequestType.QUIZ -> creationPart.getQuiz(lang, public_super_category, public_category, public_quiz).enqueue(ServerResponseCallback<List<ContestantsInfo>>(onSuccessAction, onFailAction))
             RequestType.QUIZ_STATS -> creationPart.getQuizStats(lang, public_super_category, public_category, public_quiz).enqueue(ServerResponseCallback<List<ContestantsStatsInfo>>(onSuccessAction, onFailAction))
             RequestType.WINNER -> creationPart.postWinnerInfo(lang, public_super_category, public_category, public_quiz, bodyData).enqueue(ServerResponseCallback<String>(onSuccessAction, onFailAction))

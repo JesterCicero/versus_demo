@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.rkhrapunov.versustest.presentation.licenses.ILicensesDialogContract.ILicensesDialogPresenter" />
+
+        <variable
+            name="presenter"
+            type="ILicensesDialogPresenter" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/pagerBackgroundColor">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/close_button_selector"
+            android:onClick="@{ () -> presenter.onLicensesDialogFragmentDismissIntent() }"
+            android:padding="@dimen/close_button_padding"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/licenses_title_margin_bottom"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/licenses_title_padding_horizontal"
+            android:text="@string/licenses_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/yellowButtonPressedColor"
+            android:textSize="@dimen/licenses_title_text_size"
+            app:layout_constraintBottom_toTopOf="@id/licenses_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="SpUsage" />
+
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+            android:id="@+id/licenses_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/licenses_text_line_spacing_extra"
+            android:paddingHorizontal="@dimen/licenses_text_padding_horizontal"
+            android:text="@string/licenses_text"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="@color/quizListItemTextColor"
+            android:textSize="@dimen/licenses_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
