@@ -13,8 +13,10 @@ import androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_IDLE
 import com.bumptech.glide.Glide
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.FragmentQuizPagerBinding
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
+import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.main.MainActivity
 import com.rkhrapunov.versustest.presentation.quiz_page.QuizPageFragment
@@ -97,14 +99,23 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
         activity?.let {
             val url = when (renderState) {
                 is RenderState.CategoriesState -> mPresenter.getCurrentSuperCategoryBackgroundUrl()
-                is RenderState.QuizListState -> mPresenter.getCurrentCategoryBackgroundUrl()
+                is RenderState.QuizListState -> {
+                    if (mPresenter.getCurrentSuperCategory() == getString(R.string.all)) {
+                        viewGroup.setBackgroundResource(R.color.pagerBackgroundColor)
+                        EMPTY_STRING
+                    } else {
+                        mPresenter.getCurrentCategoryBackgroundUrl()
+                    }
+                }
                 else -> {
                     Timber.w("Invalid state: $renderState")
                     return
                 }
             }
-            mCoroutineLauncherHelper.launchImgLoading {
-                mImageLoader.loadImage(it, url, viewGroup)
+            if (url.isNotEmpty()) {
+                mCoroutineLauncherHelper.launchImgLoading {
+                    mImageLoader.loadImage(it, url, viewGroup)
+                }
             }
         }
     }

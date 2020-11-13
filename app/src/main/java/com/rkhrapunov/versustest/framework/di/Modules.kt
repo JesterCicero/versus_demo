@@ -12,12 +12,16 @@ import com.rkhrapunov.versustest.framework.ContestantsDataSource
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.framework.helpers.NetworkConnectivityHelper
 import com.rkhrapunov.versustest.framework.helpers.RestApiHelper
+import com.rkhrapunov.versustest.presentation.about.AboutDialogPresenter
+import com.rkhrapunov.versustest.presentation.about.IAboutDialogContract
 import com.rkhrapunov.versustest.presentation.base.ImageLoader
 import com.rkhrapunov.versustest.presentation.base.Preferences
 import com.rkhrapunov.versustest.presentation.empty_pager.EmptyPagerPresenter
 import com.rkhrapunov.versustest.presentation.empty_pager.IEmptyPagerContract
 import com.rkhrapunov.versustest.presentation.error.ErrorDialogPresenter
 import com.rkhrapunov.versustest.presentation.error.IErrorDialogContract
+import com.rkhrapunov.versustest.presentation.licenses.ILicensesDialogContract
+import com.rkhrapunov.versustest.presentation.licenses.LicensesDialogPresenter
 import com.rkhrapunov.versustest.presentation.main.IMainContract
 import com.rkhrapunov.versustest.presentation.main.MainPresenter
 import com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract
@@ -91,5 +95,7 @@ val applicationModule = module(override = true) {
     factory<IQuizItemDetailContract.IQuizItemDetailPresenter> { QuizItemDetailPresenter() }
     factory<IWinnerContract.IWinnerPresenter> { WinnerPresenter() }
     factory<IErrorDialogContract.IErrorDialogPresenter> { ErrorDialogPresenter() }
+    factory<IAboutDialogContract.IAboutDialogPresenter> { AboutDialogPresenter() }
+    factory<ILicensesDialogContract.ILicensesDialogPresenter> { LicensesDialogPresenter() }
     factory<IEmptyPagerContract.IEmptyPagerPresenter> { EmptyPagerPresenter() }
 }

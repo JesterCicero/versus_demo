@@ -32,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
+            android:paddingHorizontal="@dimen/error_modal_text_padding_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             android:lines="@integer/error_dialog_lines_number"

@@ -6,7 +6,7 @@ import com.rkhrapunov.versustest.presentation.base.IBaseView
 interface IErrorDialogContract {
 
     interface IErrorDialogView: IBaseView {
-        fun dismissRecognitionDialog()
+        fun dismissDialog()
     }
 
     interface IErrorDialogPresenter : IBaseStatefulPresenter<IErrorDialogView> {

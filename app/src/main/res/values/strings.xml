@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Quizzes</string>
+    <string name="app_name">Choose The Best One</string>
     <string name="vs_text">VS</string>
     <string name="first_img_description">first image</string>
     <string name="second_img_description">second image</string>
@@ -13,6 +13,7 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="sort">Sort</string>
+    <string name="licenses">Licenses</string>
     <string name="about">About</string>
     <string name="sort_by_results">Sort by results</string>
     <string name="sort_by_name">Sort by name</string>
@@ -29,4 +30,14 @@
     <string name="final_round">Final</string>
     <string name="results">Results</string>
     <string name="top_4">Recent Top 4</string>
+    <string name="all">All</string>
+    <string name="default_quiz_description">Choose the best one</string>
+    <string name="disclaimer">This application is for entertainment purposes only and is not intended to offend anyone,
+         all provided materials are not aimed at insulting, belittling human dignity. The app is recommended for people at least 18 years old.</string>
+    <string name="collaboration_text">For cooperation contact:\nKuvaldin Andrey Igorevich\nandy.kuvaldin@yandex.ru</string>
+    <string name="licenses_title">Free Licenses For Development:</string>
+    <string name="licenses_text"><font color="#ffe785"><u>MinIO</u></font> - Apache V2 license and Affero General Public License Version 3 (AGPLv3);\n
+                                 <font color="#ffe785"><u>Glide</u></font> - MIT License;\n
+                                 <font color="#ffe785"><u>Retrofit2</u></font> - Apache License, Version 2.0;\n
+                                 <font color="#ffe785"><u>Django</u></font> - 3-clause license ("BSD License 2.0", "Revised BSD License", "New BSD License", or "Modified BSD License")</string>
 </resources>

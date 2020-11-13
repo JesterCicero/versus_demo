@@ -14,7 +14,11 @@ sealed class RenderState : IRenderState {
 
     data class QuizListState(val allContestants: List<IQuizShortInfo>) : RenderState()
 
-    data class QuizItemDetailState(val firstContestant: IContestantsInfo, val secondContestant: IContestantsInfo, val round: String, val quizTitle: String) : RenderState()
+    data class QuizItemDetailState(val firstContestant: IContestantsInfo,
+                                   val secondContestant: IContestantsInfo,
+                                   val round: String,
+                                   val quizTitle: String,
+                                   val quizDescription: String) : RenderState()
 
     data class StatsListState(val statsContestants: List<IContestantsStatsInfo>, val top4List: List<IContestantsInfo>) : RenderState()
 

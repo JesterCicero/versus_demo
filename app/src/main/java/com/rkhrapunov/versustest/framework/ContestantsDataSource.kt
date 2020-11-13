@@ -2,10 +2,11 @@ package com.rkhrapunov.versustest.framework
 
 import android.content.Context
 import android.os.Handler
-import com.rkhrapunov.core.data.ChosenContestant
-import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.data.IContestantsDataSource
 import com.rkhrapunov.core.data.IContestantsInfo
+import com.rkhrapunov.core.data.ChosenContestant
+import com.rkhrapunov.core.data.IQuizShortInfo
+import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
@@ -56,6 +57,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mGetSuperCategoriesJob: Job? = null
     private var mGetCategoriesJob: Job? = null
     private var mGetQuizListJob: Job? = null
+    private var mGetAllQuizzesJob: Job? = null
     private var mGetQuizItemDetailJob: Job? = null
     private var mGetStatsJob: Job? = null
     private var mSuperCategoriesUpdateUiJob: Job? = null
@@ -81,6 +83,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mWinnerDetected = false
     private lateinit var mFirstContestant: IContestantsInfo
     private lateinit var mSecondContestant: IContestantsInfo
+    private var mCurrentQuizzesList = emptyList<IQuizShortInfo>()
 
     companion object {
         private const val WINNER_RESPONSE = "Got your request!"
@@ -188,6 +191,15 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     override fun getCategories(itemData: String) {
         if (itemData.isNotEmpty()) {
             mCurrentSuperCategory = itemData
+            val allStr = mContext.getString(R.string.all)
+            if (mCurrentSuperCategory == allStr) {
+                mCurrentCategory = mCurrentSuperCategory
+                mGetAllQuizzesJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
+                    mContestantsCache.tryToGetQuizzesInfoCache(mCurrentCategory)
+                    getAllQuizzesApi()
+                })
+                return
+            }
         }
         mGetCategoriesJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
             mContestantsCache.tryToGetCategoriesCache(mCurrentSuperCategory)
@@ -197,13 +209,19 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
 
     override fun getQuizList(itemData: String) {
         mCurrentCategory = itemData
-        getAllQuizzes()
+        getQuizzes()
     }
 
-    private fun getAllQuizzes() {
+    private fun getQuizzes() {
         mGetQuizListJob = mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
-            mContestantsCache.tryToGetQuizzesInfoCache(mCurrentCategory)
-            getAllQuizzesApi()
+            if (mContestantsCache.tryToGetQuizzesInfoCache(mCurrentCategory)) {
+                mContestantsCache.quizzesInfoCache?.let { mCurrentQuizzesList = it }
+            }
+            if (mCurrentCategory == mContext.getString(R.string.all)) {
+                getAllQuizzesApi()
+            } else {
+                getQuizzesApi()
+            }
         })
     }
 
@@ -240,6 +258,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mGetSuperCategoriesJob?.cancel()
         mGetCategoriesJob?.cancel()
         mGetQuizListJob?.cancel()
+        mGetAllQuizzesJob?.cancel()
         mGetQuizItemDetailJob?.cancel()
         mGetStatsJob?.cancel()
         mSuperCategoriesUpdateUiJob?.cancel()
@@ -286,7 +305,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
 
     override fun getCurrentQuiz() = mCurrentQuiz
 
-    override fun getCurrentQuizList() = getAllQuizzes()
+    override fun getCurrentQuizList() = getQuizzes()
 
     override fun getStatsOption() = mResultsStats
 
@@ -403,26 +422,25 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         )
     }
 
+    private fun getQuizzesApi() {
+        Timber.d("getQuizzesApi()")
+        mRestApiHelper.makeRequest(
+            RestApiHelper.RequestType.QUIZZES,
+            { onGetQuizzesApiSuccess(it as Response<List<QuizShortInfo>>) },
+            { onGetQuizzesApiError(it) },
+            lang = Locale.getDefault().language,
+            public_super_category = mCurrentSuperCategory,
+            public_category = mCurrentCategory
+        )
+    }
+
     private fun getAllQuizzesApi() {
         Timber.d("getAllQuizzesApi()")
         mRestApiHelper.makeRequest(
             RestApiHelper.RequestType.ALL_QUIZZES,
-            { onGetAllQuizzesApiSuccess(it as Response<List<QuizShortInfo>>) },
-            {
-                Timber.d(it, "Error occurred while getting response for quizzes list!")
-                val quizzesCacheEmpty = mContestantsCache.quizzesInfoCache?.isEmpty() ?: true
-                Timber.d("quizzesCacheEmpty: $quizzesCacheEmpty")
-                val categoryFromCache = mContestantsCache.currentCategoryName
-                Timber.d("current category from data source: $mCurrentCategory, current category from cache: $categoryFromCache")
-                if (quizzesCacheEmpty || mCurrentCategory != categoryFromCache) {
-                    mUnableToGetQuizListJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                        mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_quiz_list))
-                    }
-                }
-            },
-            lang = Locale.getDefault().language,
-            public_super_category = mCurrentSuperCategory,
-            public_category = mCurrentCategory
+            { onGetQuizzesApiSuccess(it as Response<List<QuizShortInfo>>) },
+            { onGetQuizzesApiError(it) },
+            lang = Locale.getDefault().language
         )
     }
 
@@ -430,13 +448,16 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         response.body()?.let {
             Timber.d("onGetSuperCategoriesApiSuccess(): superCategories size: ${it.size}")
             val sortedSuperCategories = it.sortedBy { element -> element.name }
-            val listsUnequal = mContestantsCache.superCategoriesCache != sortedSuperCategories
+            val mutableSortedSuperCategories = sortedSuperCategories.toMutableList()
+            // add fake 'All' super category
+            mutableSortedSuperCategories.add(0, SuperCategory(mContext.getString(R.string.all), EMPTY_STRING, EMPTY_STRING))
+            val listsUnequal = mContestantsCache.superCategoriesCache != mutableSortedSuperCategories
             Timber.d("listsUnequal: $listsUnequal")
             if (listsUnequal) {
                 Timber.d("onGetSuperCategoriesApiSuccess(): got new superCategories from server")
-                mContestantsCache.updateSuperCategoriesCache(sortedSuperCategories)
+                mContestantsCache.updateSuperCategoriesCache(mutableSortedSuperCategories)
                 mSuperCategoriesUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mRenderUiChannel.send(RenderState.SuperCategoriesState(sortedSuperCategories))
+                    mRenderUiChannel.send(RenderState.SuperCategoriesState(mutableSortedSuperCategories))
                 }
             }
         }
@@ -462,10 +483,11 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         }
     }
 
-    private fun onGetAllQuizzesApiSuccess(response: Response<List<QuizShortInfo>>) {
+    private fun onGetQuizzesApiSuccess(response: Response<List<QuizShortInfo>>) {
         response.body()?.let {
-            Timber.d("onGetAllQuizzesApiSuccess(): allQuizzes size: ${it.size}")
+            Timber.d("onGetQuizzesApiSuccess(): quizzes size: ${it.size}")
             val sortedQuizShortInfoList = it.sortedBy { element -> element.title }
+            mCurrentQuizzesList = sortedQuizShortInfoList
             if (mContestantsCache.isQuizzesCacheEmpty(mCurrentCategory)) {
                 mContestantsCache.updateQuizzesInfoCache(sortedQuizShortInfoList, mCurrentCategory)
                 mQuizListUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
@@ -479,6 +501,19 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                         getQuizList(mCurrentCategory)
                     }
                 }
+            }
+        }
+    }
+
+    private fun onGetQuizzesApiError(throwable: Throwable) {
+        Timber.d(throwable, "Error occurred while getting response for quizzes list!")
+        val quizzesCacheEmpty = mContestantsCache.quizzesInfoCache?.isEmpty() ?: true
+        Timber.d("quizzesCacheEmpty: $quizzesCacheEmpty")
+        val categoryFromCache = mContestantsCache.currentCategoryName
+        Timber.d("current category from data source: $mCurrentCategory, current category from cache: $categoryFromCache")
+        if (quizzesCacheEmpty || mCurrentCategory != categoryFromCache) {
+            mUnableToGetQuizListJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
+                mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_quiz_list))
             }
         }
     }
@@ -580,7 +615,9 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             mSecondContestant = mInterimContestants.random()
             mInterimContestants.remove(mSecondContestant)
         }
+        val filteredCurrentQuizzesList = mCurrentQuizzesList.filter { it.title == mCurrentQuiz }
+        val description = if (filteredCurrentQuizzesList.isNotEmpty()) filteredCurrentQuizzesList[0].description else mContext.getString(R.string.default_quiz_description)
         return RenderState.QuizItemDetailState(
-            mFirstContestant, mSecondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz)
+            mFirstContestant, mSecondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz, description)
     }
 }

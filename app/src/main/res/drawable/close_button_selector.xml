@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_pressed="true" android:state_focused="true">
+        <inset
+            android:insetTop="@dimen/close_button_inset"
+            android:insetBottom="@dimen/close_button_inset"
+            android:insetLeft="@dimen/close_button_inset"
+            android:insetRight="@dimen/close_button_inset" >
+            <shape>
+                <solid android:color="@color/mainColor" />
+            </shape>
+        </inset>
+    </item>
+
+    <item android:state_pressed="true">
+        <inset
+            android:insetTop="@dimen/close_button_inset"
+            android:insetBottom="@dimen/close_button_inset"
+            android:insetLeft="@dimen/close_button_inset"
+            android:insetRight="@dimen/close_button_inset" >
+            <shape>
+                <solid android:color="@color/mainColor" />
+            </shape>
+        </inset>
+    </item>
+
+    <item android:state_pressed="false" android:state_focused="true">
+        <inset android:insetTop="@dimen/close_button_inset"
+            android:insetBottom="@dimen/close_button_inset"
+            android:insetLeft="@dimen/close_button_inset"
+            android:insetRight="@dimen/close_button_inset" >
+            <shape>
+                <solid android:drawable="@color/transparentColor"  />
+            </shape>
+        </inset>
+    </item>
+
+    <item android:drawable="@color/transparentColor" />
+
+</selector>

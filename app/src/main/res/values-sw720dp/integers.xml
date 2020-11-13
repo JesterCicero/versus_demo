@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="winner_landscape_vertical_weight">40</integer>
+    <integer name="winner_title_landscape_top_space_vertical_weight">11</integer>
+    <integer name="winner_description_landscape_img_top_space_vertical_weight">11</integer>
+</resources>

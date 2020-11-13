@@ -82,6 +82,8 @@ class QuizPagerPresenter : BasePresenter<IQuizPagerContract.IQuizPagerView>(),
         } ?: EMPTY_STRING
     }
 
+    override fun getCurrentSuperCategory() = mGetCurrentSuperCategoryInteractor.getCurrentSuperCategory()
+
     override fun onViewDestroyed() {
         mJob?.cancel()
         super.onViewDestroyed()

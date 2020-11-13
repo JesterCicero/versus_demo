@@ -20,9 +20,9 @@ import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.ActivityMainBinding
+import com.rkhrapunov.versustest.presentation.about.AboutDialogFragment
 import com.rkhrapunov.versustest.presentation.base.Constants.INVALID_VALUE
 import com.rkhrapunov.versustest.presentation.base.IItemClickListener
-import com.rkhrapunov.versustest.presentation.base.weak
 import com.rkhrapunov.versustest.presentation.empty_pager.EmptyPagerFragment
 import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment
 import com.rkhrapunov.versustest.presentation.error.ErrorDialogFragment.Companion.ERROR_MSG_KEY
@@ -30,6 +30,7 @@ import com.rkhrapunov.versustest.presentation.quiz_detail.QuizItemDetailFragment
 import com.rkhrapunov.versustest.presentation.quiz_pager.QuizPagerFragment
 import com.rkhrapunov.versustest.presentation.base.QuizAdapter
 import com.rkhrapunov.versustest.presentation.base.QuizDataType
+import com.rkhrapunov.versustest.presentation.licenses.LicensesDialogFragment
 import com.rkhrapunov.versustest.presentation.quizlist.QuizListFragment
 import com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarHelper
 import com.rkhrapunov.versustest.presentation.winner.WinnerFragment
@@ -46,7 +47,6 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private val mPresenter by inject<IMainContract.IMainPresenter>()
     var activityMainBinding: ActivityMainBinding? = null
     private var mCurrentState: IRenderState? = null
-    private var mErrorDialogFragment: ErrorDialogFragment? by weak()
     private var mAdapter: QuizAdapter<*>? = null
     private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
     private var mFirstSuperCategorySelected = false
@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             is RenderState.CategoriesState,
             is RenderState.QuizListState -> onCategoriesState()
             is RenderState.StatsListState -> onStatsListState()
-            is RenderState.QuizItemDetailState -> onQuizItemDetailState()
+            is RenderState.QuizItemDetailState -> onQuizItemDetailState(renderState.quizDescription)
             is RenderState.WinnerState -> onWinnerState()
             is RenderState.ErrorState -> onErrorState()
             is RenderState.WinnerFinalState -> {
@@ -142,8 +142,11 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         return getQuizListFragment(false)
     }
 
-    private fun onQuizItemDetailState(): QuizItemDetailFragment {
+    private fun onQuizItemDetailState(quizDescription: String): QuizItemDetailFragment {
         showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
+        if (mCurrentState !is RenderState.QuizItemDetailState) {
+            renderErrorState(quizDescription)
+        }
         return QuizItemDetailFragment()
     }
 
@@ -182,13 +185,11 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         val tag = ErrorDialogFragment::class.simpleName
         val prev = supportFragmentManager.findFragmentByTag(tag)
         prev?.let { fragmentTransaction.remove(it) }
-        mErrorDialogFragment = ErrorDialogFragment()
-        mErrorDialogFragment?.let {
-            val bundle = Bundle()
-            bundle.putString(ERROR_MSG_KEY, errorMsg)
-            it.arguments = bundle
-            it.show(fragmentTransaction, tag)
-        }
+        val errorDialogFragment = ErrorDialogFragment()
+        val bundle = Bundle()
+        bundle.putString(ERROR_MSG_KEY, errorMsg)
+        errorDialogFragment.arguments = bundle
+        errorDialogFragment.show(fragmentTransaction, tag)
     }
 
     private fun setOnQueryTextListener() {
@@ -324,9 +325,35 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                     getQuizListAdapter(false)?.sort(ascending = false, sortByResults = false)
                     true
                 }
+                R.id.licenses -> {
+                    showLicensesDialog()
+                    true
+                }
+                R.id.about -> {
+                    showAboutDialog()
+                    true
+                }
                 else -> false
             }
         }
+    }
+
+    private fun showLicensesDialog() {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val tag = LicensesDialogFragment::class.simpleName
+        val prev = supportFragmentManager.findFragmentByTag(tag)
+        prev?.let { fragmentTransaction.remove(it) }
+        val licensesDialogFragment = LicensesDialogFragment()
+        licensesDialogFragment.show(fragmentTransaction, tag)
+    }
+
+    private fun showAboutDialog() {
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+        val tag = AboutDialogFragment::class.simpleName
+        val prev = supportFragmentManager.findFragmentByTag(tag)
+        prev?.let { fragmentTransaction.remove(it) }
+        val aboutDialogFragment = AboutDialogFragment()
+        aboutDialogFragment.show(fragmentTransaction, tag)
     }
 
     private fun setupSubmenu(menu: Menu, menuItemId: Int) {

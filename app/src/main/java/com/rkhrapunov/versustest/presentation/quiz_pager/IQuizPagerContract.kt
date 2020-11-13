@@ -18,5 +18,6 @@ interface IQuizPagerContract {
         fun onBackPressed()
         fun getCurrentSuperCategoryBackgroundUrl(): String
         fun getCurrentCategoryBackgroundUrl(): String
+        fun getCurrentSuperCategory(): String
     }
 }

@@ -96,4 +96,25 @@
     <dimen name="tooltip_margin_top">16dp</dimen>
     <dimen name="tooltip_width">160dp</dimen>
     <dimen name="tooltip_bg_corners_radius">25dp</dimen>
+    <dimen name="close_button_width_height">25dp</dimen>
+    <dimen name="close_button_inset">8dp</dimen>
+    <dimen name="close_button_padding">16dp</dimen>
+    <dimen name="logo_padding">12dp</dimen>
+    <dimen name="logo_width">280dp</dimen>
+    <dimen name="disclaimer_width">380dp</dimen>
+    <dimen name="disclaimer_padding_horizontal">12dp</dimen>
+    <dimen name="disclaimer_text_size">16dp</dimen>
+    <dimen name="disclaimer_land_text_size">14dp</dimen>
+    <dimen name="about_bottom_text_width">300dp</dimen>
+    <dimen name="about_bottom_text_size">16dp</dimen>
+    <dimen name="about_bottom_land_text_size">14dp</dimen>
+    <dimen name="about_bottom_text_padding_horizontal">12dp</dimen>
+    <dimen name="error_modal_text_padding_horizontal">20dp</dimen>
+    <dimen name="img_description_max_width_land">250dp</dimen>
+    <dimen name="licenses_title_margin_bottom">16dp</dimen>
+    <dimen name="licenses_title_padding_horizontal">12dp</dimen>
+    <dimen name="licenses_title_text_size">28dp</dimen>
+    <dimen name="licenses_text_line_spacing_extra">10dp</dimen>
+    <dimen name="licenses_text_padding_horizontal">12dp</dimen>
+    <dimen name="licenses_text_size">20dp</dimen>
 </resources>

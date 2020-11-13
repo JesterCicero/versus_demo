@@ -11,6 +11,6 @@ class ErrorDialogPresenter : BasePresenter<IErrorDialogContract.IErrorDialogView
     IErrorDialogContract.IErrorDialogPresenter, KoinComponent {
 
     override fun onErrorDialogFragmentDismissIntent() {
-        mView?.dismissRecognitionDialog()
+        mView?.dismissDialog()
     }
 }
