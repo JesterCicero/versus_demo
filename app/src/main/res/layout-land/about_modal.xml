@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_weight="@integer/about_top_space_vertical_weight" />
+            app:layout_constraintVertical_weight="@integer/about_top_space_land_vertical_weight" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -47,14 +47,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_space"
             app:layout_constraintBottom_toTopOf="@id/top_space_disclaimer"
-            app:layout_constraintVertical_weight="@integer/about_logo_vertical_weight">
+            app:layout_constraintVertical_weight="@integer/about_logo_vertical_land_weight">
 
             <ImageView
                 android:id="@+id/small_img"
                 android:padding="@dimen/logo_padding"
                 android:layout_gravity="center"
                 android:background="@color/white"
-                android:layout_width="@dimen/logo_width"
+                android:layout_width="@dimen/logo_land_width"
                 android:layout_height="match_parent"
                 android:contentDescription="@string/list_icon_description"
                 android:src="@drawable/avp_logo" />
@@ -72,7 +72,7 @@
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/disclaimer_text"
-            android:layout_width="@dimen/disclaimer_width"
+            android:layout_width="@dimen/disclaimer_land_width"
             android:layout_height="0dp"
             android:background="@drawable/custom_page_item_selector"
             android:gravity="center"

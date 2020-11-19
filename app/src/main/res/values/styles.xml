@@ -12,7 +12,7 @@
     </style>
 
     <style name="SearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">@dimen/search_view_text_size</item>
         <item name="android:textColorHint">#232323</item>
     </style>
 
@@ -27,7 +27,7 @@
 
     <style name="itemTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textColor">#ffb80a</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/menu_item_text_size</item>
         <item name="android:background">@color/colorPrimary</item>
     </style>
 

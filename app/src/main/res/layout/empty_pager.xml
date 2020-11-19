@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="@integer/empty_pager_error_dialog_top_bottom_space_vertical_weight" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/error_text"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -67,13 +67,15 @@
             app:layout_constraintVertical_weight="@integer/empty_pager_error_dialog_ok_button_vertical_weight"
             tools:visibility="visible">
 
-            <TextView
+            <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/retry_loading"
+                android:textSize="@dimen/empty_pager_button_text_size"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="@color/backgroundMainColor" />
+                android:textColor="@color/backgroundMainColor"
+                tools:ignore="SpUsage" />
         </FrameLayout>
 
         <Space

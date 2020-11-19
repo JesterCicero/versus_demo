@@ -88,11 +88,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/quizListItemTextColor"
             android:layout_marginBottom="@dimen/quiz_item_detail_round_description_margin_bottom"
+            android:textSize="@dimen/round_text_size"
             app:layout_constraintBottom_toTopOf="@id/first_img"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/round" />
+            tools:text="@string/round"
+            tools:ignore="SpUsage" />
 
         <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/first_img_description"
@@ -106,12 +108,14 @@
             android:text="@{firstDescription}"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             android:layout_marginTop="@dimen/quiz_item_land_description_margin_top"
             android:layout_marginBottom="@dimen/quiz_item_land_detail_item_margin_bottom"
             app:layout_constraintEnd_toEndOf="@id/first_img"
             app:layout_constraintStart_toStartOf="@id/first_img"
             app:layout_constraintTop_toBottomOf="@id/first_img"
-            tools:text="@string/first_img_description" />
+            tools:text="@string/first_img_description"
+            tools:ignore="SpUsage" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/first_img"
@@ -140,7 +144,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/question_button_img1_frame_layout_id"
-            android:background="@drawable/back_button_selector"
+            android:background="@drawable/tooltip_button_selector"
             android:layout_marginEnd="@dimen/item_icon_margin_start"
             android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
             android:elevation="@dimen/question_mark_elevation"
@@ -151,10 +155,10 @@
             tools:visibility="visible">
             <ImageView
                 tools:ignore="ContentDescription"
-                android:layout_width="@dimen/back_button_width_height"
-                android:layout_height="@dimen/back_button_width_height"
-                android:paddingTop="@dimen/back_button_padding_top_bottom"
-                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_width="@dimen/tooltip_button_width_height"
+                android:layout_height="@dimen/tooltip_button_width_height"
+                android:paddingTop="@dimen/tooltip_button_padding_top_bottom"
+                android:paddingBottom="@dimen/tooltip_button_padding_top_bottom"
                 android:layout_gravity="center"
                 android:id="@+id/question_btn_img1_icon_id"
                 android:src="@drawable/ic_question_mark"/>
@@ -202,13 +206,15 @@
             android:paddingHorizontal="@dimen/super_category_item_margin_padding_value"
             android:background="@drawable/custom_page_item_selector"
             android:layout_marginBottom="@dimen/quiz_item_land_detail_item_margin_bottom"
+            android:textSize="@dimen/vs_text_size"
             android:text="@string/vs_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/second_img"
             app:layout_constraintStart_toEndOf="@id/first_img"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpUsage" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/second_img"
@@ -236,7 +242,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/question_button_img2_frame_layout_id"
-            android:background="@drawable/back_button_selector"
+            android:background="@drawable/tooltip_button_selector"
             android:layout_marginEnd="@dimen/item_icon_margin_start"
             android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
             android:elevation="@dimen/question_mark_elevation"
@@ -245,15 +251,16 @@
             android:scaleType="centerCrop"
             android:visibility="@{ secondContestantTooltipVisible ? View.VISIBLE : View.GONE }"
             tools:visibility="visible">
+
             <ImageView
-                tools:ignore="ContentDescription"
-                android:layout_width="@dimen/back_button_width_height"
-                android:layout_height="@dimen/back_button_width_height"
-                android:paddingTop="@dimen/back_button_padding_top_bottom"
-                android:paddingBottom="@dimen/back_button_padding_top_bottom"
-                android:layout_gravity="center"
                 android:id="@+id/question_btn_img2_icon_id"
-                android:src="@drawable/ic_question_mark"/>
+                android:layout_width="@dimen/tooltip_button_width_height"
+                android:layout_height="@dimen/tooltip_button_width_height"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/tooltip_button_padding_top_bottom"
+                android:paddingBottom="@dimen/tooltip_button_padding_top_bottom"
+                android:src="@drawable/ic_question_mark"
+                tools:ignore="ContentDescription" />
 
         </FrameLayout>
 
@@ -298,6 +305,7 @@
             android:gravity="center"
             android:maxWidth="@dimen/img_description_max_width_land"
             android:paddingHorizontal="@dimen/super_category_item_margin_padding_value"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             android:background="@drawable/custom_page_item_selector"
             android:text="@{secondDescription}"
             android:scrollHorizontally="false"
@@ -308,7 +316,8 @@
             app:layout_constraintEnd_toEndOf="@id/second_img"
             app:layout_constraintStart_toStartOf="@id/second_img"
             app:layout_constraintTop_toBottomOf="@id/second_img"
-            tools:text="@string/second_img_description" />
+            tools:text="@string/second_img_description"
+            tools:ignore="SpUsage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

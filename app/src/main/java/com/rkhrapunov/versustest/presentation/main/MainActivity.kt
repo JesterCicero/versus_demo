@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private var mAdapter: QuizAdapter<*>? = null
     private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
     private var mFirstSuperCategorySelected = false
+    private var mGetSuperCategoriesRequest = false
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                 (mAdapter as? QuizAdapter<ISuperCategory>)?.updateData(it)
             }
         }
+        mGetSuperCategoriesRequest = true
         mPresenter.attachView(this, lifecycle)
     }
 
@@ -86,6 +88,10 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     override fun onResume() {
         super.onResume()
         mTopSnackBarHelper.setActivity(this)
+        if (mCurrentState == null && !mGetSuperCategoriesRequest) {
+            Timber.d("onResume(): getSuperCategories")
+            mPresenter.getSuperCategories()
+        }
     }
 
     override fun onPause() {
@@ -109,6 +115,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                 if (superCategories.isNotEmpty()) {
                     mPresenter.onInitialSuperCategory()
                 }
+                mGetSuperCategoriesRequest = false
                 return
             }
             is RenderState.CategoriesState,
@@ -144,8 +151,11 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private fun onQuizItemDetailState(quizDescription: String): QuizItemDetailFragment {
         showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
-        if (mCurrentState !is RenderState.QuizItemDetailState) {
-            renderErrorState(quizDescription)
+        Timber.d("mCurrentState: $mCurrentState")
+        mCurrentState?.let {
+            if (it !is RenderState.QuizItemDetailState) {
+                renderErrorState(quizDescription)
+            }
         }
         return QuizItemDetailFragment()
     }
@@ -381,7 +391,13 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                 cancelQuizAndGetQuizList()
                 (currentFragment as? QuizItemDetailFragment)?.onBackPressed()
             }
-            is QuizPagerFragment -> (currentFragment as? QuizPagerFragment)?.onBackPressed()
+            is QuizPagerFragment -> (currentFragment as? QuizPagerFragment)?.let {
+                if (mPresenter.getCurrentSuperCategoryPosition() == 0) {
+                    super.onBackPressed()
+                } else {
+                    it.onBackPressed()
+                }
+            }
             else -> super.onBackPressed()
         }
     }

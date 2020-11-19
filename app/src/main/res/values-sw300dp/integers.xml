@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="about_logo_vertical_weight">20</integer>
+    <integer name="about_top_space_vertical_weight">10</integer>
+    <integer name="about_bottom_space_vertical_weight">13</integer>
+    <integer name="about_logo_vertical_land_weight">30</integer>
+    <integer name="about_top_space_land_vertical_weight">5</integer>
+    <integer name="about_bottom_space_land_vertical_weight">9</integer>
+    <integer name="about_bottom_text_land_vertical_weight">17</integer>
+    <integer name="top_snack_bar_width">280</integer>
+    <integer name="top_snack_bar_height">40</integer>
+    <integer name="top_snack_bar_land_width">380</integer>
+    <integer name="quiz_item_vs_text_view_vertical_weight">5</integer>
+</resources>

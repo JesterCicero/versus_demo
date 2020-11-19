@@ -616,6 +616,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             mInterimContestants.remove(mSecondContestant)
         }
         val filteredCurrentQuizzesList = mCurrentQuizzesList.filter { it.title == mCurrentQuiz }
+        Timber.d("filteredCurrentQuizzesList size: ${filteredCurrentQuizzesList.size}")
         val description = if (filteredCurrentQuizzesList.isNotEmpty()) filteredCurrentQuizzesList[0].description else mContext.getString(R.string.default_quiz_description)
         return RenderState.QuizItemDetailState(
             mFirstContestant, mSecondContestant, if (mCurrentRound == 1) mContext.getString(R.string.final_round) else "1/$mCurrentRound", mCurrentQuiz, description)

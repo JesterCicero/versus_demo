@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.rkhrapunov.core.data.ICategory
 import com.rkhrapunov.core.data.IQuizShortInfo
 import com.rkhrapunov.core.data.ISuperCategory
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.QuizPageItemBinding
 import com.rkhrapunov.versustest.presentation.base.IItemClickListener
 import com.rkhrapunov.versustest.presentation.base.QuizAdapter
@@ -60,7 +61,14 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
         val binding = QuizPageItemBinding.inflate(inflater, container, false)
         binding.quizGridRecyclerViewId.apply {
             setHasFixedSize(true)
-            val columnsNumber = if (inflater.context.resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_COLUMNS_NUMBER else LANDSCAPE_COLUMNS_NUMBER
+            val config = inflater.context.resources.configuration
+            val smallestWidth = config.smallestScreenWidthDp
+            Timber.d("smallest width: $smallestWidth")
+            val columnsNumber = if (inflater.context.resources.configuration.orientation == ORIENTATION_PORTRAIT) {
+                resources.getInteger(R.integer.quiz_page_columns_number)
+            } else {
+                resources.getInteger(R.integer.quiz_page_land_columns_number)
+            }
             Timber.d("onCreateView(): mColumnsNumber=$columnsNumber")
             layoutManager = GridLayoutManager(this@QuizPageFragment.activity, columnsNumber)
             createAdapter()?.let {
@@ -100,10 +108,5 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
                 }
             }
         } else null
-    }
-
-    companion object {
-        private const val PORTRAIT_COLUMNS_NUMBER = 2
-        private const val LANDSCAPE_COLUMNS_NUMBER = 3
     }
 }

@@ -73,6 +73,8 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
 
     override fun resetResultsStatsOption() = mGetStatsOptionInteractor.saveStatsOption(true)
 
+    override fun getCurrentSuperCategoryPosition() = mCurrentSuperCategoryInteractor.getCurrentSuperCategoryPosition()
+
     override fun cancelQuiz() {
         mCancelQuizInteractor.cancelQuiz()
         mGetCurrentQuizListInteractor.getCurrentQuizList()

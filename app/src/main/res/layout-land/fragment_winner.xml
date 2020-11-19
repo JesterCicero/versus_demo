@@ -56,19 +56,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/winner_title"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
+            android:background="@drawable/custom_page_item_selector"
             android:text="@string/winner_title"
+            android:paddingHorizontal="@dimen/winner_title_horizontal_padding"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintVertical_weight="@integer/winner_title_landscape_vertical_weight"
             app:layout_constraintBottom_toTopOf="@id/winner_img_top_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/winner_title_top_space" />
+            app:layout_constraintTop_toBottomOf="@id/winner_title_top_space"
+            tools:ignore="SpUsage" />
 
         <Space
             android:layout_width="match_parent"
@@ -83,7 +87,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/winner"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintVertical_weight="@integer/winner_landscape_vertical_weight"
             android:onClick="@{ () -> presenter.onWinnerClickedIntent()}"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
@@ -95,7 +99,7 @@
             <ImageView
                 android:id="@+id/winner_img_id"
                 android:layout_width="@dimen/contestant_img_width"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/winner_img_description"
                 android:scaleType="fitXY"
                 android:src="@drawable/empty_drawable"
@@ -112,20 +116,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/winner" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/winner_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="@{name}"
+            android:background="@drawable/custom_page_item_selector"
             android:gravity="center"
+            android:paddingHorizontal="@dimen/winner_title_horizontal_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintVertical_weight="@integer/winner_description_landscape_vertical_weight"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             app:layout_constraintBottom_toTopOf="@id/bottom_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/winner_description_img_top_space"
-            tools:text="Winner Title" />
+            tools:text="Winner Title"
+            tools:ignore="SpUsage" />
 
         <Space
             android:layout_width="match_parent"
@@ -151,7 +159,7 @@
 
         <FrameLayout
             android:id="@+id/stats_button"
-            android:layout_width="@dimen/stats_button_width"
+            android:layout_width="@dimen/stats_button_landscape_width"
             android:layout_height="@dimen/stats_button_landscape_height"
             android:background="@drawable/statistics_button_selector"
             android:onClick="@{ () -> presenter.onViewStatsClickedIntent()}"

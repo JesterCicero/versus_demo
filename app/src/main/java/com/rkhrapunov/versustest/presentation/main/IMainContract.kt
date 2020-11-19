@@ -17,5 +17,6 @@ interface IMainContract {
         fun onInitialSuperCategory()
         fun updateSuperCategoryPosition(newPosition: Int)
         fun resetResultsStatsOption()
+        fun getCurrentSuperCategoryPosition(): Int
     }
 }

@@ -53,7 +53,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
     }
 
     fun updateData(data: List<T>) {
-        Timber.d("data size: {${data.size}}")
+        Timber.d("data size: ${data.size}")
         mData = data.toMutableList()
         notifyDataSetChanged()
     }
@@ -116,7 +116,6 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
     @ExperimentalCoroutinesApi
     @FlowPreview
     override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) {
-        holder.setIsRecyclable(false)
         if (mQuizDataType == QuizDataType.QUIZ_SUPER_CATEGORIES) holder.bindSuperCategory(
             position, mData, mActivity) else holder.bind(position, mData, mFragment)
     }
@@ -205,7 +204,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
         }
 
         fun bind(position: Int, data: List<*>, fragment: Fragment?) {
-           when {
+            when {
                 data[position] is ICategory -> onBindCategory(position, data, fragment)
                 data[position] is IQuizShortInfo -> onBindQuizShortInfo(position, data, fragment)
                 data[position] is IContestantsStatsInfo || data[position] is IContestantsInfo -> onBindContestantsStatsInfo(position, data, fragment)
