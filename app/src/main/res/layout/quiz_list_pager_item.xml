@@ -31,7 +31,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/pager_item_parent_height"
-        android:layout_margin="@dimen/pager_item_parent_margin"
+        android:layout_marginVertical="@dimen/pager_item_parent_margin"
+        android:layout_marginHorizontal="@dimen/pager_item_parent_horizontal_margin"
         android:background="@drawable/custom_page_item_selector"
         android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position) }">
 
@@ -69,11 +70,13 @@
             android:text="@{itemDataFake}"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/quizListItemTextColor"
+            android:textSize="@dimen/pager_item_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/small_img_container"
-            tools:text="Test Description" />
+            tools:text="Test Description"
+            tools:ignore="SpUsage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

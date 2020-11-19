@@ -17,19 +17,19 @@
     <item name="stats_progress_bar_gradient_center_y" type="integer" format="float">0.5</item>
     <integer name="stats_progress_bar_background_gradient_angle">270</integer>
     <integer name="stats_progress_bar_gradient_angle">90</integer>
-    <integer name="winner_title_landscape_top_space_vertical_weight">1</integer>
-    <integer name="winner_title_landscape_vertical_weight">13</integer>
+    <integer name="winner_title_landscape_top_space_vertical_weight">2</integer>
+    <integer name="winner_title_landscape_vertical_weight">12</integer>
     <integer name="winner_landscape_vertical_weight">60</integer>
-    <integer name="winner_description_landscape_img_top_space_vertical_weight">1</integer>
-    <integer name="winner_description_landscape_vertical_weight">13</integer>
+    <integer name="winner_description_landscape_img_top_space_vertical_weight">2</integer>
+    <integer name="winner_description_landscape_vertical_weight">12</integer>
     <integer name="winner_bottom_space_landscape_vertical_weight">12</integer>
-    <integer name="winner_title_top_space_vertical_weight">11</integer>
-    <integer name="winner_title_vertical_weight">13</integer>
-    <integer name="winner_img_top_space_vertical_weight">1</integer>
+    <integer name="winner_title_top_space_vertical_weight">17</integer>
+    <integer name="winner_title_vertical_weight">6</integer>
+    <integer name="winner_img_top_space_vertical_weight">2</integer>
     <integer name="winner_vertical_weight">34</integer>
-    <integer name="winner_description_img_top_space_vertical_weight">1</integer>
-    <integer name="winner_description_vertical_weight">13</integer>
-    <integer name="winner_stats_button_top_space_vertical_weight">6</integer>
+    <integer name="winner_description_img_top_space_vertical_weight">2</integer>
+    <integer name="winner_description_vertical_weight">6</integer>
+    <integer name="winner_stats_button_top_space_vertical_weight">12</integer>
     <integer name="winner_stats_button_vertical_weight">10</integer>
     <integer name="winner_bottom_space_vertical_weight">11</integer>
     <integer name="quiz_item_detail_top_round_space_vertical_weight">2</integer>
@@ -50,10 +50,12 @@
     <integer name="empty_pager_error_dialog_ok_button_vertical_weight">12</integer>
     <integer name="error_dialog_ok_button_vertical_weight">16</integer>
     <integer name="top_snack_bar_button_gradient_angle">270</integer>
-    <integer name="error_dialog_lines_number">2</integer>
+    <integer name="error_dialog_lines_number">3</integer>
     <integer name="tooltip_max_lines_number">6</integer>
     <integer name="about_top_space_vertical_weight">5</integer>
+    <integer name="about_top_space_land_vertical_weight">5</integer>
     <integer name="about_logo_vertical_weight">30</integer>
+    <integer name="about_logo_vertical_land_weight">30</integer>
     <integer name="about_top_space_disclaimer_vertical_weight">7</integer>
     <integer name="about_top_space_disclaimer_land_vertical_weight">4</integer>
     <integer name="about_disclaimer_vertical_weight">25</integer>
@@ -65,4 +67,11 @@
     <integer name="about_bottom_space_vertical_weight">8</integer>
     <integer name="about_bottom_space_land_vertical_weight">6</integer>
     <integer name="img_description_max_lines">2</integer>
+    <integer name="quiz_page_columns_number">2</integer>
+    <integer name="quiz_page_land_columns_number">3</integer>
+    <integer name="quiz_page_items_number">10</integer>
+    <integer name="quiz_page_land_items_number">12</integer>
+    <integer name="top_snack_bar_width">360</integer>
+    <integer name="top_snack_bar_height">55</integer>
+    <integer name="top_snack_bar_land_width">460</integer>
 </resources>

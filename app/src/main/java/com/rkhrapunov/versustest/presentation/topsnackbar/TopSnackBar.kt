@@ -12,6 +12,7 @@ import android.view.View.VISIBLE
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.databinding.TopSnackbarBinding
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.pxFromDp
@@ -66,9 +67,6 @@ class TopSnackBar private constructor(activity: Activity?,
     companion object {
         private const val SNACK_BAR_ELEVATION = 25f
         private const val ANIM_DURATION_MS = 250L
-        private const val TOP_BAR_PORTRAIT_WIDTH_DP = 360F
-        private const val TOP_BAR_LANDSCAPE_WIDTH_DP = 460F
-        private const val TOP_BAR_HEIGHT_DP = 55F
         const val DEFAULT_TIMEOUT_SEC = 15
 
         @SuppressLint("InflateParams")
@@ -150,7 +148,7 @@ class TopSnackBar private constructor(activity: Activity?,
         }
         try {
             mSnackBarView.animate()
-                .translationY(-pxFromDp(mContext, TOP_BAR_HEIGHT_DP))
+                .translationY(-pxFromDp(mContext, mContext.resources.getInteger(R.integer.top_snack_bar_height).toFloat()))
                 .setDuration(ANIM_DURATION_MS)
                 .withEndAction {
                     removeTopSnackBar()
@@ -165,12 +163,16 @@ class TopSnackBar private constructor(activity: Activity?,
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     private fun addSnackBar() {
         mSnackBarView.elevation = SNACK_BAR_ELEVATION
-        mSnackBarView.translationY = -pxFromDp(mContext, TOP_BAR_HEIGHT_DP)
+        mSnackBarView.translationY = -pxFromDp(mContext, mContext.resources.getInteger(R.integer.top_snack_bar_height).toFloat())
         val params = WindowManager.LayoutParams()
         params.gravity = Gravity.CENTER or Gravity.TOP
-        params.height = pxFromDp(mContext, TOP_BAR_HEIGHT_DP).toInt()
-        params.width = pxFromDp(mContext, if (
-            mContext.resources.configuration.orientation == ORIENTATION_PORTRAIT) TOP_BAR_PORTRAIT_WIDTH_DP else TOP_BAR_LANDSCAPE_WIDTH_DP ).toInt()
+        params.height = pxFromDp(mContext, mContext.resources.getInteger(R.integer.top_snack_bar_height).toFloat()).toInt()
+        params.width = pxFromDp(mContext, if (mContext.resources.configuration.orientation == ORIENTATION_PORTRAIT) {
+            mContext.resources.getInteger(R.integer.top_snack_bar_width).toFloat()
+        } else {
+            mContext.resources.getInteger(R.integer.top_snack_bar_land_width).toFloat()
+        }
+        ).toInt()
         params.type = WindowManager.LayoutParams.TYPE_APPLICATION
         params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
         mWindowManager?.addView(mSnackBarView, params)

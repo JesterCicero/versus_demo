@@ -27,13 +27,14 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="@integer/error_dialog_top_bottom_space_vertical_weight" />
 
-        <TextView
+        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
             android:id="@+id/error_text"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:gravity="center"
             android:paddingHorizontal="@dimen/error_modal_text_padding_horizontal"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textSize="@dimen/error_modal_text_size"
             android:textColor="@color/quizListItemTextColor"
             android:lines="@integer/error_dialog_lines_number"
             app:layout_constraintBottom_toTopOf="@id/middle_space"
@@ -41,7 +42,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_space"
             app:layout_constraintVertical_weight="@integer/empty_pager_error_dialog_error_text_vertical_weight"
-            tools:text="TEST" />
+            tools:text="TEST"
+            tools:ignore="SpUsage" />
 
         <Space
             android:id="@+id/middle_space"
@@ -55,7 +57,7 @@
 
         <FrameLayout
             android:id="@+id/ok_button"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/error_ok_button_width"
             android:layout_height="0dp"
             android:background="@drawable/statistics_button_selector"
             android:onClick="@{ () -> presenter.onErrorDialogFragmentDismissIntent() }"

@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_top_space_height"
         android:id="@+id/top_bar_space_top"
-        app:layout_constraintHorizontal_weight="@integer/top_bar_top_space_weight"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/search_view" />
 
@@ -38,15 +37,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/top_bar_space"
         android:scaleType="centerCrop">
+
         <ImageView
-            tools:ignore="ContentDescription"
+            android:id="@+id/nav_back_btn_icon_id"
             android:layout_width="@dimen/back_button_width_height"
             android:layout_height="@dimen/back_button_width_height"
+            android:layout_gravity="center"
             android:paddingTop="@dimen/back_button_padding_top_bottom"
             android:paddingBottom="@dimen/back_button_padding_top_bottom"
-            android:layout_gravity="center"
-            android:id="@+id/nav_back_btn_icon_id"
-            android:src="@drawable/ic_back_button"/>
+            android:src="@drawable/ic_back_button"
+            tools:ignore="ContentDescription" />
 
     </FrameLayout>
 
@@ -69,7 +69,6 @@
         android:paddingStart="@dimen/search_view_margin_start"
         android:paddingBottom="@dimen/search_view_padding_bottom"
         android:textColorHint="@color/backgroundMainColor"
-        android:textSize="@dimen/search_view_text_size"
         android:theme="@style/SearchViewStyle"
         app:queryBackground="@null"
         app:defaultQueryHint="@string/search_hint"
@@ -81,7 +80,7 @@
         app:layout_constraintTop_toBottomOf="@id/top_bar_space_top"
         app:queryHint="@string/search_hint"
         app:searchIcon="@null"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RtlSymmetry,SpUsage" />
 
     <Space
         android:layout_width="0dp"
@@ -106,15 +105,16 @@
         android:background="@drawable/back_button_selector"
         android:onClick="showPopupMenu"
         android:scaleType="centerCrop">
+
         <ImageView
-            tools:ignore="ContentDescription"
+            android:id="@+id/stats_icon_id"
             android:layout_width="@dimen/back_button_width_height"
             android:layout_height="@dimen/back_button_width_height"
+            android:layout_gravity="center"
             android:paddingTop="@dimen/back_button_padding_top_bottom"
             android:paddingBottom="@dimen/back_button_padding_top_bottom"
-            android:layout_gravity="center"
-            android:id="@+id/stats_icon_id"
-            android:src="@drawable/ic_menu" />
+            android:src="@drawable/ic_menu"
+            tools:ignore="ContentDescription" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

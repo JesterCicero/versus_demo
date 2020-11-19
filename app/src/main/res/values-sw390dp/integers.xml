@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="about_bottom_space_land_vertical_weight">8</integer>
+    <integer name="about_top_space_disclaimer_land_vertical_weight">3</integer>
+    <integer name="about_middle_space_land_vertical_weight">3</integer>
+    <integer name="about_logo_vertical_weight">30</integer>
+    <integer name="about_top_space_vertical_weight">5</integer>
+    <integer name="about_bottom_space_vertical_weight">8</integer>
+    <integer name="about_logo_vertical_land_weight">30</integer>
+    <integer name="about_top_space_land_vertical_weight">5</integer>
+    <integer name="about_bottom_text_land_vertical_weight">20</integer>
+    <integer name="top_snack_bar_width">360</integer>
+    <integer name="top_snack_bar_height">55</integer>
+    <integer name="top_snack_bar_land_width">460</integer>
+    <integer name="quiz_item_vs_text_view_vertical_weight">5</integer>
+</resources>

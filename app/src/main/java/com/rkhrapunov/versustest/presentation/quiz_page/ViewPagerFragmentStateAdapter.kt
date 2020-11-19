@@ -5,18 +5,18 @@ import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.rkhrapunov.core.data.IQuizShortInfo
+import com.rkhrapunov.versustest.R
 import timber.log.Timber
 
 @ExperimentalStdlibApi
-class ViewPagerFragmentStateAdapter<T>(context: Context,
+class ViewPagerFragmentStateAdapter<T>(private val mContext: Context,
                                     data: List<T>,
                                     fm: FragmentManager,
                                     lifecycle: Lifecycle) : FragmentStateAdapter(fm, lifecycle) {
 
     private var mData = data
 
-    private val mPageItemsNumber = if (context.resources.configuration.orientation == ORIENTATION_PORTRAIT) PORTRAIT_PAGE_ITEMS_NUMBER else LANDSCAPE_PAGE_ITEMS_NUMBER
+    private val mPageItemsNumber = getPageItemsNumber()
 
     override fun getItemCount() = getTotalPages()
 
@@ -40,6 +40,17 @@ class ViewPagerFragmentStateAdapter<T>(context: Context,
         return quizPageFragment
     }
 
+    private fun getPageItemsNumber(): Int {
+        val config = mContext.resources.configuration
+        val smallestWidth = config.smallestScreenWidthDp
+        Timber.d("getPageItemsNumber(): smallestWidth=$smallestWidth")
+        return if (mContext.resources.configuration.orientation == ORIENTATION_PORTRAIT) {
+            mContext.resources.getInteger(R.integer.quiz_page_items_number)
+        } else {
+            mContext.resources.getInteger(R.integer.quiz_page_land_items_number)
+        }
+    }
+
     private fun getTotalPages(): Int {
         var resultsPageNumber = 0
         val dataSize = mData.size
@@ -50,10 +61,5 @@ class ViewPagerFragmentStateAdapter<T>(context: Context,
         resultsPageNumber += fullPagesNumber
         Timber.d("getTotalPages(): $resultsPageNumber")
         return resultsPageNumber
-    }
-
-    companion object {
-        private const val PORTRAIT_PAGE_ITEMS_NUMBER = 10
-        private const val LANDSCAPE_PAGE_ITEMS_NUMBER = 12
     }
 }

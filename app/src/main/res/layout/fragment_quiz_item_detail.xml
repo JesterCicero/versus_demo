@@ -108,12 +108,14 @@
             android:background="@drawable/custom_page_item_selector"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/quizListItemTextColor"
+            android:textSize="@dimen/round_text_size"
             app:layout_constraintBottom_toTopOf="@id/bottom_round_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_round_space"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_round_description_vertical_weight"
-            tools:text="@string/round" />
+            tools:text="@string/round"
+            tools:ignore="SpUsage" />
 
         <Space
             android:id="@+id/bottom_round_space"
@@ -135,13 +137,15 @@
             android:text="@{firstDescription}"
             android:maxLines="@integer/img_description_max_lines"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_img_description_vertical_weight"
             app:layout_constraintBottom_toTopOf="@id/top_first_img_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/bottom_round_space"
-            tools:text="@string/first_img_description" />
+            tools:text="@string/first_img_description"
+            tools:ignore="SpUsage" />
 
         <Space
             android:id="@+id/top_first_img_space"
@@ -156,7 +160,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/first_img"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:onClick="@{ () -> presenter.onFirstImgClickedIntent() }"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
             app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
@@ -168,7 +172,7 @@
             <ImageView
                 android:id="@+id/first_image_id"
                 android:layout_width="@dimen/contestant_img_width"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/first_img_description"
                 android:scaleType="fitXY"
                 android:src="@drawable/empty_drawable"
@@ -180,7 +184,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/question_button_img1_frame_layout_id"
-            android:background="@drawable/back_button_selector"
+            android:background="@drawable/tooltip_button_selector"
             android:layout_marginEnd="@dimen/item_icon_margin_start"
             android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
             android:elevation="@dimen/question_mark_elevation"
@@ -191,10 +195,10 @@
             tools:visibility="visible">
             <ImageView
                 tools:ignore="ContentDescription"
-                android:layout_width="@dimen/back_button_width_height"
-                android:layout_height="@dimen/back_button_width_height"
-                android:paddingTop="@dimen/back_button_padding_top_bottom"
-                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_width="@dimen/tooltip_button_width_height"
+                android:layout_height="@dimen/tooltip_button_width_height"
+                android:paddingTop="@dimen/tooltip_button_padding_top_bottom"
+                android:paddingBottom="@dimen/tooltip_button_padding_top_bottom"
                 android:layout_gravity="center"
                 android:id="@+id/question_btn_img1_icon_id"
                 android:src="@drawable/ic_question_mark"/>
@@ -253,13 +257,15 @@
             android:paddingHorizontal="@dimen/super_category_item_margin_padding_value"
             android:background="@drawable/custom_page_item_selector"
             app:layout_constraintVertical_weight="@integer/quiz_item_vs_text_view_vertical_weight"
+            android:textSize="@dimen/vs_text_size"
             android:text="@string/vs_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="@color/quizListItemTextColor"
             app:layout_constraintBottom_toTopOf="@id/bottom_vs_space"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/top_vs_space" />
+            app:layout_constraintTop_toBottomOf="@id/top_vs_space"
+            tools:ignore="SpUsage" />
 
         <Space
             android:id="@+id/bottom_vs_space"
@@ -274,7 +280,7 @@
         <androidx.cardview.widget.CardView
             android:id="@+id/second_img"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintVertical_weight="@integer/quiz_item_img_vertical_weight"
             android:onClick="@{ () -> presenter.onSecondImgClickedIntent() }"
             app:cardCornerRadius="@dimen/contestant_tile_corner_radius"
@@ -286,7 +292,7 @@
             <ImageView
                 android:id="@+id/second_image_id"
                 android:layout_width="@dimen/contestant_img_width"
-                android:layout_height="match_parent"
+                android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/second_img_description"
                 android:scaleType="fitXY"
                 android:src="@drawable/empty_drawable"
@@ -297,7 +303,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/question_button_img2_frame_layout_id"
-            android:background="@drawable/back_button_selector"
+            android:background="@drawable/tooltip_button_selector"
             android:layout_marginEnd="@dimen/item_icon_margin_start"
             android:layout_marginTop="@dimen/item_detail_back_button_margin_top"
             android:elevation="@dimen/question_mark_elevation"
@@ -308,10 +314,10 @@
             tools:visibility="visible">
             <ImageView
                 tools:ignore="ContentDescription"
-                android:layout_width="@dimen/back_button_width_height"
-                android:layout_height="@dimen/back_button_width_height"
-                android:paddingTop="@dimen/back_button_padding_top_bottom"
-                android:paddingBottom="@dimen/back_button_padding_top_bottom"
+                android:layout_width="@dimen/tooltip_button_width_height"
+                android:layout_height="@dimen/tooltip_button_width_height"
+                android:paddingTop="@dimen/tooltip_button_padding_top_bottom"
+                android:paddingBottom="@dimen/tooltip_button_padding_top_bottom"
                 android:layout_gravity="center"
                 android:id="@+id/question_btn_img2_icon_id"
                 android:src="@drawable/ic_question_mark"/>
@@ -369,6 +375,7 @@
             android:paddingHorizontal="@dimen/super_category_item_margin_padding_value"
             android:background="@drawable/custom_page_item_selector"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_img_description_vertical_weight"
+            android:textSize="@dimen/quiz_detail_title_text_size"
             android:text="@{secondDescription}"
             android:gravity="center"
             android:maxLines="@integer/img_description_max_lines"
@@ -378,7 +385,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/top_second_img_space"
-            tools:text="@string/second_img_description" />
+            tools:text="@string/second_img_description"
+            tools:ignore="SpUsage" />
 
         <Space
             android:id="@+id/bottom_second_img_space"
