@@ -135,8 +135,7 @@
                 android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/first_img_description"
                 android:scaleType="fitXY"
-                android:src="@drawable/empty_drawable"
-                tools:src="@drawable/charlize_theron" />
+                android:src="@drawable/empty_drawable" />
 
         </androidx.cardview.widget.CardView>
 
@@ -234,8 +233,7 @@
                 android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/second_img_description"
                 android:scaleType="fitXY"
-                android:src="@drawable/empty_drawable"
-                tools:src="@drawable/jennifer_lawrence" />
+                android:src="@drawable/empty_drawable" />
         </androidx.cardview.widget.CardView>
 
         <FrameLayout
