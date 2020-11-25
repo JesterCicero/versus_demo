@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     private var mAdapter: QuizAdapter<*>? = null
     private val mTopSnackBarHelper by inject<TopSnackBarHelper>()
     private var mFirstSuperCategorySelected = false
-    private var mGetSuperCategoriesRequest = false
+    @Volatile
+    private var mShouldGetSuperCategoriesOnResume = true
 
     companion object {
         const val QUIZ_LIST_EXTRA = "quiz_list_extra"
@@ -73,14 +74,20 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
         }
         activityMainBinding = binding
         setOnQueryTextListener()
-        if (savedInstanceState == null) {
-            mPresenter.getSuperCategories()
+        mShouldGetSuperCategoriesOnResume = if (savedInstanceState == null) {
+            Timber.d("onCreate(): first time launch")
+            true
         } else {
             mPresenter.getSuperCategoriesFromCache()?.let {
+                Timber.d("onCreate(): trying to get super categories from cache")
                 (mAdapter as? QuizAdapter<ISuperCategory>)?.updateData(it)
+            } ?: run {
+                Timber.d("onCreate(): failed to get super categories from cache, trying to get not from cache")
+                mPresenter.getSuperCategories()
             }
+            Timber.d("onCreate(): setting mShouldGetSuperCategoriesOnResume to false")
+            false
         }
-        mGetSuperCategoriesRequest = true
         mPresenter.attachView(this, lifecycle)
     }
 
@@ -88,10 +95,13 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     override fun onResume() {
         super.onResume()
         mTopSnackBarHelper.setActivity(this)
-        if (mCurrentState == null && !mGetSuperCategoriesRequest) {
+        Timber.d("onResume(): mShouldGetSuperCategoriesOnResume: $mShouldGetSuperCategoriesOnResume, current state: $mCurrentState")
+        if (mCurrentState == null && mShouldGetSuperCategoriesOnResume) {
             Timber.d("onResume(): getSuperCategories")
             mPresenter.getSuperCategories()
         }
+        Timber.d("onResume(): setting mShouldGetSuperCategoriesOnResume to true")
+        mShouldGetSuperCategoriesOnResume = true
     }
 
     override fun onPause() {
@@ -115,7 +125,6 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
                 if (superCategories.isNotEmpty()) {
                     mPresenter.onInitialSuperCategory()
                 }
-                mGetSuperCategoriesRequest = false
                 return
             }
             is RenderState.CategoriesState,
