@@ -137,7 +137,8 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
                 super.onPageScrollStateChanged(state)
                 if (state == SCROLL_STATE_IDLE && mPositionChanged) {
                     mPositionChanged = false
-                    getCurrentPageFragment()?.getAdapter()?.filter((activity as? MainActivity)?.activityMainBinding?.searchView?.query.toString())
+                    // leave this for possible future search issue
+                    // getCurrentPageFragment()?.getAdapter()?.filter((activity as? MainActivity)?.activityMainBinding?.searchView?.query.toString())
                 }
             }
         })
