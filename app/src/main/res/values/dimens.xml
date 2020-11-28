@@ -115,6 +115,7 @@
     <dimen name="about_bottom_land_text_size">14dp</dimen>
     <dimen name="about_bottom_text_padding_horizontal">12dp</dimen>
     <dimen name="error_modal_text_padding_horizontal">20dp</dimen>
+    <dimen name="img_description_max_width">350dp</dimen>
     <dimen name="img_description_max_width_land">250dp</dimen>
     <dimen name="licenses_title_margin_bottom">16dp</dimen>
     <dimen name="licenses_title_padding_horizontal">12dp</dimen>
@@ -123,11 +124,13 @@
     <dimen name="licenses_text_padding_horizontal">12dp</dimen>
     <dimen name="licenses_text_size">20dp</dimen>
     <dimen name="round_text_size">18dp</dimen>
+    <dimen name="round_land_text_size">18dp</dimen>
     <dimen name="pager_item_text_size">18dp</dimen>
     <dimen name="error_modal_text_size">18dp</dimen>
     <dimen name="winner_title_horizontal_padding">8dp</dimen>
     <dimen name="error_ok_button_width">100dp</dimen>
     <dimen name="quiz_detail_title_text_size">22dp</dimen>
+    <dimen name="quiz_detail_title_land_text_size">22dp</dimen>
     <dimen name="vs_text_size">30dp</dimen>
     <dimen name="menu_item_text_size">15sp</dimen>
     <dimen name="pager_indicator_text_size">22dp</dimen>
