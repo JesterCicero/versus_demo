@@ -104,6 +104,8 @@ class ContestantsCache : KoinComponent {
                 if (it.isEmpty()) { return@let null }
                 val quizShortInfoList = it.toList().map { element ->
                     val list = element.split(DELIMITER)
+                    if (list.size < QUIZ_CACHE_SHORT_INFO_LIST_NUMBER) { return@let null }
+                    Timber.d("tryToGetQuizzesInfoCache(): list[0]=${list[0]}, list[1]=${list[1]}, list[2]=${list[2]}, list[3]=${list[3]}")
                     QuizShortInfo(list[0], list[1], list[2], list[3])
                 }.sortedBy { element -> element.title }
                 if (quizShortInfoList.isEmpty()) { return@let null }
@@ -175,7 +177,10 @@ class ContestantsCache : KoinComponent {
         quizzesInfoCache = updatedQuizzesInfoCache
         quizCache = null
         clearQuizzesPreferencesCache()
-        mPreferences.saveCategory(mCurrentCategoryName, updatedQuizzesInfoCache.map { "${it.title}$DELIMITER${it.description}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}" }.toSet())
+        mPreferences.saveCategory(mCurrentCategoryName, updatedQuizzesInfoCache.map {
+            Timber.d("updateQuizzesInfoCache(): ${it.title}$DELIMITER${it.description}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}")
+            "${it.title}$DELIMITER${it.description}$DELIMITER${it.url}$DELIMITER${it.backgroundUrl}"
+        }.toSet())
     }
 
     fun updateQuizInfoCache(updatedQuizInfoCache: List<IContestantsInfo>, currentQuiz: String) {
@@ -241,5 +246,6 @@ class ContestantsCache : KoinComponent {
 
     companion object {
         private const val DELIMITER = ";"
+        private const val QUIZ_CACHE_SHORT_INFO_LIST_NUMBER = 4
     }
 }
