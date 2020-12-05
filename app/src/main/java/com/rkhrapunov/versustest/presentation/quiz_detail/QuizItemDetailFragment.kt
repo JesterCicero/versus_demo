@@ -15,6 +15,7 @@ import com.rkhrapunov.versustest.databinding.ActivityMainBinding
 import com.rkhrapunov.versustest.databinding.FragmentQuizItemDetailBinding
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import com.rkhrapunov.versustest.presentation.base.Constants.DISABLED_ALPHA
+import com.rkhrapunov.versustest.presentation.base.Constants.EMPTY_STRING
 import com.rkhrapunov.versustest.presentation.base.Constants.ENABLED_ALPHA
 import com.rkhrapunov.versustest.presentation.base.Constants.SPACE_SYMBOL
 import com.rkhrapunov.versustest.presentation.base.Constants.UNDERSCORE_SYMBOL
@@ -175,27 +176,34 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 itemView.visibility = View.INVISIBLE
                 binding.firstImageId.setImageResource(R.drawable.empty_drawable)
                 binding.secondImageId.setImageResource(R.drawable.empty_drawable)
+                itemView.setBackgroundResource(R.drawable.unselected_contestant_shape)
                 mImgReverseAnimation = animateView(itemView, -translationValue,
                     descriptionAnimation = false,
                     reverseAnimation = true
                 ) {
-                    mPresenter.onItemClickFinished(chosenFirst)
-                    mSecondImgRunnable = Runnable {
-                        Timber.d("Second img postDelayed()")
-                        if (chosenFirst) {
-                            binding.secondImg.visibility = View.VISIBLE
-                            binding.secondImgDescription.visibility = View.VISIBLE
-                        } else {
-                            binding.firstImg.visibility = View.VISIBLE
-                            binding.firstImgDescription.visibility = View.VISIBLE
+                    val currentRound = mPresenter.getCurrentRound()
+                    Timber.d("current round: $currentRound")
+                    if (currentRound == FINAL_ROUND) {
+                        mPresenter.onItemClickFinished(chosenFirst)
+                    } else {
+                        mSecondImgRunnable = Runnable {
+                            Timber.d("Second img postDelayed()")
+                            if (chosenFirst) {
+                                binding.secondImg.visibility = View.VISIBLE
+                                binding.secondImgDescription.visibility = View.VISIBLE
+                            } else {
+                                binding.firstImg.visibility = View.VISIBLE
+                                binding.firstImgDescription.visibility = View.VISIBLE
+                            }
+                            binding.vsTextView.visibility = View.VISIBLE
+                            binding.roundDescription.visibility = View.VISIBLE
+                            binding.nextButtonFrameLayoutId.visibility = View.VISIBLE
+                            itemView.isEnabled = true
+                            itemView.visibility = View.VISIBLE
+                            mPresenter.onItemClickFinished(chosenFirst)
                         }
-                        binding.vsTextView.visibility = View.VISIBLE
-                        binding.roundDescription.visibility = View.VISIBLE
-                        binding.nextButtonFrameLayoutId.visibility = View.VISIBLE
-                        itemView.isEnabled = true
-                        itemView.visibility = View.VISIBLE
+                        mSecondImgRunnable?.let { mHandler.postDelayed(it, NEXT_ROUND_TIMEOUT) }
                     }
-                    mSecondImgRunnable?.let { mHandler.postDelayed(it, NEXT_ROUND_TIMEOUT) }
                 }
             }
             mFirstImgRunnable?.let { mHandler.postDelayed(it, CHOSEN_CONTESTANT_TIMEOUT) }
@@ -222,6 +230,8 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             mFirstDescriptionRunnable = Runnable {
                 mAnimationsStarted = false
                 Timber.d("First description postDelayed()")
+                binding.firstImgDescription.text = EMPTY_STRING
+                binding.secondImgDescription.text = EMPTY_STRING
                 descriptionViewToAnimate.visibility = View.INVISIBLE
                 mDescriptionReverseAnimation = animateView(descriptionViewToAnimate, -translationByCoordinateDescription,
                     descriptionAnimation = true,
@@ -252,7 +262,9 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         val animator = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
             viewPropertyAnimator.translationYBy(translationValue)
         } else {
-            viewPropertyAnimator.translationXBy(translationValue).translationYBy(if (descriptionAnimation) LANDSCAPE_DESCRIPTION_Y_VALUE else LANDSCAPE_IMG_Y_VALUE)
+            viewPropertyAnimator.translationXBy(translationValue)
+            // leave this code for possible future use
+            //.translationYBy(if (descriptionAnimation) LANDSCAPE_DESCRIPTION_Y_VALUE else LANDSCAPE_IMG_Y_VALUE)
         }
         animator.scaleXBy(scaleFactor)
                 .scaleYBy(scaleFactor)
@@ -262,7 +274,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         return viewPropertyAnimator
     }
 
-    override fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState) {
+    override fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState, shouldLoadBackground: Boolean) {
         Timber.d("round: ${renderState.round}")
         mBinding?.let { binding ->
             binding.round = "${renderState.quizTitle.replace(UNDERSCORE_SYMBOL, SPACE_SYMBOL).capitalizeWords()}: ${renderState.round}"
@@ -291,8 +303,12 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
             activity?.let {
                 mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                     mCoroutineLauncherHelper.launchImgLoading {
-                        Timber.d("launch img loading coroutine")
-                        mImageLoader.loadImage(it, mPresenter.getCurrentQuizBackgroundUrl(), binding.fragmentContainer)
+                        Timber.d("launch img loading coroutine, shouldLoadBackground: $shouldLoadBackground")
+                        if (shouldLoadBackground) {
+                            val backgroundUrl = mPresenter.getCurrentQuizBackgroundUrl()
+                            Timber.d("background url: $backgroundUrl")
+                            mImageLoader.loadImage(it, backgroundUrl, binding.fragmentContainer)
+                        }
                         mImageLoader.loadImage(it, renderState.firstContestant.url, binding.firstImageId)
                         mImageLoader.loadImage(it, renderState.secondContestant.url, binding.secondImageId)
                     }
@@ -310,7 +326,9 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val CHOSEN_CONTESTANT_TIMEOUT = 750L
         private const val NEXT_ROUND_TIMEOUT = 30L
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.9F
-        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -30F
-        private const val LANDSCAPE_IMG_Y_VALUE = -50F
+        private const val FINAL_ROUND = 1
+        // leave these constants for possible future use
+//        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -30F
+//        private const val LANDSCAPE_IMG_Y_VALUE = -50F
     }
 }

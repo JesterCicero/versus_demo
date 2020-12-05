@@ -5,9 +5,10 @@ import androidx.lifecycle.Lifecycle
 import com.rkhrapunov.core.data.ChosenContestant
 import com.rkhrapunov.core.domain.IRenderState
 import com.rkhrapunov.core.domain.RenderState
+import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
 import com.rkhrapunov.core.interactors.ChosenContestantInteractor
 import com.rkhrapunov.core.interactors.GetCurrentQuizInteractor
-import com.rkhrapunov.core.interactors.GetRenderUiChannelInteractor
+import com.rkhrapunov.core.interactors.GetCurrentRoundInteractor
 import com.rkhrapunov.core.interactors.RetrieveChosenContestantInteractor
 import com.rkhrapunov.versustest.framework.ContestantsCache
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
@@ -33,12 +34,12 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
     private val mChosenContestantInteractor by inject<ChosenContestantInteractor>()
     private val mGetCurrentQuizInteractor by inject<GetCurrentQuizInteractor>()
+    private val mGetCurrentRoundInteractor by inject<GetCurrentRoundInteractor>()
     private val mContestantsCache by inject<ContestantsCache>()
     private var mJob: Job? = null
     private var mCurrentState: IRenderState? = null
     private var mQuizItemStateUpdated = false
     private val mRetrieveChosenContestantInteractor by inject<RetrieveChosenContestantInteractor>()
-    private var mNextButtonClicked = false
 
     override fun attachView(view: IQuizItemDetailContract.IQuizItemDetailView, viewLifecycle: Lifecycle, savedInstanceState: Bundle?) {
         super.attachView(view, viewLifecycle, savedInstanceState)
@@ -46,12 +47,15 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
                 .asFlow()
-                .filter { it is RenderState.QuizItemDetailState && it != mCurrentState && !mNextButtonClicked}
+                .filter {
+                    Timber.d("filter(): current state=$mCurrentState, new state=$it")
+                    it is RenderState.QuizItemDetailState && it != mCurrentState
+                }
                 .collect { renderState ->
                     Timber.d("attachView(): renderState=$renderState")
                     if (renderState is RenderState.QuizItemDetailState) {
                         mQuizItemStateUpdated = true
-                        mView?.renderQuizItemDetailState(renderState)
+                        mView?.renderQuizItemDetailState(renderState, mCurrentState == null)
                         mCurrentState = renderState
                     }
                 }
@@ -76,13 +80,14 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
 
     override fun onNextButtonClickedIntent() {
         Timber.d("onNextButtonClickedIntent()")
-        mNextButtonClicked = true
         val chosenContestant = mRetrieveChosenContestantInteractor.getChosenContestant()
         if (chosenContestant != ChosenContestant.UNKNOWN) {
             onItemClicked(chosenContestant == ChosenContestant.CHOSEN_FIRST)
             mRetrieveChosenContestantInteractor.saveChosenContestant(ChosenContestant.UNKNOWN)
         }
     }
+
+    override fun getCurrentRound() = mGetCurrentRoundInteractor.getCurrentRound()
 
     override fun onItemClickFinished(chosenFirst: Boolean) {
         mCurrentState?.let { mChosenContestantInteractor.onChosenContestant(it, chosenFirst) }
@@ -93,9 +98,12 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
     override fun saveChosenContestant(chosenContestant: ChosenContestant) = mRetrieveChosenContestantInteractor.saveChosenContestant(chosenContestant)
 
     override fun getCurrentQuizBackgroundUrl(): String {
+        val currentQuiz = mGetCurrentQuizInteractor.getCurrentQuiz()
+        Timber.d("getCurrentQuizBackgroundUrl(): current quiz: $currentQuiz")
         val filteredQuizzes = mContestantsCache.quizzesInfoCache?.filter {
             it.title == mGetCurrentQuizInteractor.getCurrentQuiz()
         }
+        Timber.d("getCurrentQuizBackgroundUrl(): filteredQuizzes list size: ${filteredQuizzes?.size}")
         return filteredQuizzes?.let {
             if (it.isNotEmpty()) it[0].backgroundUrl else Constants.EMPTY_STRING
         } ?: Constants.EMPTY_STRING

@@ -15,6 +15,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.rkhrapunov.versustest.R
 import com.rkhrapunov.versustest.framework.helpers.CoroutineLauncherHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import timber.log.Timber
@@ -25,6 +26,7 @@ class ImageLoader : KoinComponent {
 
     companion object {
         private const val ROTATION_ANGLE = 90F
+        private const val IMG_LOAD_RETRY_DELAY = 1000L
     }
 
     fun loadImage(context: Context, url: String, imgView: ImageView) {
@@ -58,7 +60,13 @@ class ImageLoader : KoinComponent {
         override fun onLoadFailed(errorDrawable: Drawable?) {
             super.onLoadFailed(errorDrawable)
             Timber.d("onLoadFailed()")
-            mImgView?.let { loadImage(mContext, mUrl, it) }
+            mImgView?.let {
+                mCoroutineLauncherHelper.launchImgLoading {
+                    delay(IMG_LOAD_RETRY_DELAY)
+                    Timber.d("onLoadFailed(): img url: $mUrl")
+                    loadImage(mContext, mUrl, it)
+                }
+            }
         }
 
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -86,7 +94,14 @@ class ImageLoader : KoinComponent {
 
         override fun onLoadFailed(errorDrawable: Drawable?) {
             super.onLoadFailed(errorDrawable)
-            mLayout?.let { loadImage(mContext, mUrl, it) }
+            Timber.d("onLoadFailed()")
+            mLayout?.let {
+                mCoroutineLauncherHelper.launchImgLoading {
+                    delay(IMG_LOAD_RETRY_DELAY)
+                    Timber.d("onLoadFailed(): img url: $mUrl")
+                    loadImage(mContext, mUrl, it)
+                }
+            }
         }
 
         override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {

@@ -55,6 +55,11 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
 
     override fun updateSuperCategoryPosition(newPosition: Int) = mCurrentSuperCategoryInteractor.saveCurrentSuperCategoryPosition(newPosition)
 
+    override fun updateSuperCategoryOnError() {
+        mView?.onSuperCategoryChanged(mCurrentSuperCategoryInteractor.getCurrentSuperCategoryPosition(),
+            mCurrentSuperCategoryInteractor.getPreviousSuperCategoryPosition())
+    }
+
     override fun onInitialSuperCategory() {
         Timber.d("onInitialSuperCategory()")
         val currentSuperCategoryPosition = mCurrentSuperCategoryInteractor.getCurrentSuperCategoryPosition()

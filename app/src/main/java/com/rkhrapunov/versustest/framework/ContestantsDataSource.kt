@@ -75,12 +75,14 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     private var mPageIndicatorText: String = EMPTY_STRING
     private var mCurrentPagePosition: Int = 0
     private var mCurrentSuperCategoryPosition: Int = INVALID_VALUE
+    private var mPreviousSuperCategoryPosition: Int = INVALID_VALUE
     private val mContext by inject<Context>()
     private val mDeferredWinnersList = mutableListOf<String>()
     private var mDeferredPost = false
     private var mChosenContestant = ChosenContestant.UNKNOWN
     private var mResultsStats = true
     private var mWinnerDetected = false
+    private var mGetQuizApiFailed = false
     private lateinit var mFirstContestant: IContestantsInfo
     private lateinit var mSecondContestant: IContestantsInfo
     private var mCurrentQuizzesList = emptyList<IQuizShortInfo>()
@@ -226,7 +228,8 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     }
 
     override fun getQuizItemDetail(itemData: String) {
-        if (mCurrentQuiz == itemData && !mWinnerDetected) {
+        if (mCurrentQuiz == itemData && !mWinnerDetected && !mGetQuizApiFailed) {
+            Timber.d("getQuizItemDetail(): current quiz: $mCurrentQuiz")
             mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                 mRenderUiChannel.send(getQuizItemDetailState(true))
             }
@@ -288,10 +291,13 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     override fun getCurrentPagePosition() = mCurrentPagePosition
 
     override fun saveCurrentSuperCategoryPosition(currentPosition: Int) {
+        mPreviousSuperCategoryPosition = mCurrentSuperCategoryPosition
         mCurrentSuperCategoryPosition = currentPosition
     }
 
     override fun getCurrentSuperCategoryPosition() = mCurrentSuperCategoryPosition
+
+    override fun getPreviousSuperCategoryPosition() = mPreviousSuperCategoryPosition
 
     override fun saveChosenContestant(chosenContestant: ChosenContestant) {
         mChosenContestant = chosenContestant
@@ -313,6 +319,8 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mResultsStats = resultsStats
     }
 
+    override fun getCurrentRound() = mCurrentRound
+
     private fun clearData() {
         mInterimContestants.clear()
         mCurrentContestants = emptyList()
@@ -325,6 +333,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             RestApiHelper.RequestType.QUIZ,
             { onGetQuizApiSuccess(it as Response<List<ContestantsInfo>>) },
             {
+                mGetQuizApiFailed = true
                 Timber.d(it, "Error occurred while getting request for quiz!")
                 val quizCacheEmpty = mContestantsCache.quizCache?.isEmpty() ?: true
                 Timber.d("quizCacheEmpty: $quizCacheEmpty")
@@ -344,8 +353,10 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     }
 
     private fun onGetQuizApiSuccess(response: Response<List<ContestantsInfo>>) {
+        mGetQuizApiFailed = false
         response.body()?.let {
             val sortedQuizList: List<IContestantsInfo> = it.sortedBy { element -> element.name }
+            Timber.d("onGetQuizApiSuccess(): current quiz=$mCurrentQuiz")
             if (mContestantsCache.isQuizCacheEmpty(mCurrentQuiz)) {
                 mContestantsCache.updateQuizInfoCache(sortedQuizList, mCurrentQuiz)
                 startQuiz(sortedQuizList)
@@ -614,6 +625,10 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             mInterimContestants.remove(mFirstContestant)
             mSecondContestant = mInterimContestants.random()
             mInterimContestants.remove(mSecondContestant)
+        }
+        Timber.d("getQuizItemDetailState(): current quiz: $mCurrentQuiz, mCurrentQuizzesList size: ${mCurrentQuizzesList.size}")
+        if (mCurrentQuizzesList.isEmpty()) {
+            mContestantsCache.quizzesInfoCache?.let { mCurrentQuizzesList = it }
         }
         val filteredCurrentQuizzesList = mCurrentQuizzesList.filter { it.title == mCurrentQuiz }
         Timber.d("filteredCurrentQuizzesList size: ${filteredCurrentQuizzesList.size}")

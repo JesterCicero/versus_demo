@@ -28,6 +28,7 @@ class ContestantsRepository : KoinComponent {
     fun getCurrentPagePosition() = mContestantsDataSource.getCurrentPagePosition()
     fun saveCurrentSuperCategoryPosition(position: Int) = mContestantsDataSource.saveCurrentSuperCategoryPosition(position)
     fun getCurrentSuperCategoryPosition() = mContestantsDataSource.getCurrentSuperCategoryPosition()
+    fun getPreviousSuperCategoryPosition() = mContestantsDataSource.getPreviousSuperCategoryPosition()
     fun saveChosenContestant(chosenContestant: ChosenContestant) = mContestantsDataSource.saveChosenContestant(chosenContestant)
     fun getChosenContestant() = mContestantsDataSource.getChosenContestant()
     fun getCurrentSuperCategory() = mContestantsDataSource.getCurrentSuperCategory()
@@ -36,4 +37,5 @@ class ContestantsRepository : KoinComponent {
     fun getCurrentQuizList() = mContestantsDataSource.getCurrentQuizList()
     fun getStatsOption() = mContestantsDataSource.getStatsOption()
     fun saveStatsOption(resultsStats: Boolean) = mContestantsDataSource.saveStatsOption(resultsStats)
+    fun getCurrentRound() = mContestantsDataSource.getCurrentRound()
 }
