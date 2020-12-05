@@ -183,7 +183,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
                 ) {
                     val currentRound = mPresenter.getCurrentRound()
                     Timber.d("current round: $currentRound")
-                    if (currentRound == 1) {
+                    if (currentRound == FINAL_ROUND) {
                         mPresenter.onItemClickFinished(chosenFirst)
                     } else {
                         mSecondImgRunnable = Runnable {
@@ -326,6 +326,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val CHOSEN_CONTESTANT_TIMEOUT = 750L
         private const val NEXT_ROUND_TIMEOUT = 30L
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.9F
+        private const val FINAL_ROUND = 1
         // leave these constants for possible future use
 //        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -30F
 //        private const val LANDSCAPE_IMG_Y_VALUE = -50F
