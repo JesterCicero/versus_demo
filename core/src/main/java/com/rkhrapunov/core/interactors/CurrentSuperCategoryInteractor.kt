@@ -10,4 +10,5 @@ class CurrentSuperCategoryInteractor : KoinComponent {
 
     fun saveCurrentSuperCategoryPosition(position: Int) = mContestantsRepo.saveCurrentSuperCategoryPosition(position)
     fun getCurrentSuperCategoryPosition() = mContestantsRepo.getCurrentSuperCategoryPosition()
+    fun getPreviousSuperCategoryPosition() = mContestantsRepo.getPreviousSuperCategoryPosition()
 }

@@ -8,7 +8,7 @@ import com.rkhrapunov.versustest.presentation.base.IBaseView
 interface IQuizItemDetailContract {
 
     interface IQuizItemDetailView : IBaseView {
-        fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState)
+        fun renderQuizItemDetailState(renderState: RenderState.QuizItemDetailState, shouldLoadBackground: Boolean)
         fun onItemClicked(chosenFirst: Boolean)
         fun onItemChosen(chosenFirst: Boolean)
     }
@@ -21,5 +21,6 @@ interface IQuizItemDetailContract {
         fun retrieveChosenContestant(): ChosenContestant
         fun saveChosenContestant(chosenContestant: ChosenContestant)
         fun getCurrentQuizBackgroundUrl(): String
+        fun getCurrentRound(): Int
     }
 }

@@ -130,7 +130,12 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
             is RenderState.CategoriesState,
             is RenderState.QuizListState -> onCategoriesState()
             is RenderState.StatsListState -> onStatsListState()
-            is RenderState.QuizItemDetailState -> onQuizItemDetailState(renderState.quizDescription)
+            is RenderState.QuizItemDetailState -> {
+                if (mCurrentState is RenderState.QuizItemDetailState) {
+                    return
+                }
+                onQuizItemDetailState(renderState.quizDescription)
+            }
             is RenderState.WinnerState -> onWinnerState()
             is RenderState.ErrorState -> onErrorState()
             is RenderState.WinnerFinalState -> {
@@ -160,7 +165,7 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private fun onQuizItemDetailState(quizDescription: String): QuizItemDetailFragment {
         showTopBarAndSuperCategories(showTopBar = false, showSuperCategories = false)
-        Timber.d("mCurrentState: $mCurrentState")
+        Timber.d("onQuizItemDetailState(): current state: $mCurrentState")
         mCurrentState?.let {
             if (it !is RenderState.QuizItemDetailState) {
                 renderErrorState(quizDescription)
@@ -180,6 +185,8 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     }
 
     override fun onSuperCategoriesBack() = super.onBackPressed()
+
+    override fun updateSuperCategoryOnError() = mPresenter.updateSuperCategoryOnError()
 
     override fun onSuperCategoryChanged(previousPosition: Int, currentPosition: Int) {
         activityMainBinding?.let { binding ->

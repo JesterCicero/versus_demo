@@ -9,6 +9,7 @@ interface IMainContract {
         fun renderErrorState(errorMsg: String)
         fun onSuperCategoriesBack()
         fun onSuperCategoryChanged(previousPosition: Int, currentPosition: Int)
+        fun updateSuperCategoryOnError()
     }
     interface IMainPresenter : IBaseStatefulPresenter<IMainView> {
         fun getSuperCategories()
@@ -16,6 +17,7 @@ interface IMainContract {
         fun cancelQuiz()
         fun onInitialSuperCategory()
         fun updateSuperCategoryPosition(newPosition: Int)
+        fun updateSuperCategoryOnError()
         fun resetResultsStatsOption()
         fun getCurrentSuperCategoryPosition(): Int
     }

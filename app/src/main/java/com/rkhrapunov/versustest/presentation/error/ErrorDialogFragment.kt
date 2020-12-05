@@ -1,5 +1,6 @@
 package com.rkhrapunov.versustest.presentation.error
 
+import android.content.DialogInterface
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import org.koin.android.ext.android.inject
 class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogView {
 
     private val mPresenter by inject<IErrorDialogContract.IErrorDialogPresenter>()
+    private var mCurrentErrorMsg = EMPTY_STRING
 
     companion object {
         private const val SCREEN_WIDTH_PERCENTAGE = 0.8
@@ -51,8 +53,18 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
                               container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding = ErrorModalBinding.inflate(inflater, container, false)
         binding.presenter = mPresenter
-        binding.errorText.text = arguments?.getString(ERROR_MSG_KEY, EMPTY_STRING) ?: EMPTY_STRING
+        mCurrentErrorMsg = arguments?.getString(ERROR_MSG_KEY, EMPTY_STRING) ?: EMPTY_STRING
+        binding.errorText.text = mCurrentErrorMsg
         return binding.root
+    }
+
+    @ExperimentalCoroutinesApi
+    @ExperimentalStdlibApi
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        if (mCurrentErrorMsg == getString(R.string.unable_to_get_categories)) {
+            (activity as? MainActivity)?.updateSuperCategoryOnError()
+        }
     }
 
     @ExperimentalCoroutinesApi

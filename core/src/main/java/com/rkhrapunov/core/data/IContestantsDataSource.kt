@@ -24,6 +24,7 @@ interface IContestantsDataSource {
     fun saveCurrentSuperCategoryPosition(currentPosition: Int)
     fun getCurrentPagePosition(): Int
     fun getCurrentSuperCategoryPosition(): Int
+    fun getPreviousSuperCategoryPosition(): Int
     fun saveChosenContestant(chosenContestant: ChosenContestant)
     fun getChosenContestant(): ChosenContestant
     fun getCurrentSuperCategory(): String
@@ -32,4 +33,5 @@ interface IContestantsDataSource {
     fun getCurrentQuizList()
     fun getStatsOption(): Boolean
     fun saveStatsOption(resultsStats: Boolean)
+    fun getCurrentRound(): Int
 }
