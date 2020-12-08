@@ -19,10 +19,10 @@
     <dimen name="contestant_img_height">150dp</dimen>
     <dimen name="contestant_shape_stroke_width">5dp</dimen>
     <dimen name="contestant_shape_padding">5dp</dimen>
-    <dimen name="round_text_size">8dp</dimen>
-    <dimen name="round_land_text_size">8dp</dimen>
-    <dimen name="quiz_detail_title_text_size">10dp</dimen>
-    <dimen name="quiz_detail_title_land_text_size">10dp</dimen>
+    <dimen name="round_text_size">10dp</dimen>
+    <dimen name="round_land_text_size">12dp</dimen>
+    <dimen name="quiz_detail_title_text_size">12dp</dimen>
+    <dimen name="quiz_detail_title_land_text_size">13dp</dimen>
     <dimen name="vs_text_size">20dp</dimen>
     <dimen name="quiz_list_next_button_width_height">18dp</dimen>
     <dimen name="quiz_list_item_name_padding">1dp</dimen>
@@ -50,4 +50,5 @@
     <dimen name="img_description_max_width">250dp</dimen>
     <dimen name="img_description_max_width_land">150dp</dimen>
     <dimen name="error_modal_text_size">12dp</dimen>
+    <dimen name="round_max_width">180dp</dimen>
 </resources>

@@ -2,7 +2,6 @@
 <resources>
     <dimen name="super_categories_recycler_view_height">62dp</dimen>
     <dimen name="super_category_item_height">42dp</dimen>
-    <dimen name="super_category_item_margin_padding_value">10dp</dimen>
     <dimen name="super_category_item_text_size">20dp</dimen>
     <dimen name="pager_item_text_size">18dp</dimen>
     <dimen name="error_dialog_border_width">3dp</dimen>
@@ -17,7 +16,7 @@
     <dimen name="quiz_detail_title_text_size">24dp</dimen>
     <dimen name="quiz_detail_title_land_text_size">24dp</dimen>
     <dimen name="img_description_max_width_land">300dp</dimen>
-    <dimen name="vs_text_size">36dp</dimen>
+    <dimen name="vs_text_size">28dp</dimen>
     <dimen name="next_button_margin_end">16dp</dimen>
     <dimen name="quiz_list_next_button_width_height">65dp</dimen>
     <dimen name="quiz_list_item_name_padding">16dp</dimen>
@@ -63,4 +62,6 @@
     <dimen name="tooltip_icon_height">60dp</dimen>
     <dimen name="tooltip_button_padding_top_bottom">12dp</dimen>
     <dimen name="img_description_max_width">380dp</dimen>
+    <dimen name="round_max_width">450dp</dimen>
+    <dimen name="vs_text_padding_value">14dp</dimen>
 </resources>

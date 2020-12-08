@@ -89,6 +89,7 @@
     <dimen name="super_category_item_img_height">35dp</dimen>
     <dimen name="super_category_item_height">32dp</dimen>
     <dimen name="super_category_item_margin_padding_value">5dp</dimen>
+    <dimen name="quiz_detail_title_horizontal_padding">10dp</dimen>
     <dimen name="super_category_item_text_size">15dp</dimen>
     <dimen name="question_mark_elevation">2dp</dimen>
     <dimen name="tooltip_nav_up_width_height">25dp</dimen>
@@ -140,4 +141,7 @@
     <dimen name="tooltip_button_width_height">50dp</dimen>
     <dimen name="tooltip_icon_height">50dp</dimen>
     <dimen name="tooltip_button_padding_top_bottom">8dp</dimen>
+    <dimen name="round_max_width">250dp</dimen>
+    <dimen name="round_max_land_width">450dp</dimen>
+    <dimen name="vs_text_padding_value">5dp</dimen>
 </resources>

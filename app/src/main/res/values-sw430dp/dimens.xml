@@ -23,7 +23,7 @@
     <dimen name="round_land_text_size">18dp</dimen>
     <dimen name="quiz_detail_title_text_size">18dp</dimen>
     <dimen name="quiz_detail_title_land_text_size">20dp</dimen>
-    <dimen name="vs_text_size">30dp</dimen>
+    <dimen name="vs_text_size">28dp</dimen>
     <dimen name="quiz_list_next_button_width_height">45dp</dimen>
     <dimen name="quiz_list_item_name_padding">8dp</dimen>
     <dimen name="quiz_list_icon_height">50dp</dimen>
@@ -47,4 +47,5 @@
     <dimen name="tooltip_button_width_height">50dp</dimen>
     <dimen name="tooltip_icon_height">50dp</dimen>
     <dimen name="tooltip_button_padding_top_bottom">8dp</dimen>
+    <dimen name="vs_text_padding_value">14dp</dimen>
 </resources>
