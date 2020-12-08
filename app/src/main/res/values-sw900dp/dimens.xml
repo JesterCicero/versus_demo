@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="round_text_size">24dp</dimen>
+    <dimen name="quiz_detail_title_text_size">26dp</dimen>
+    <dimen name="round_land_text_size">24dp</dimen>
+    <dimen name="quiz_detail_title_land_text_size">26dp</dimen>
+    <dimen name="img_description_max_width">400dp</dimen>
+    <dimen name="img_description_max_width_land">400dp</dimen>
+    <dimen name="round_max_width">550dp</dimen>
+    <dimen name="round_max_land_width">550dp</dimen>
+</resources>

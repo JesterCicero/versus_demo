@@ -262,9 +262,9 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         val animator = if (resources.configuration.orientation == ORIENTATION_PORTRAIT) {
             viewPropertyAnimator.translationYBy(translationValue)
         } else {
-            viewPropertyAnimator.translationXBy(translationValue)
-            // leave this code for possible future use
-            //.translationYBy(if (descriptionAnimation) LANDSCAPE_DESCRIPTION_Y_VALUE else LANDSCAPE_IMG_Y_VALUE)
+            val descriptionAnimationTranslationYValue = if (reverseAnimation) -LANDSCAPE_DESCRIPTION_Y_VALUE else LANDSCAPE_DESCRIPTION_Y_VALUE
+            val imgAnimationTranslationYValue = if (reverseAnimation) -LANDSCAPE_IMG_Y_VALUE else LANDSCAPE_IMG_Y_VALUE
+            viewPropertyAnimator.translationXBy(translationValue).translationYBy(if (descriptionAnimation) descriptionAnimationTranslationYValue else imgAnimationTranslationYValue)
         }
         animator.scaleXBy(scaleFactor)
                 .scaleYBy(scaleFactor)
@@ -328,7 +328,7 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         private const val TRANSLATION_DESCRIPTION_FACTOR = 0.9F
         private const val FINAL_ROUND = 1
         // leave these constants for possible future use
-//        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -30F
-//        private const val LANDSCAPE_IMG_Y_VALUE = -50F
+        private const val LANDSCAPE_DESCRIPTION_Y_VALUE = -10F
+        private const val LANDSCAPE_IMG_Y_VALUE = -30F
     }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="super_category_item_text_size">14dp</dimen>
+    <dimen name="round_text_size">13dp</dimen>
+    <dimen name="quiz_detail_title_text_size">16dp</dimen>
+    <dimen name="vs_text_size">22dp</dimen>
+    <dimen name="round_land_text_size">14dp</dimen>
+    <dimen name="quiz_detail_title_land_text_size">14dp</dimen>
+    <dimen name="pager_item_text_size">11dp</dimen>
+    <dimen name="error_modal_text_size">16dp</dimen>
+    <dimen name="img_description_max_width_land">230dp</dimen>
+</resources>

@@ -63,7 +63,8 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
             setHasFixedSize(true)
             val config = inflater.context.resources.configuration
             val smallestWidth = config.smallestScreenWidthDp
-            Timber.d("smallest width: $smallestWidth")
+            val availableHeight = config.screenHeightDp
+            Timber.d("smallest width: $smallestWidth, available height: $availableHeight")
             val columnsNumber = if (inflater.context.resources.configuration.orientation == ORIENTATION_PORTRAIT) {
                 resources.getInteger(R.integer.quiz_page_columns_number)
             } else {
