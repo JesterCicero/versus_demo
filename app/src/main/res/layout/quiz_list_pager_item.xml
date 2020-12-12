@@ -64,7 +64,7 @@
             android:layout_marginEnd="@dimen/item_description_margin_start"
             android:layout_marginRight="@dimen/item_description_margin_start"
             android:layout_marginBottom="@dimen/pager_item_parent_margin"
-            android:ellipsize="marquee"
+            android:ellipsize="end"
             android:gravity="center"
             android:maxLines="@integer/pager_item_max_lines_text"
             android:text="@{itemDataFake}"

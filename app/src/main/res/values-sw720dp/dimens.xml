@@ -3,17 +3,17 @@
     <dimen name="super_categories_recycler_view_height">62dp</dimen>
     <dimen name="super_category_item_height">42dp</dimen>
     <dimen name="super_category_item_text_size">20dp</dimen>
-    <dimen name="pager_item_text_size">18dp</dimen>
+    <dimen name="pager_item_text_size">22dp</dimen>
     <dimen name="error_dialog_border_width">3dp</dimen>
     <dimen name="error_modal_text_size">34dp</dimen>
     <dimen name="back_button_width_height">60dp</dimen>
     <dimen name="back_button_padding_top_bottom">12dp</dimen>
-    <dimen name="contestant_img_width">400dp</dimen>
-    <dimen name="contestant_img_height">300dp</dimen>
+    <dimen name="contestant_img_width">320dp</dimen>
+    <dimen name="contestant_img_height">240dp</dimen>
     <dimen name="error_ok_button_width">150dp</dimen>
-    <dimen name="round_text_size">22dp</dimen>
+    <dimen name="round_text_size">18dp</dimen>
     <dimen name="round_land_text_size">22dp</dimen>
-    <dimen name="quiz_detail_title_text_size">24dp</dimen>
+    <dimen name="quiz_detail_title_text_size">20dp</dimen>
     <dimen name="quiz_detail_title_land_text_size">24dp</dimen>
     <dimen name="img_description_max_width_land">300dp</dimen>
     <dimen name="vs_text_size">28dp</dimen>
@@ -64,4 +64,5 @@
     <dimen name="img_description_max_width">380dp</dimen>
     <dimen name="round_max_width">450dp</dimen>
     <dimen name="vs_text_padding_value">14dp</dimen>
+    <dimen name="stats_progress_bar_land_width_height">40dp</dimen>
 </resources>

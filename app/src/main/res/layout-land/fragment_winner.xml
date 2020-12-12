@@ -102,8 +102,7 @@
                 android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/winner_img_description"
                 android:scaleType="fitXY"
-                android:src="@drawable/empty_drawable"
-                tools:src="@drawable/jennifer_lawrence" />
+                android:src="@drawable/empty_drawable" />
         </androidx.cardview.widget.CardView>
 
         <Space
@@ -121,6 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:text="@{name}"
+            android:maxWidth="@dimen/img_description_max_width_land"
             android:background="@drawable/custom_page_item_selector"
             android:gravity="center"
             android:paddingHorizontal="@dimen/winner_title_horizontal_padding"
@@ -151,7 +151,7 @@
             android:id="@+id/progress_bar"
             android:indeterminateTint="@color/quizListItemTextColor"
             android:layout_marginBottom="@dimen/stats_progress_bar_margin_bottom"
-            app:layout_constraintVertical_weight="@integer/winner_stats_button_vertical_weight"
+            app:layout_constraintVertical_weight="@integer/winner_progress_bar_land_vertical_weight"
             app:layout_constraintTop_toBottomOf="@id/winner_description"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
