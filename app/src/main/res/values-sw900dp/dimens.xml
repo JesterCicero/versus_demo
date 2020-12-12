@@ -8,4 +8,7 @@
     <dimen name="img_description_max_width_land">400dp</dimen>
     <dimen name="round_max_width">550dp</dimen>
     <dimen name="round_max_land_width">550dp</dimen>
+    <dimen name="stats_progress_bar_land_width_height">40dp</dimen>
+    <dimen name="contestant_img_width">400dp</dimen>
+    <dimen name="contestant_img_height">300dp</dimen>
 </resources>

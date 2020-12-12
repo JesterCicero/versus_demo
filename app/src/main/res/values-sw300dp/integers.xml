@@ -18,4 +18,6 @@
     <integer name="quiz_item_detail_bottom_round_space_vertical_weight">3</integer>
     <integer name="quiz_item_top_second_img_space_vertical_weight">1</integer>
     <integer name="quiz_item_bottom_second_img_space_vertical_weight">3</integer>
+    <integer name="winner_progress_bar_land_vertical_weight">6</integer>
+    <integer name="winner_description_landscape_vertical_weight">16</integer>
 </resources>

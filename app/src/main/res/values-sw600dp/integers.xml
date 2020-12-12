@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="quiz_item_detail_bottom_round_space_vertical_weight">5</integer>
+    <integer name="quiz_item_detail_img_description_vertical_weight">7</integer>
+    <integer name="quiz_item_detail_top_first_img_space_vertical_weight">4</integer>
+    <integer name="quiz_item_top_second_img_space_vertical_weight">4</integer>
+    <integer name="quiz_item_bottom_second_img_space_vertical_weight">5</integer>
+    <integer name="quiz_item_top_vs_space_vertical_weight">4</integer>
+    <integer name="quiz_item_vs_text_view_vertical_weight">5</integer>
+    <integer name="quiz_item_bottom_vs_space_vertical_weight">4</integer>
+    <integer name="winner_description_vertical_weight">7</integer>
+    <integer name="winner_stats_button_top_space_vertical_weight">14</integer>
+</resources>

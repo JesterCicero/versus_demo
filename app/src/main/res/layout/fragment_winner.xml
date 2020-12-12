@@ -102,8 +102,7 @@
                 android:layout_height="@dimen/contestant_img_height"
                 android:contentDescription="@string/winner_img_description"
                 android:scaleType="fitXY"
-                android:src="@drawable/empty_drawable"
-                tools:src="@drawable/jennifer_lawrence" />
+                android:src="@drawable/empty_drawable" />
         </androidx.cardview.widget.CardView>
 
         <Space
@@ -120,6 +119,7 @@
             android:id="@+id/winner_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:maxWidth="@dimen/img_description_max_width"
             android:text="@{name}"
             android:background="@drawable/custom_page_item_selector"
             android:gravity="center"
