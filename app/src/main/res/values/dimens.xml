@@ -144,4 +144,5 @@
     <dimen name="round_max_width">250dp</dimen>
     <dimen name="round_max_land_width">450dp</dimen>
     <dimen name="vs_text_padding_value">5dp</dimen>
+    <dimen name="menu_anchor_view_width_height">1dp</dimen>
 </resources>

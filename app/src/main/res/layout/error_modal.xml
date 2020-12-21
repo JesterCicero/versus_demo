@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.error.IErrorDialogContract.IErrorDialogPresenter" />
+        <import type="com.avp.ctbo.presentation.error.IErrorDialogContract.IErrorDialogPresenter" />
 
         <variable
             name="presenter"
@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_weight="@integer/error_dialog_top_bottom_space_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/error_text"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

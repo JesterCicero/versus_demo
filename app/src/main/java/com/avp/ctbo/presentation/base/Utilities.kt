@@ -1,0 +1,46 @@
+package com.avp.ctbo.presentation.base
+
+import android.content.Context
+import android.os.Build
+import android.util.DisplayMetrics
+import android.view.WindowInsets
+import androidx.core.graphics.Insets
+import androidx.fragment.app.FragmentActivity
+import java.util.*
+
+
+val random = Random()
+
+fun <T,U> Map<T,U>.random(): Map.Entry<T,U> = entries.elementAt(random.nextInt(size))
+
+fun dpFromPx(context: Context, px: Float) = px / context.resources.displayMetrics.density
+
+fun pxFromDp(context: Context, dp: Float) = dp * context.resources.displayMetrics.density
+
+@Suppress("DEPRECATION")
+fun getScreenWidth(activity: FragmentActivity): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = activity.windowManager.currentWindowMetrics
+        val windowInsets = metrics.windowInsets
+        val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+        insets.right + insets.left
+    } else {
+        val displayMetrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        displayMetrics.widthPixels
+    }
+}
+
+@Suppress("DEPRECATION")
+fun getScreenHeight(activity: FragmentActivity): Int {
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val metrics = activity.windowManager.currentWindowMetrics
+        val windowInsets = metrics.windowInsets
+        val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+        insets.top + insets.bottom
+    } else {
+        val displayMetrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        displayMetrics.heightPixels
+    }
+}

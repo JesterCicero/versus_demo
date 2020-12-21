@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.licenses.ILicensesDialogContract.ILicensesDialogPresenter" />
+        <import type="com.avp.ctbo.presentation.licenses.ILicensesDialogContract.ILicensesDialogPresenter" />
 
         <variable
             name="presenter"
@@ -28,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="SpUsage" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/licenses_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

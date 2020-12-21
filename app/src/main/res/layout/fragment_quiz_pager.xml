@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_weight="@integer/view_pager_vertical_weight"
         />
-    <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+    <com.avp.ctbo.framework.custom_views.CustomTextView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:id="@+id/page_indicator"

@@ -5,11 +5,11 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
+        <import type="com.avp.ctbo.presentation.base.IItemClickListener" />
 
         <import type="android.view.View" />
 
-        <import type="com.rkhrapunov.versustest.presentation.base.Constants" />
+        <import type="com.avp.ctbo.presentation.base.Constants" />
 
         <variable
             name="itemDataFake"
@@ -25,7 +25,7 @@
 
         <variable
             name="itemClickListener"
-            type="com.rkhrapunov.versustest.presentation.base.IItemClickListener" />
+            type="com.avp.ctbo.presentation.base.IItemClickListener" />
 
         <variable
             name="position"
@@ -42,7 +42,7 @@
         android:background="@drawable/custom_list_selector"
         android:onClick="@{ () -> itemClickListener.onItemClickedIntent(itemDataReal, position) }">
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/number"
             android:layout_width="@dimen/top_4_number_text_width"
             android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
                 android:src="@drawable/empty_drawable" />
         </androidx.cardview.widget.CardView>
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/item_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -110,7 +110,7 @@
             app:layout_constraintStart_toEndOf="@id/small_img_container"
             app:layout_constraintTop_toBottomOf="@id/item_name" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/item_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
