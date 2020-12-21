@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.winner.IWinnerContract.IWinnerPresenter" />
+        <import type="com.avp.ctbo.presentation.winner.IWinnerContract.IWinnerPresenter" />
 
         <variable
             name="name"
@@ -56,7 +56,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/winner_title"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -115,7 +115,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/winner" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/winner_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

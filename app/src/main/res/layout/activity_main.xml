@@ -18,8 +18,9 @@
 
     <View
         android:id="@+id/anchor_menu"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="@dimen/menu_anchor_view_width_height"
+        android:layout_height="@dimen/menu_anchor_view_width_height"
+        android:visibility="invisible"
         android:layout_marginTop="@dimen/item_description_margin_start"
         android:layout_marginEnd="@dimen/item_icon_margin_start"
         app:layout_constraintEnd_toEndOf="parent"

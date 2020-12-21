@@ -5,8 +5,8 @@
 
     <data>
 
-        <import type="com.rkhrapunov.core.domain.RenderState.QuizItemDetailState" />
-        <import type="com.rkhrapunov.versustest.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter" />
+        <import type="com.avp.core.domain.RenderState" />
+        <import type="com.avp.ctbo.presentation.quiz_detail.IQuizItemDetailContract.IQuizItemDetailPresenter" />
         <import type="android.view.View" />
 
         <variable
@@ -98,7 +98,7 @@
 
         </FrameLayout>
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/round_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -128,7 +128,7 @@
             app:layout_constraintTop_toBottomOf="@id/round_description"
             app:layout_constraintVertical_weight="@integer/quiz_item_detail_bottom_round_space_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/first_img_description"
             android:paddingHorizontal="@dimen/quiz_detail_title_horizontal_padding"
             android:background="@drawable/custom_page_item_selector"
@@ -222,7 +222,7 @@
             tools:visibility="visible"
             tools:ignore="ContentDescription" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/tooltip_text1"
             android:layout_width="@dimen/tooltip_width"
             android:layout_height="wrap_content"
@@ -251,7 +251,7 @@
             app:layout_constraintTop_toBottomOf="@id/first_img"
             app:layout_constraintVertical_weight="@integer/quiz_item_top_vs_space_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/vs_text_view"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -340,7 +340,7 @@
             tools:visibility="visible"
             tools:ignore="ContentDescription" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/tooltip_text2"
             android:layout_width="@dimen/tooltip_width"
             android:layout_height="wrap_content"
@@ -369,7 +369,7 @@
             app:layout_constraintTop_toBottomOf="@id/second_img"
             app:layout_constraintVertical_weight="@integer/quiz_item_top_second_img_space_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/second_img_description"
             android:layout_width="wrap_content"
             android:layout_height="0dp"

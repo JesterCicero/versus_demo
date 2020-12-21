@@ -4,7 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.rkhrapunov.versustest.presentation.quizlist.IQuizListContract.IQuizListPresenter"/>
+        <import type="com.avp.ctbo.presentation.quizlist.IQuizListContract.IQuizListPresenter"/>
         <variable
             name="presenter"
             type="IQuizListPresenter" />
@@ -17,7 +17,7 @@ xmlns:tools="http://schemas.android.com/tools">
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/stats"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/stats_header_button_height"
@@ -38,7 +38,7 @@ xmlns:tools="http://schemas.android.com/tools">
             app:layout_constraintEnd_toStartOf="@id/top_4"
             tools:ignore="SpUsage" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/top_4"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/stats_header_button_height"

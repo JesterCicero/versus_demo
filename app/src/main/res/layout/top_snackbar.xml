@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBar" />
+        <import type="com.avp.ctbo.presentation.topsnackbar.TopSnackBar" />
 
         <variable
             name="topSnackBar"
@@ -12,7 +12,7 @@
 
     </data>
 
-    <com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarView
+    <com.avp.ctbo.presentation.topsnackbar.TopSnackBarView
         android:id="@+id/parent_view"
         android:layout_width="@dimen/top_snack_bar_parent_width"
         android:layout_height="@dimen/top_snack_bar_parent_height"
@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/ic_no_internet" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/snack_bar_text"
             android:layout_width="@dimen/top_snack_bar_description_width"
             android:layout_height="@dimen/top_snack_bar_description_height"
@@ -47,7 +47,7 @@
             tools:text="Primary text"
             tools:ignore="SpUsage" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/snack_bar_left_button"
             android:layout_width="@dimen/top_snack_bar_button_width"
             android:layout_height="@dimen/top_snack_bar_button_height"
@@ -66,5 +66,5 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="OK"
             tools:ignore="SpUsage" />
-    </com.rkhrapunov.versustest.presentation.topsnackbar.TopSnackBarView>
+    </com.avp.ctbo.presentation.topsnackbar.TopSnackBarView>
 </layout>

@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.rkhrapunov.versustest.presentation.about.IAboutDialogContract.IAboutDialogPresenter" />
+        <import type="com.avp.ctbo.presentation.about.IAboutDialogContract.IAboutDialogPresenter" />
 
         <variable
             name="presenter"
@@ -70,7 +70,7 @@
             app:layout_constraintTop_toBottomOf="@id/small_img_container"
             app:layout_constraintVertical_weight="@integer/about_top_space_disclaimer_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/disclaimer_text"
             android:layout_width="@dimen/disclaimer_width"
             android:layout_height="0dp"
@@ -98,7 +98,7 @@
             app:layout_constraintTop_toBottomOf="@id/disclaimer_text"
             app:layout_constraintVertical_weight="@integer/about_middle_space_vertical_weight" />
 
-        <com.rkhrapunov.versustest.framework.custom_views.CustomTextView
+        <com.avp.ctbo.framework.custom_views.CustomTextView
             android:id="@+id/bottom_text"
             android:layout_width="@dimen/about_bottom_text_width"
             android:layout_height="0dp"
