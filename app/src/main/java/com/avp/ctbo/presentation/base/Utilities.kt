@@ -4,10 +4,8 @@ import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import android.view.WindowInsets
-import androidx.core.graphics.Insets
 import androidx.fragment.app.FragmentActivity
-import java.util.*
-
+import java.util.Random
 
 val random = Random()
 
@@ -21,9 +19,9 @@ fun pxFromDp(context: Context, dp: Float) = dp * context.resources.displayMetric
 fun getScreenWidth(activity: FragmentActivity): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val metrics = activity.windowManager.currentWindowMetrics
-        val windowInsets = metrics.windowInsets
-        val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
-        insets.right + insets.left
+        val insets = activity.windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(
+            WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+        metrics.bounds.width() - insets.right - insets.left
     } else {
         val displayMetrics = DisplayMetrics()
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
@@ -35,9 +33,9 @@ fun getScreenWidth(activity: FragmentActivity): Int {
 fun getScreenHeight(activity: FragmentActivity): Int {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         val metrics = activity.windowManager.currentWindowMetrics
-        val windowInsets = metrics.windowInsets
-        val insets = windowInsets.getInsetsIgnoringVisibility(WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
-        insets.top + insets.bottom
+        val insets = activity.windowManager.currentWindowMetrics.windowInsets.getInsetsIgnoringVisibility(
+            WindowInsets.Type.navigationBars() or WindowInsets.Type.displayCutout())
+        metrics.bounds.height() - insets.top - insets.bottom
     } else {
         val displayMetrics = DisplayMetrics()
         activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
