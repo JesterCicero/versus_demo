@@ -1,14 +1,12 @@
 package com.avp.core.data
 
 import com.avp.core.domain.IRenderState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface IContestantsDataSource {
-    @ExperimentalCoroutinesApi
-    fun getRenderUiChannel(): BroadcastChannel<IRenderState>
-    @ExperimentalCoroutinesApi
-    fun getErrorMsgChannel(): BroadcastChannel<String>
+    fun getRenderUiChannel(): MutableStateFlow<IRenderState>
+    fun getErrorMsgChannel(): MutableSharedFlow<String>
     fun updateState(state: IRenderState, chosenFirst: Boolean)
     fun resetContest()
     fun getSuperCategories()

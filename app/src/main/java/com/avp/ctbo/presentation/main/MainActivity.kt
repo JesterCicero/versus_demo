@@ -34,14 +34,11 @@ import com.avp.ctbo.presentation.licenses.LicensesDialogFragment
 import com.avp.ctbo.presentation.quizlist.QuizListFragment
 import com.avp.ctbo.presentation.topsnackbar.TopSnackBarHelper
 import com.avp.ctbo.presentation.winner.WinnerFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
-@FlowPreview
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class MainActivity : AppCompatActivity(), IMainContract.IMainView {
 
     private val mPresenter by inject<IMainContract.IMainPresenter>()
@@ -94,9 +91,13 @@ class MainActivity : AppCompatActivity(), IMainContract.IMainView {
     @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onResume() {
         super.onResume()
+        performOnResumeActions()
+    }
+
+    fun performOnResumeActions(onDialogDismiss: Boolean = false) {
         mTopSnackBarHelper.setActivity(this)
         Timber.d("onResume(): mShouldGetSuperCategoriesOnResume: $mShouldGetSuperCategoriesOnResume, current state: $mCurrentState")
-        if (mCurrentState == null && mShouldGetSuperCategoriesOnResume) {
+        if (mCurrentState == null && mShouldGetSuperCategoriesOnResume || onDialogDismiss) {
             Timber.d("onResume(): getSuperCategories")
             mPresenter.getSuperCategories()
         }

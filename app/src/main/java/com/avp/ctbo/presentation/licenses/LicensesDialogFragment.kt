@@ -9,8 +9,11 @@ import com.avp.ctbo.R
 import com.avp.ctbo.databinding.LicensesModalBinding
 import com.avp.ctbo.presentation.base.getScreenHeight
 import com.avp.ctbo.presentation.base.getScreenWidth
+import com.avp.ctbo.presentation.main.MainActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 
+@DelicateCoroutinesApi
 class LicensesDialogFragment : DialogFragment(), ILicensesDialogContract.ILicensesDialogView {
 
     private val mPresenter by inject<ILicensesDialogContract.ILicensesDialogPresenter>()
@@ -22,7 +25,7 @@ class LicensesDialogFragment : DialogFragment(), ILicensesDialogContract.ILicens
     }
 
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = LicensesModalBinding.inflate(inflater, container, false)
         binding.presenter = mPresenter
         return binding.root
@@ -38,5 +41,8 @@ class LicensesDialogFragment : DialogFragment(), ILicensesDialogContract.ILicens
         }
     }
 
-    override fun dismissDialog() = dismiss()
+    override fun dismissDialog() {
+        dismiss()
+        (activity as? MainActivity)?.performOnResumeActions(onDialogDismiss = true)
+    }
 }

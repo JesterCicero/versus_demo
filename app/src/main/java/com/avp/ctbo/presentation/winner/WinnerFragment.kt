@@ -14,9 +14,10 @@ import com.avp.ctbo.presentation.base.Constants.SPACE_SYMBOL
 import com.avp.ctbo.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.avp.ctbo.presentation.base.ImageLoader
 import com.avp.ctbo.presentation.base.capitalizeWords
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class WinnerFragment : Fragment(), IWinnerContract.IWinnerView {
 
     private val mPresenter by inject<IWinnerContract.IWinnerPresenter>()

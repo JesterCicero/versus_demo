@@ -17,20 +17,16 @@ import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.IItemClickListener
 import com.avp.ctbo.presentation.base.QuizAdapter
 import com.avp.ctbo.presentation.base.QuizDataType
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@ExperimentalStdlibApi
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
     IQuizListContract.IQuizListPresenter, KoinComponent,
     IItemClickListener {
@@ -49,7 +45,6 @@ class QuizListPresenter : BasePresenter<IQuizListContract.IQuizListView>(),
         super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
-                .asFlow()
                 .filter { it is RenderState.StatsListState && mAllContestantsStats != it.statsContestants && mTop4List != it.top4List}
                 .collect { onCollectRenderState(it) }
         }

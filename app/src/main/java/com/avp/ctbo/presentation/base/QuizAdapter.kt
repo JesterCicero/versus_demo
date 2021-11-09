@@ -1,5 +1,6 @@
 package com.avp.ctbo.presentation.base
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,14 +22,13 @@ import com.avp.ctbo.presentation.base.Constants.EMPTY_STRING
 import com.avp.ctbo.presentation.base.Constants.INVALID_VALUE
 import com.avp.ctbo.presentation.base.Constants.SPACE_SYMBOL
 import com.avp.ctbo.presentation.base.Constants.UNDERSCORE_SYMBOL
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.DelicateCoroutinesApi
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 import java.util.Locale
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 @Suppress("UNCHECKED_CAST")
 class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
                      quizDataType: QuizDataType = QuizDataType.QUIZ_LIST)
@@ -52,12 +52,14 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
         mFragment = fragment
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateData(data: List<T>) {
         Timber.d("data size: ${data.size}")
         mData = data.toMutableList()
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun sort(ascending: Boolean = true, sortByResults: Boolean = true) {
         if (mData.isNotEmpty()) {
             when (mData[0]) {
@@ -69,6 +71,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun filter(text: String) {
         Timber.d("filter(): text: $text")
         if (mCopyData.isEmpty()) {
@@ -113,8 +116,6 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
 
     override fun getItemCount() = mData.size
 
-    @ExperimentalCoroutinesApi
-    @FlowPreview
     override fun onBindViewHolder(holder: QuizListViewHolder, position: Int) {
         if (mQuizDataType == QuizDataType.QUIZ_SUPER_CATEGORIES) holder.bindSuperCategory(
             position, mData, mActivity) else holder.bind(position, mData, mFragment)
@@ -150,7 +151,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
     private fun onFilterCategories(text: String) {
         Timber.d("onFilterCategories(): ICategories")
         (mCopyData as? MutableList<ICategory>)?.forEach {
-            if (it.name.toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
+            if (it.name.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))) {
                 (mData as? MutableList<ICategory>)?.add(it)
             }
         }
@@ -159,7 +160,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
     private fun onFilterQuizzes(text: String) {
         Timber.d("onFilterSuperCategories(): IQuizShortInfo")
         (mCopyData as? MutableList<IQuizShortInfo>)?.forEach {
-            if (it.title.toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
+            if (it.title.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))) {
                 (mData as? MutableList<IQuizShortInfo>)?.add(it)
             }
         }
@@ -168,13 +169,14 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
     private fun onFilterContestantsStatsInfo(text: String) {
         Timber.d("onFilterSuperCategories(): IContestantsStatsInfo")
         (mCopyData as? MutableList<IContestantsStatsInfo>)?.forEach {
-            if (it.name.toLowerCase(Locale.getDefault()).contains(text.toLowerCase(Locale.getDefault()))) {
+            if (it.name.lowercase(Locale.getDefault()).contains(text.lowercase(Locale.getDefault()))) {
                 (mData as? MutableList<IContestantsStatsInfo>)?.add(it)
             }
         }
     }
 
-    @ExperimentalStdlibApi
+    @Suppress("JoinDeclarationAndAssignment")
+    @DelicateCoroutinesApi
     class QuizListViewHolder(root: View,
                              private val mItemClickListener: IItemClickListener
     )
@@ -212,9 +214,7 @@ class QuizAdapter<T>(private val mItemClickListener: IItemClickListener,
             }
         }
 
-        @Suppress("UNUSED_PARAMETER")
-        @FlowPreview
-        @ExperimentalCoroutinesApi
+        @Suppress("UNUSED_PARAMETER", "SimpleRedundantLet")
         fun bindSuperCategory(position: Int, data: List<*>, activity: FragmentActivity?) {
             mSuperCategoryItemBinding.itemClickListener = mItemClickListener
             mSuperCategoryItemBinding.position = position

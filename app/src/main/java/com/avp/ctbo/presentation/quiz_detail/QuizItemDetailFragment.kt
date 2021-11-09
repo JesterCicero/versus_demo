@@ -23,13 +23,12 @@ import com.avp.ctbo.presentation.base.Constants.UNDERSCORE_SYMBOL
 import com.avp.ctbo.presentation.base.ImageLoader
 import com.avp.ctbo.presentation.base.capitalizeWords
 import com.avp.ctbo.presentation.main.MainActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDetailView {
 
     private val mPresenter by inject<IQuizItemDetailContract.IQuizItemDetailPresenter>()
@@ -93,8 +92,6 @@ class QuizItemDetailFragment : Fragment(), IQuizItemDetailContract.IQuizItemDeta
         }
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     override fun onItemClicked(chosenFirst: Boolean) {
         mBinding?.let {
             (activity as? MainActivity)?.let { activity ->

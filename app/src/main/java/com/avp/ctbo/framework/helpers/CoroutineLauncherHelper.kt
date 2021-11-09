@@ -2,6 +2,7 @@ package com.avp.ctbo.framework.helpers
 
 import com.avp.ctbo.framework.helpers.CustomDispatchers.singleCoroutineDispatcher
 import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -10,13 +11,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import org.koin.core.KoinComponent
+import org.koin.core.component.KoinComponent
 import java.util.concurrent.Executors
 
 object CustomDispatchers {
     val singleCoroutineDispatcher = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
 }
 
+@DelicateCoroutinesApi
 class CoroutineLauncherHelper : KoinComponent {
 
     private val parentJob = Job()

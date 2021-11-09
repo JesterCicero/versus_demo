@@ -9,8 +9,11 @@ import com.avp.ctbo.R
 import com.avp.ctbo.databinding.AboutModalBinding
 import com.avp.ctbo.presentation.base.getScreenHeight
 import com.avp.ctbo.presentation.base.getScreenWidth
+import com.avp.ctbo.presentation.main.MainActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 
+@DelicateCoroutinesApi
 class AboutDialogFragment : DialogFragment(), IAboutDialogContract.IAboutDialogView {
 
     private val mPresenter by inject<IAboutDialogContract.IAboutDialogPresenter>()
@@ -22,7 +25,7 @@ class AboutDialogFragment : DialogFragment(), IAboutDialogContract.IAboutDialogV
     }
 
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = AboutModalBinding.inflate(inflater, container, false)
         binding.presenter = mPresenter
         return binding.root
@@ -38,5 +41,9 @@ class AboutDialogFragment : DialogFragment(), IAboutDialogContract.IAboutDialogV
         }
     }
 
-    override fun dismissDialog() = dismiss()
+
+    override fun dismissDialog() {
+        dismiss()
+        (activity as? MainActivity)?.performOnResumeActions(onDialogDismiss = true)
+    }
 }

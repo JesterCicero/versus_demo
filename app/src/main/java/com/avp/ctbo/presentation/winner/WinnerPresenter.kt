@@ -13,19 +13,16 @@ import com.avp.ctbo.framework.ContestantsCache
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.Constants
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
     IWinnerContract.IWinnerPresenter, KoinComponent {
 
@@ -33,6 +30,7 @@ class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
     private val mErrorMsgChannelInteractor by inject<GetErrorMsgChannelInteractor>()
     // Leave this interactor for possible future use
+    @Suppress("unused")
     private val mResetInteractor by inject<ResetInteractor>()
     private val mGetStatsInteractor by inject<GetStatsInteractor>()
     private val mGetCurrentQuizInteractor by inject<GetCurrentQuizInteractor>()
@@ -46,7 +44,6 @@ class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
         subscribeErrorMsgChannel()
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
-                .asFlow()
                 .filter {
                     (it is RenderState.WinnerState || it is RenderState.WinnerFinalState) && it != mCurrentState
                 }
@@ -85,7 +82,6 @@ class WinnerPresenter : BasePresenter<IWinnerContract.IWinnerView>(),
     private fun subscribeErrorMsgChannel() {
         mErrorMsgJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mErrorMsgChannelInteractor.getErrorMsgChannel()
-                .asFlow()
                 .collect {
                     Timber.d("Error message: $it")
                     mView?.hideProgressBar()

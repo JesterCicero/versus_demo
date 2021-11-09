@@ -17,19 +17,16 @@ import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.Constants.INVALID_VALUE
 import com.avp.ctbo.presentation.base.IItemClickListener
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IMainPresenter,
     IItemClickListener, KoinComponent {
 
@@ -101,7 +98,6 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
     private fun subscribeRenderUiChannel() {
         mRenderUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
-                .asFlow()
                 .filter { it != mCurrentState }
                 .collect {
                     Timber.d("$mCurrentState -> $it")
@@ -114,7 +110,6 @@ class MainPresenter : BasePresenter<IMainContract.IMainView>(), IMainContract.IM
     private fun subscribeErrorMsgChannel() {
         mErrorMsgJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mErrorMsgChannelInteractor.getErrorMsgChannel()
-                .asFlow()
                 .collect {
                     Timber.d("Error message: $it")
                     mView?.renderErrorState(it)

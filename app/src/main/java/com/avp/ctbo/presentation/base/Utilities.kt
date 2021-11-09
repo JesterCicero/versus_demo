@@ -9,8 +9,10 @@ import java.util.Random
 
 val random = Random()
 
+@Suppress("unused")
 fun <T,U> Map<T,U>.random(): Map.Entry<T,U> = entries.elementAt(random.nextInt(size))
 
+@Suppress("unused")
 fun dpFromPx(context: Context, px: Float) = px / context.resources.displayMetrics.density
 
 fun pxFromDp(context: Context, dp: Float) = dp * context.resources.displayMetrics.density
