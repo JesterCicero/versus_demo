@@ -6,9 +6,10 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.avp.ctbo.R
+import kotlinx.coroutines.DelicateCoroutinesApi
 import timber.log.Timber
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class ViewPagerFragmentStateAdapter<T>(private val mContext: Context,
                                     data: List<T>,
                                     fm: FragmentManager,

@@ -10,11 +10,10 @@ import com.avp.ctbo.R
 import com.avp.ctbo.databinding.FragmentQuizListBinding
 import com.avp.ctbo.presentation.base.QuizAdapter
 import com.avp.ctbo.presentation.main.MainActivity
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
 
     private val mPresenter by inject<IQuizListContract.IQuizListPresenter>()
@@ -22,15 +21,13 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
     private var mBinding: FragmentQuizListBinding? = null
     private var mAdapter: QuizAdapter<*>? = null
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mQuizListState = arguments?.getBoolean(MainActivity.QUIZ_LIST_EXTRA, true) ?: true
         mPresenter.attachView(this, lifecycle)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentQuizListBinding.inflate(inflater, container, false)
         binding.quizListRecyclerViewId.apply {
             setHasFixedSize(true)
@@ -45,8 +42,6 @@ class QuizListFragment : Fragment(), IQuizListContract.IQuizListView {
         return binding.root
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     override fun updateStatsHeaders(resultsStats: Boolean) {
         mBinding?.let {
             if (resultsStats) {

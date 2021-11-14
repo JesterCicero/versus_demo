@@ -14,19 +14,16 @@ import com.avp.ctbo.framework.ContestantsCache
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.Constants
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemDetailView>(),
     IQuizItemDetailContract.IQuizItemDetailPresenter, KoinComponent {
 
@@ -46,7 +43,6 @@ class QuizItemDetailPresenter : BasePresenter<IQuizItemDetailContract.IQuizItemD
         Timber.d("attachView()")
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
-                .asFlow()
                 .filter {
                     Timber.d("filter(): current state=$mCurrentState, new state=$it")
                     it is RenderState.QuizItemDetailState && it != mCurrentState

@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 
+@Suppress("unused")
 class CustomEditText : AppCompatEditText {
     constructor(context: Context) : super(context) {
         setFont()

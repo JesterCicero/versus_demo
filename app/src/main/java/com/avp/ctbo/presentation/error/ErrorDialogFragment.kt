@@ -15,11 +15,10 @@ import com.avp.ctbo.presentation.base.getScreenWidth
 import com.avp.ctbo.presentation.main.MainActivity
 import com.avp.ctbo.presentation.quiz_detail.QuizItemDetailFragment
 import com.avp.ctbo.presentation.quiz_pager.QuizPagerFragment
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 
-@FlowPreview
+@DelicateCoroutinesApi
 class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogView {
 
     private val mPresenter by inject<IErrorDialogContract.IErrorDialogPresenter>()
@@ -50,7 +49,7 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
     }
 
     override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?, savedInstanceState: Bundle?): View? {
+                              container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = ErrorModalBinding.inflate(inflater, container, false)
         binding.presenter = mPresenter
         mCurrentErrorMsg = arguments?.getString(ERROR_MSG_KEY, EMPTY_STRING) ?: EMPTY_STRING
@@ -58,8 +57,6 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
-    @ExperimentalStdlibApi
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         if (mCurrentErrorMsg == getString(R.string.unable_to_get_categories)) {
@@ -67,8 +64,6 @@ class ErrorDialogFragment : DialogFragment(), IErrorDialogContract.IErrorDialogV
         }
     }
 
-    @ExperimentalCoroutinesApi
-    @ExperimentalStdlibApi
     override fun dismissDialog() {
         dismiss()
         (activity as? MainActivity)?.let {

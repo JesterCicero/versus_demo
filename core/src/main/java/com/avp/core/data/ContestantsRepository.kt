@@ -1,19 +1,15 @@
 package com.avp.core.data
 
 import com.avp.core.domain.IRenderState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class ContestantsRepository : KoinComponent {
 
     private val mContestantsDataSource by inject<IContestantsDataSource>()
 
-    @ExperimentalCoroutinesApi
     fun getRenderUiChannel() = mContestantsDataSource.getRenderUiChannel()
-    @ExperimentalCoroutinesApi
     fun getErrorMsgChannel() = mContestantsDataSource.getErrorMsgChannel()
-    @ExperimentalCoroutinesApi
     fun onChosenContestant(state: IRenderState, chosenFirst: Boolean) = mContestantsDataSource.updateState(state, chosenFirst)
     fun resetContest() = mContestantsDataSource.resetContest()
     fun getSuperCategories() = mContestantsDataSource.getSuperCategories()

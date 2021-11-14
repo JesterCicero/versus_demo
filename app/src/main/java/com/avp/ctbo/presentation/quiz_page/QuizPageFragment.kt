@@ -16,10 +16,11 @@ import com.avp.ctbo.databinding.QuizPageItemBinding
 import com.avp.ctbo.presentation.base.IItemClickListener
 import com.avp.ctbo.presentation.base.QuizAdapter
 import com.avp.ctbo.presentation.base.QuizDataType
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
 
     private val mPresenter by inject<IQuizPageContract.IQuizPagePresenter>()
@@ -57,7 +58,7 @@ class QuizPageFragment : Fragment(), IQuizPageContract.IQuizPageView {
     }
 
     @Suppress("UNCHECKED_CAST")
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = QuizPageItemBinding.inflate(inflater, container, false)
         binding.quizGridRecyclerViewId.apply {
             setHasFixedSize(true)

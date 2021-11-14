@@ -13,19 +13,16 @@ import com.avp.ctbo.framework.ContestantsCache
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.Constants.EMPTY_STRING
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class QuizPagerPresenter : BasePresenter<IQuizPagerContract.IQuizPagerView>(),
     IQuizPagerContract.IQuizPagerPresenter, KoinComponent {
 
@@ -44,7 +41,6 @@ class QuizPagerPresenter : BasePresenter<IQuizPagerContract.IQuizPagerView>(),
         if (savedInstanceState == null) {
             mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                 mRenderUiChannelInteractor.getRenderUiChannel()
-                    .asFlow()
                     .filter { it is RenderState.SuperCategoriesState
                             || it is RenderState.CategoriesState
                             || it is RenderState.QuizListState }

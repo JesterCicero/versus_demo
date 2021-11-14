@@ -9,15 +9,15 @@ import com.avp.core.domain.RenderState
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.Constants.EMPTY_STRING
 import com.avp.ctbo.presentation.base.Preferences
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class ContestantsCache : KoinComponent {
 
     var superCategoriesCache: List<ISuperCategory>? = null
@@ -46,7 +46,7 @@ class ContestantsCache : KoinComponent {
     private var mCurrentCategoryName = EMPTY_STRING
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
-    private val mRenderUiChannel by inject<ConflatedBroadcastChannel<IRenderState>>(named("RenderState"))
+    private val mRenderUiChannel by inject<MutableStateFlow<IRenderState>>(named("RenderState"))
     private val mPreferences by inject<Preferences>()
 
     fun tryToGetSuperCategoriesCache() {
@@ -246,19 +246,19 @@ class ContestantsCache : KoinComponent {
 
     private fun sendSuperCategories(superCategories: List<ISuperCategory>) {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-            mRenderUiChannel.send(RenderState.SuperCategoriesState(superCategories))
+            mRenderUiChannel.emit(RenderState.SuperCategoriesState(superCategories))
         }
     }
 
     private fun sendCategories(categories: List<ICategory>) {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-            mRenderUiChannel.send(RenderState.CategoriesState(categories))
+            mRenderUiChannel.emit(RenderState.CategoriesState(categories))
         }
     }
 
     private fun sendQuizzesList(quizzesList: List<IQuizShortInfo>) {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-            mRenderUiChannel.send(RenderState.QuizListState(quizzesList))
+            mRenderUiChannel.emit(RenderState.QuizListState(quizzesList))
         }
     }
 

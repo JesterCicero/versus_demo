@@ -16,29 +16,26 @@ import com.avp.ctbo.framework.helpers.RestApiHelper
 import com.avp.ctbo.presentation.base.Constants.EMPTY_STRING
 import com.avp.ctbo.presentation.base.Constants.INVALID_VALUE
 import com.avp.ctbo.presentation.base.Constants.MAX_TOP_4_ITEMS
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import retrofit2.Response
 import timber.log.Timber
 import java.util.Locale
 
-@FlowPreview
+@DelicateCoroutinesApi
 @Suppress("UNCHECKED_CAST")
-@ExperimentalCoroutinesApi
 class ContestantsDataSource : IContestantsDataSource, KoinComponent {
 
-    private val mRenderUiChannel by inject<ConflatedBroadcastChannel<IRenderState>>(named("RenderState"))
-    private val mErrorMsgChannel by inject<BroadcastChannel<String>>(named("ErrorMsg"))
-    private val mNetworkStateChannel by inject<BroadcastChannel<Boolean>>(named("NetworkState"))
+    private val mRenderUiChannel by inject<MutableStateFlow<IRenderState>>(named("RenderState"))
+    private val mErrorMsgChannel by inject<MutableSharedFlow<String>>(named("ErrorMsg"))
+    private val mNetworkStateChannel by inject<MutableSharedFlow<Boolean>>(named("NetworkState"))
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mRestApiHelper by inject<RestApiHelper>()
     private val mContestantsCache by inject<ContestantsCache>()
@@ -97,7 +94,6 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
     init {
         mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({
             mNetworkStateChannel
-                .asFlow()
                 .collect {
                     if (it) {
                         if (mDeferredWinnersList.isNotEmpty()) {
@@ -112,10 +108,8 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         })
     }
 
-    @ExperimentalCoroutinesApi
     override fun getRenderUiChannel() = mRenderUiChannel
 
-    @ExperimentalCoroutinesApi
     override fun getErrorMsgChannel() = mErrorMsgChannel
 
     override fun updateState(state: IRenderState, chosenFirst: Boolean) {
@@ -144,7 +138,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 } else {
                     getQuizItemDetailState()
                 }
-                mRenderUiChannel.send(resultState)
+                mRenderUiChannel.emit(resultState)
             } catch (e: Exception) {
                 Timber.e("Exception caught: $e")
             }
@@ -177,7 +171,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         mCurrentRound = mInterimContestants.size / 2
         mResetContestUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             try {
-                mRenderUiChannel.send(getQuizItemDetailState())
+                mRenderUiChannel.emit(getQuizItemDetailState())
             } catch (e: Exception) {
                 Timber.e("Exception caught: $e")
             }
@@ -232,7 +226,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         if (mCurrentQuiz == itemData && !mWinnerDetected && !mGetQuizApiFailed) {
             Timber.d("getQuizItemDetail(): current quiz: $mCurrentQuiz")
             mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mRenderUiChannel.send(getQuizItemDetailState(true))
+                mRenderUiChannel.emit(getQuizItemDetailState(true))
             }
         } else {
             mWinnerDetected = false
@@ -342,7 +336,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 Timber.d("current quiz from data source: $mCurrentQuiz, current quiz from cache: $quizFromCache")
                 if (quizCacheEmpty || mCurrentQuiz != quizFromCache) {
                     mUnableToGetQuizJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                        mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_quiz))
+                        mErrorMsgChannel.emit(mContext.getString(R.string.unable_to_get_quiz))
                     }
                 }
             },
@@ -368,7 +362,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                         mContestantsCache.updateQuizInfoCache(sortedQuizList, mCurrentQuiz)
                         getQuizList(mCurrentCategory)
                         mQuizUpdatedOnServerJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                            mErrorMsgChannel.send(mContext.getString(R.string.quiz_updated_on_server))
+                            mErrorMsgChannel.emit(mContext.getString(R.string.quiz_updated_on_server))
                         }
                     }
                 }
@@ -386,7 +380,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             Timber.d("interim contestants size: ${mInterimContestants.size}")
             mCurrentRound = mInterimContestants.size / 2
             try {
-                mRenderUiChannel.send(getQuizItemDetailState())
+                mRenderUiChannel.emit(getQuizItemDetailState())
             } catch (e: Exception) {
                 Timber.e("Exception caught: $e")
             }
@@ -404,7 +398,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 Timber.d("superCategoriesCacheEmpty: $superCategoriesCacheEmpty")
                 if (superCategoriesCacheEmpty) {
                     mUnableToGetSuperCategoriesJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                        mRenderUiChannel.send(RenderState.ErrorState(mContext.getString(R.string.unable_to_get_super_categories)))
+                        mRenderUiChannel.emit(RenderState.ErrorState(mContext.getString(R.string.unable_to_get_super_categories)))
                     }
                 }
             },
@@ -425,7 +419,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 Timber.d("current superCategory from data source: $mCurrentSuperCategory, current superCategory from cache: $superCategoryFromCache")
                 if (categoriesCacheEmpty || mCurrentSuperCategory != superCategoryFromCache) {
                     mUnableToGetCategoriesJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                        mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_categories))
+                        mErrorMsgChannel.emit(mContext.getString(R.string.unable_to_get_categories))
                     }
                 }
             },
@@ -475,7 +469,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 Timber.d("onGetSuperCategoriesApiSuccess(): got new superCategories from server")
                 mContestantsCache.updateSuperCategoriesCache(mutableSortedSuperCategories)
                 mSuperCategoriesUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mRenderUiChannel.send(RenderState.SuperCategoriesState(mutableSortedSuperCategories))
+                    mRenderUiChannel.emit(RenderState.SuperCategoriesState(mutableSortedSuperCategories))
                 }
             }
         }
@@ -487,7 +481,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             if (mContestantsCache.isCategoriesCacheEmpty(mCurrentSuperCategory)) {
                 mContestantsCache.updateCategoriesCache(sortedCategories, mCurrentSuperCategory)
                 mCategoriesUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mRenderUiChannel.send(RenderState.CategoriesState(sortedCategories))
+                    mRenderUiChannel.emit(RenderState.CategoriesState(sortedCategories))
                 }
             } else {
                 mContestantsCache.categoriesCache?.let { categories ->
@@ -509,7 +503,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             if (mContestantsCache.isQuizzesCacheEmpty(mCurrentCategory)) {
                 mContestantsCache.updateQuizzesInfoCache(sortedQuizShortInfoList, mCurrentCategory)
                 mQuizListUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mRenderUiChannel.send(RenderState.QuizListState(sortedQuizShortInfoList))
+                    mRenderUiChannel.emit(RenderState.QuizListState(sortedQuizShortInfoList))
                 }
             } else {
                 mContestantsCache.quizzesInfoCache?.let { quizzes ->
@@ -531,7 +525,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
         Timber.d("current category from data source: $mCurrentCategory, current category from cache: $categoryFromCache")
         if (quizzesCacheEmpty || mCurrentCategory != categoryFromCache) {
             mUnableToGetQuizListJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_quiz_list))
+                mErrorMsgChannel.emit(mContext.getString(R.string.unable_to_get_quiz_list))
             }
         }
     }
@@ -544,7 +538,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
             {
                 Timber.d(it, "Error occurred while getting request for contestants stats!")
                 mUnableToGetStatsJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                    mErrorMsgChannel.send(mContext.getString(R.string.unable_to_get_stats))
+                    mErrorMsgChannel.emit(mContext.getString(R.string.unable_to_get_stats))
                 }
             },
             lang = Locale.getDefault().language,
@@ -565,7 +559,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                     }
                 }
                 (mTop4Array.toList() as? List<IContestantsInfo>)?.let { list ->
-                    mRenderUiChannel.send(RenderState.StatsListState(it.sortedByDescending { element -> element.percentage.toFloat() }, list))
+                    mRenderUiChannel.emit(RenderState.StatsListState(it.sortedByDescending { element -> element.percentage.toFloat() }, list))
                 }
                 mTop4Array = arrayOfNulls(MAX_TOP_4_ITEMS)
             }
@@ -584,7 +578,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                 } else {
                     Handler(Looper.getMainLooper()).postDelayed({
                         mUnableToPostWinnerJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                            mErrorMsgChannel.send(mContext.getString(R.string.unable_to_post_winner))
+                            mErrorMsgChannel.emit(mContext.getString(R.string.unable_to_post_winner))
                             val winnerItem = if (winner.contains(POST_WINNER_SEPARATOR)) winner else "$winner$POST_WINNER_SEPARATOR$mCurrentQuiz"
                             if (!mDeferredWinnersList.contains(winnerItem)) {
                                 Timber.d("adding winnerItem: $winnerItem")
@@ -620,7 +614,7 @@ class ContestantsDataSource : IContestantsDataSource, KoinComponent {
                     mPostWinnerSuccessUpdateUiJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
                         mLastWinnerState?.let { lastWinnerState ->
                             Timber.d("onPostWinnerSuccess(): ${lastWinnerState.winner}")
-                            mRenderUiChannel.send(RenderState.WinnerFinalState(lastWinnerState.winner))
+                            mRenderUiChannel.emit(RenderState.WinnerFinalState(lastWinnerState.winner))
                         }
                     }
                 }

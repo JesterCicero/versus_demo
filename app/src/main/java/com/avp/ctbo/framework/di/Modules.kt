@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import com.avp.core.data.ContestantsRepository
 import com.avp.core.data.IContestantsDataSource
 import com.avp.core.domain.IRenderState
+import com.avp.core.domain.RenderState
 import com.avp.core.interactors.CancelQuizInteractor
 import com.avp.core.interactors.ChosenContestantInteractor
 import com.avp.core.interactors.CurrentSuperCategoryInteractor
@@ -55,11 +56,9 @@ import com.avp.ctbo.presentation.topsnackbar.TopSnackBarHelper
 import com.avp.ctbo.presentation.topsnackbar.TopSnackBarType
 import com.avp.ctbo.presentation.winner.IWinnerContract
 import com.avp.ctbo.presentation.winner.WinnerPresenter
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -67,11 +66,9 @@ import org.koin.dsl.module
 
 private const val PREFS_NAME = "prefs_name"
 
+@DelicateCoroutinesApi
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-@ExperimentalStdlibApi
-@FlowPreview
-@ExperimentalCoroutinesApi
-val applicationModule = module(override = true) {
+val applicationModule = module {
     single { androidApplication() }
     single { ContestantsRepository() }
     single { CoroutineLauncherHelper() }
@@ -81,11 +78,12 @@ val applicationModule = module(override = true) {
     single { ContestantsCache() }
     single { NetworkConnectivityHelper() }
     single { TopSnackBarHelper() }
-    single(named("RenderState")) { ConflatedBroadcastChannel<IRenderState>() }
-    single(named("ErrorMsg")) { BroadcastChannel<String>(Channel.BUFFERED) }
-    single(named("NetworkState")) { BroadcastChannel<Boolean>(Channel.BUFFERED) }
-    single(named("Notification")) { BroadcastChannel<ITopBarNotification>(Channel.BUFFERED) }
-    single(named("NotificationDismiss")) { BroadcastChannel<TopSnackBarType>(Channel.BUFFERED) }
+    single(named("RenderState")) { MutableStateFlow<IRenderState>(RenderState.SuperCategoriesState(
+        emptyList())) }
+    single(named("ErrorMsg")) { MutableSharedFlow<String>() }
+    single(named("NetworkState")) { MutableSharedFlow<Boolean>() }
+    single(named("Notification")) { MutableSharedFlow<ITopBarNotification>() }
+    single(named("NotificationDismiss")) { MutableSharedFlow<TopSnackBarType>() }
     factory { androidContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE) }
     factory<IContestantsDataSource> { ContestantsDataSource() }
     factory { GetRenderUiChannelInteractor() }

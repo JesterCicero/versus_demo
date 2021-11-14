@@ -11,15 +11,15 @@ import com.avp.ctbo.R
 import com.avp.ctbo.presentation.topsnackbar.ITopBarNotification
 import com.avp.ctbo.presentation.topsnackbar.TopBarNotification
 import com.avp.ctbo.presentation.topsnackbar.TopSnackBarType
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.flow.MutableSharedFlow
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import timber.log.Timber
 
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class NetworkConnectivityHelper : KoinComponent {
 
@@ -27,8 +27,8 @@ class NetworkConnectivityHelper : KoinComponent {
     private var mOnline = false
     private var mConnectivityManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     private var callback = ConnectionStatusCallback()
-    @ExperimentalCoroutinesApi
-    private val mNetworkStateChannel by inject<BroadcastChannel<Boolean>>(named("NetworkState"))
+    private val mNetworkStateChannel by inject<MutableSharedFlow<Boolean>>(named("NetworkState"))
+    @DelicateCoroutinesApi
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
 
     @Suppress("DEPRECATION")
@@ -43,12 +43,12 @@ class NetworkConnectivityHelper : KoinComponent {
         }
     }
 
-    @ExperimentalCoroutinesApi
+    @DelicateCoroutinesApi
     inner class ConnectionStatusCallback : ConnectivityManager.NetworkCallback() {
 
         private val activeNetworks: MutableList<Network> = mutableListOf()
-        private val mNotificationChannel by inject<BroadcastChannel<ITopBarNotification>>(named("Notification"))
-        private val mNotificationDismissChannel by inject<BroadcastChannel<TopSnackBarType>>(named("NotificationDismiss"))
+        private val mNotificationChannel by inject<MutableSharedFlow<ITopBarNotification>>(named("Notification"))
+        private val mNotificationDismissChannel by inject<MutableSharedFlow<TopSnackBarType>>(named("NotificationDismiss"))
 
         override fun onLost(network: Network) {
             super.onLost(network)
@@ -56,7 +56,7 @@ class NetworkConnectivityHelper : KoinComponent {
             mOnline = activeNetworks.isNotEmpty()
             Timber.d("onLost(): online: $mOnline")
             mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mNotificationChannel.send(TopBarNotification(
+                mNotificationChannel.emit(TopBarNotification(
                     TopSnackBarType.NO_CONNECTION,
                     R.string.no_internet_connection,
                     R.drawable.ic_no_internet,
@@ -64,12 +64,12 @@ class NetworkConnectivityHelper : KoinComponent {
                     notificationTimeout = NO_CONNECTION_TIMEOUT_MS,
                     action = {
                         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                            mNotificationDismissChannel.send(TopSnackBarType.NO_CONNECTION)
+                            mNotificationDismissChannel.emit(TopSnackBarType.NO_CONNECTION)
                         }
                     }
                 ))
             }
-            mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.send(mOnline) })
+            mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.emit(mOnline) })
         }
 
         override fun onAvailable(network: Network) {
@@ -80,9 +80,9 @@ class NetworkConnectivityHelper : KoinComponent {
             mOnline = activeNetworks.isNotEmpty()
             Timber.d("onAvailable(): online: $mOnline")
             mCoroutineLauncherHelper.launch(Dispatchers.Main) {
-                mNotificationDismissChannel.send(TopSnackBarType.NO_CONNECTION)
+                mNotificationDismissChannel.emit(TopSnackBarType.NO_CONNECTION)
             }
-            mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.send(mOnline) })
+            mCoroutineLauncherHelper.launchWithSingleCoroutineDispatcher({ mNetworkStateChannel.emit(mOnline) })
         }
     }
 

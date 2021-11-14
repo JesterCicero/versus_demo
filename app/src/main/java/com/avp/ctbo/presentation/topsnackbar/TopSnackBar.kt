@@ -17,11 +17,12 @@ import com.avp.ctbo.databinding.TopSnackbarBinding
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.pxFromDp
 import com.avp.ctbo.presentation.base.weak
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 enum class TopSnackBarType {
@@ -44,6 +45,7 @@ class TopSnackBarView @JvmOverloads constructor(
     }
 }
 
+@DelicateCoroutinesApi
 class TopSnackBar private constructor(activity: Activity?,
                                       private val mSnackBarView: View,
                                       private var mBinding: TopSnackbarBinding) : KoinComponent {

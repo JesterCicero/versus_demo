@@ -3,10 +3,11 @@ package com.avp.ctbo.presentation.quizlist
 import com.avp.ctbo.presentation.base.IBaseStatefulPresenter
 import com.avp.ctbo.presentation.base.IBaseView
 import com.avp.ctbo.presentation.base.QuizAdapter
+import kotlinx.coroutines.DelicateCoroutinesApi
 
 interface IQuizListContract {
 
-    @ExperimentalStdlibApi
+    @DelicateCoroutinesApi
     interface IQuizListView : IBaseView {
         fun shouldShowQuizList(): Boolean
         fun setAdapter(quizAdapter: QuizAdapter<*>?)
@@ -14,7 +15,7 @@ interface IQuizListContract {
         fun updateStatsHeaders(resultsStats: Boolean)
     }
 
-    @ExperimentalStdlibApi
+    @DelicateCoroutinesApi
     interface IQuizListPresenter : IBaseStatefulPresenter<IQuizListView> {
         fun onBackToQuizzesButtonClickedIntent()
         fun onStatsTabClicked(results: Boolean)

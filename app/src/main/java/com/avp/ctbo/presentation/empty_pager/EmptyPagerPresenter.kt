@@ -9,24 +9,22 @@ import com.avp.core.interactors.GetRenderUiChannelInteractor
 import com.avp.core.interactors.GetSuperCategoriesInteractor
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.BasePresenter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.collect
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import kotlinx.coroutines.Dispatchers
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+@DelicateCoroutinesApi
 class EmptyPagerPresenter : BasePresenter<IEmptyPagerContract.IEmptyPagerView>(),
     IEmptyPagerContract.IEmptyPagerPresenter, KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
     private val mGetSuperCategoriesInteractor by inject<GetSuperCategoriesInteractor>()
+    @Suppress("unused")
     private val mGetQuizListInteractor by inject<GetQuizListInteractor>()
     private val mRenderUiChannelInteractor by inject<GetRenderUiChannelInteractor>()
     private var mJob: Job? = null
@@ -36,7 +34,6 @@ class EmptyPagerPresenter : BasePresenter<IEmptyPagerContract.IEmptyPagerView>()
         super.attachView(view, viewLifecycle, savedInstanceState)
         mJob = mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mRenderUiChannelInteractor.getRenderUiChannel()
-                .asFlow()
                 .filter { it is RenderState.ErrorState }
                 .collect { renderState ->
                     Timber.d("attachView(): renderState=$renderState")

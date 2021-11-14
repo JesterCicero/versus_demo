@@ -11,7 +11,6 @@ import com.avp.ctbo.R
 import com.avp.ctbo.databinding.EmptyPagerBinding
 import org.koin.android.ext.android.inject
 
-@ExperimentalStdlibApi
 class EmptyPagerFragment : Fragment(), IEmptyPagerContract.IEmptyPagerView {
 
     private val mPresenter by inject<IEmptyPagerContract.IEmptyPagerPresenter>()

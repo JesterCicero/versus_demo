@@ -5,27 +5,22 @@ import androidx.annotation.RequiresApi
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
 import com.avp.ctbo.presentation.base.weak
 import com.avp.ctbo.presentation.main.MainActivity
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.filter
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.qualifier.named
 import timber.log.Timber
 
-@FlowPreview
-@ExperimentalCoroutinesApi
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class TopSnackBarHelper : KoinComponent {
 
     private val mTopSnackBarsList = mutableListOf<ITopBarNotification>()
-    private val mNotificationChannel by inject<BroadcastChannel<ITopBarNotification>>(named("Notification"))
-    private val mNotificationDismissChannel by inject<BroadcastChannel<TopSnackBarType>>(named("NotificationDismiss"))
-    @ExperimentalStdlibApi
+    private val mNotificationChannel by inject<MutableSharedFlow<ITopBarNotification>>(named("Notification"))
+    private val mNotificationDismissChannel by inject<MutableSharedFlow<TopSnackBarType>>(named("NotificationDismiss"))
     private var mActivity: MainActivity? by weak()
     private var mCurrentTopSnackBar: TopSnackBar? = null
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()
@@ -55,7 +50,6 @@ class TopSnackBarHelper : KoinComponent {
     private fun subscribeNotificationDismissChannel() {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mNotificationDismissChannel
-                .asFlow()
                 .collect {
                     Timber.d("topSnackBar type: $it")
                     onDismiss(it)
@@ -67,7 +61,6 @@ class TopSnackBarHelper : KoinComponent {
     private fun subscribeNotificationChannel() {
         mCoroutineLauncherHelper.launch(Dispatchers.Main) {
             mNotificationChannel
-                .asFlow()
                 .filter { it.type != TopSnackBarType.UNKNOWN }
                 .collect {
                     Timber.d("topSnackBar type: ${it.type.name}, current topSnackBar type: $mCurrentTopSnackBar")
@@ -84,7 +77,7 @@ class TopSnackBarHelper : KoinComponent {
             }
             val topSnackBar = createTopSnackBar(it, notification)
             if (mTopSnackBarsList.isEmpty()) {
-                topSnackBar?.show()
+                topSnackBar.show()
                 mCurrentTopSnackBar = topSnackBar
             }
         }
@@ -121,7 +114,7 @@ class TopSnackBarHelper : KoinComponent {
                 Timber.d("Show next available topSnackBar in list: ${it.type}")
                 mActivity?.let { activity ->
                     val newTopSnackBar = createTopSnackBar(activity, it)
-                    newTopSnackBar?.let { topSnackBar ->
+                    newTopSnackBar.let { topSnackBar ->
                         topSnackBar.show()
                         nextTopSnackBar = topSnackBar
                         return@run
@@ -142,7 +135,7 @@ class TopSnackBarHelper : KoinComponent {
     }
 
     private fun createTopSnackBar(activity: MainActivity,
-                                  notification: ITopBarNotification): TopSnackBar? {
+                                  notification: ITopBarNotification): TopSnackBar {
         return TopSnackBar.createTopSnackBar(activity)
             .setIcon(notification.iconId)
             .setType(notification.type)

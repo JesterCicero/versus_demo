@@ -21,13 +21,11 @@ import com.avp.ctbo.presentation.base.ImageLoader
 import com.avp.ctbo.presentation.main.MainActivity
 import com.avp.ctbo.presentation.quiz_page.QuizPageFragment
 import com.avp.ctbo.presentation.quiz_page.ViewPagerFragmentStateAdapter
-import kotlinx.android.synthetic.main.fragment_quiz_pager.pager
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.DelicateCoroutinesApi
 import org.koin.android.ext.android.inject
 import timber.log.Timber
 
-@ExperimentalStdlibApi
+@DelicateCoroutinesApi
 class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
 
     private val mPresenter by inject<IQuizPagerContract.IQuizPagerPresenter>()
@@ -37,44 +35,38 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
     private var mPositionChanged = false
     private var mPager: ViewPager2? = null
 
-    fun getCurrentPageFragment() = fragmentManager?.findFragmentByTag("f${mPager?.currentItem}") as? QuizPageFragment
+    fun getCurrentPageFragment() = activity?.supportFragmentManager?.findFragmentByTag("f${mPager?.currentItem}") as? QuizPageFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mPresenter.attachView(this, lifecycle)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val binding = FragmentQuizPagerBinding.inflate(inflater, container,  false)
         mBinding = binding
         return binding.root
     }
 
-    @ExperimentalCoroutinesApi
-    @FlowPreview
     override fun renderState(renderState: IRenderState) {
         Timber.d("renderState(): renderState: $renderState")
         mBinding?.let { binding ->
-            fragmentManager?.let { fm ->
-                activity?.let {
-                    getAdapter(renderState, it, fm)?.let { adapter ->
-                        binding.pager.adapter = adapter
-                        mPager = binding.pager
-                        mPager?.setCurrentItem(mPresenter.getCurrentPagePosition(), false)
-                        val pageIndicatorText = mPresenter.getPageIndicatorText()
-                        if (binding.pageIndicator.text != pageIndicatorText) {
-                            binding.pageIndicator.text = pageIndicatorText
-                        }
-                        registerOnPageChangeCallback(binding, adapter.itemCount)
+            activity?.let {
+                getAdapter(renderState, it, it.supportFragmentManager)?.let { adapter ->
+                    binding.pager.adapter = adapter
+                    mPager = binding.pager
+                    mPager?.setCurrentItem(mPresenter.getCurrentPagePosition(), false)
+                    val pageIndicatorText = mPresenter.getPageIndicatorText()
+                    if (binding.pageIndicator.text != pageIndicatorText) {
+                        binding.pageIndicator.text = pageIndicatorText
                     }
-                    loadBackgroundImg(renderState, it.pager)
+                    registerOnPageChangeCallback(binding, adapter.itemCount)
                 }
+                loadBackgroundImg(renderState, binding.pager)
             }
         }
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     override fun onSuperCategoriesBack() {
         (activity as? MainActivity)?.onSuperCategoriesBack()
     }
@@ -120,8 +112,6 @@ class QuizPagerFragment : Fragment(), IQuizPagerContract.IQuizPagerView {
         }
     }
 
-    @FlowPreview
-    @ExperimentalCoroutinesApi
     private fun registerOnPageChangeCallback(binding: FragmentQuizPagerBinding, itemCount: Int) {
         mPager?.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback() {
             @SuppressLint("SetTextI18n")

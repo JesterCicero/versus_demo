@@ -36,6 +36,7 @@ class RestApiHelper {
     private lateinit var mRetrofit: Retrofit
 
     private val mTrustAllCerts = arrayOf(
+        @SuppressLint("CustomX509TrustManager")
         object : X509TrustManager {
             @SuppressLint("TrustAllX509TrustManager")
             override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) { }

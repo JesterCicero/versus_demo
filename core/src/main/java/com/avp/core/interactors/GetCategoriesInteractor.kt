@@ -1,9 +1,9 @@
 package com.avp.core.interactors
 
+import com.avp.core.data.Constants.EMPTY_STRING
 import com.avp.core.data.ContestantsRepository
-import com.sun.org.apache.xml.internal.utils.LocaleUtility.EMPTY_STRING
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class GetCategoriesInteractor : KoinComponent {
 

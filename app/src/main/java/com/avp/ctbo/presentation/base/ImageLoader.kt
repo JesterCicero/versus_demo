@@ -14,12 +14,14 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.avp.ctbo.R
 import com.avp.ctbo.framework.helpers.CoroutineLauncherHelper
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
+@DelicateCoroutinesApi
 class ImageLoader : KoinComponent {
 
     private val mCoroutineLauncherHelper by inject<CoroutineLauncherHelper>()

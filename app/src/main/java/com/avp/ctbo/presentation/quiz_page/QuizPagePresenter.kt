@@ -5,8 +5,8 @@ import com.avp.core.interactors.GetQuizItemDetailInteractor
 import com.avp.core.interactors.GetQuizListInteractor
 import com.avp.ctbo.presentation.base.BasePresenter
 import com.avp.ctbo.presentation.base.IItemClickListener
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import timber.log.Timber
 
 class QuizPagePresenter : BasePresenter<IQuizPageContract.IQuizPageView>(),
